@@ -28,12 +28,14 @@ python, as well as various python packages.  Most package managers
 For manual installation, install python and pip (python's package
 manager), and then run
 
-    pip install numpy
-    pip install matplotlib
-    pip install pandas
-    pip install sympy
-    pip install scipy
-    pip install ipython[notebook]
+```Shell
+pip install numpy
+pip install matplotlib
+pip install pandas
+pip install sympy
+pip install scipy
+pip install ipython[notebook]
+```
 
 (For tcsh users, the brackets in the last command will need to be
 escaped with backslashes.)
