@@ -8,17 +8,17 @@ systems
 Introduction
 ============
 
-The current state of PN literature is somewhat confusing to anyone
-wishing to implement PN evolutions.  There is a huge array of sources,
-each of which provides partial or outdated listings of the various PN
-expressions.  For example, a recent paper describing a new spin-orbit
-contribution to the gravitational-wave flux might give the complete
-expression for all spin-orbit terms in the flux, but omit non-spinning
-and spin-spin terms.  This leaves anyone wishing to collect the most
-accurate and up-to-date PN expressions to search through a vast
-literature, sorting out various conventions.  Even worse, this is
-generally done in isolation by one person, whose work is then lost to
-other people.
+The current state of PN literature is somewhat confusing to anyone who
+is not already well versed in that literature---and even to those who
+are.  There is a huge array of sources, each of which provides partial
+or outdated listings of the various PN expressions.  For example, a
+recent paper describing a new spin-orbit contribution to the
+gravitational-wave flux might give the complete expression for all
+spin-orbit terms in the flux, but omit non-spinning and spin-spin
+terms.  This leaves anyone wishing to collect the most accurate and
+up-to-date PN expressions to search through a vast literature, sorting
+out various conventions.  Even worse, this is generally done in
+isolation by one person, whose work must then be duplicated by others.
 
 This project aims to correct that situation by providing a simple
 framework for collecting PN expressions, combining them to
