@@ -9,22 +9,24 @@ Introduction
 ============
 
 The current state of PN literature is somewhat confusing to anyone who
-is not already well versed in that literature---and even to those who
-are.  There is a huge array of sources, each of which provides partial
-or outdated listings of the various PN expressions.  For example, a
-recent paper describing a new spin-orbit contribution to the
-gravitational-wave flux might give the complete expression for all
-spin-orbit terms in the flux, but omit non-spinning and spin-spin
-terms.  This leaves anyone wishing to collect the most accurate and
-up-to-date PN expressions to search through a vast literature, sorting
-out various conventions.  Even worse, this is generally done in
-isolation by one person, whose work must then be duplicated by others.
+is not already well versed in that literature---and even to some of
+those who are.  There is a huge array of sources, each of which
+provides partial or outdated listings of the various PN expressions.
+For example, a recent paper describing a new spin-orbit contribution
+to the gravitational-wave flux might give the complete expression for
+all known spin-orbit terms in the flux, but omit non-spinning and
+spin-spin terms.  This leaves anyone wishing to collect the most
+accurate and up-to-date PN expressions to search through a vast
+literature, sorting out various conventions.  Even worse, this is
+generally done in isolation by one person, whose work must then be
+duplicated by others.  We all make mistakes, which means that nobody
+has a good PN code.
 
 This project aims to correct that situation by providing a simple
 framework for collecting PN expressions, combining them to
 automatically calculate the various TaylorTn approximants, for
 example, centralizing the results, and sharing them in a way that can
-be used by as many people as possible -- for both analytical work and
+be used by as many people as possible---for both analytical work and
 computational work.  In particular, the computational side is intended
 to support people working in pure python, C, C++, and Mathematica.
 
@@ -98,7 +100,8 @@ pip install scipy
 pip install ipython[notebook]
 ```
 
-(For tcsh users, the brackets in the last command will need to be
-escaped with backslashes.)
+For tcsh users, the brackets in the last command will need to be
+escaped with backslashes.  If these fail, complaining about
+permissions, simply add `--user` to each command.
 
 
