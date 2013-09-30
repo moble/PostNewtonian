@@ -31,8 +31,9 @@ computational work.  In particular, the computational side is intended
 to support people working in pure python, C, C++, and Mathematica.
 
 This repository contains python notebooks which collect various PN
-expressions, allow for their symbolic manipulation using the , and
-generate C/C++ code which allows for efficient evaluation.
+expressions, allow for their symbolic manipulation using the `sympy`
+module, and generate C/C++ code which allows for efficient evaluation.
+To be more explicit, the tasks performed by code in this module will:
 
 - Collect various PN expressions, with annotations describing where
   they come from
