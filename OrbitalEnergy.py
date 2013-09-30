@@ -11,10 +11,3 @@
 %run -i Variables.py
 from __future__ import division # This needs to be here, even though it's in Variables.py
 
-# <headingcell level=1>
-
-# TaylorT1 and TaylorT4
-
-# <codecell>
-
-

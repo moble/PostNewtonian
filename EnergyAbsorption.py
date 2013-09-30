@@ -11,9 +11,9 @@
 %run -i Variables.py
 from __future__ import division # This needs to be here, even though it's in Variables.py
 
-# <headingcell level=1>
+# <markdowncell>
 
-# TaylorT1 and TaylorT4
+# See [Tagoshi, Sasaki (1994)](http://arxiv.org/abs/gr-qc/9405062) and [Alvi (2001)](http://link.aps.org/doi/10.1103/PhysRevD.64.104020).
 
 # <codecell>
 
