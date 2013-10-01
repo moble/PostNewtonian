@@ -35,7 +35,7 @@ def CCodeOutput(Quantities, Indent=4) :
     const double x = pow(y, 2);
     say hello
     """
-    from sympy import Symbol, ccode
+    from sympy import Symbol, ccode, horner
     ReturnList = ['']
     Atoms = set([])
     if (not isinstance(Quantities, list)) :
@@ -54,17 +54,18 @@ def CCodeOutput(Quantities, Indent=4) :
         else :
             pass # Quantity will just get printed as is
     for Atom in Atoms :
-        if (Atom in BasicSubstitutions) :
+        if (Atom in BasicSubstitutions and Atom not in VariableConstants) :
             ReturnList += [ccode(N(BasicSubstitutions[Atom]), assign_to=str(Atom))]
     for Quantity in Quantities :
         if (isinstance(Quantity, list) and len(Quantity)==2) :
             if (isinstance(Quantity[1], basestring)) :
-                ReturnList += [str(Quantity[0])+ccode(N(eval(Quantity[1], globals(), locals())))]
+                ReturnList += [str(Quantity[0])+ccode(N(horner(eval(Quantity[1], globals(), locals()))))]
             elif ('sympy' in type(Quantity[1]).__name__) :
-                ReturnList += [str(Quantity[0])+ccode(N(Quantity[1]))]
+                ReturnList += [str(Quantity[0])+ccode(N(horner(Quantity[1])))]
         elif (isinstance(Quantity, basestring)) :
             if (' ' not in Quantity) :
-                ReturnList += [ccode(N(eval(Quantity, globals(), locals())), assign_to='const double '+Quantity)]
+                ReturnList += [ccode(N(horner(eval(Quantity, globals(), locals()))),
+                                     assign_to='const double '+Quantity)]
             else :
                 ReturnList += [str(Quantity)]
         else :
