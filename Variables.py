@@ -11,7 +11,10 @@
 from __future__ import division
 
 # Make everything in python's symbolic math package available
-from sympy import *
+from sympy import * # Make sure sympy functions are used in preference to numpy
+import sympy # Make sympy. constructions available
+from sympy import Rational as frac # Rename for similarity to latex
+from sympy import log as ln
 
 # Print symbolic expressions nicely
 init_printing()
@@ -101,12 +104,17 @@ BasicSubstitutions[lambdahat_z] = BasicSubstitutions[lambdahat][2]
 
 # <markdowncell>
 
-# Various spin definitions:
+# Various spin components and combinations:
 
 # <codecell>
 
 BasicSubstitutions[chi1] = array([chi1_l, chi1_n, chi1_la])
 BasicSubstitutions[chi2] = array([chi2_l, chi2_n, chi2_la])
+
+chi1chi1, chi1chi2, chi2chi2 = symbols('chi1chi1, chi1chi2, chi2chi2', real=True)
+BasicSubstitutions[chi1chi1] = dot(BasicSubstitutions[chi1], BasicSubstitutions[chi1])
+BasicSubstitutions[chi1chi2] = dot(BasicSubstitutions[chi1], BasicSubstitutions[chi2])
+BasicSubstitutions[chi2chi2] = dot(BasicSubstitutions[chi2], BasicSubstitutions[chi2])
 
 S, S_l, S_n, S_la = symbols('S, S_l, S_n, S_lambda', real=True)
 BasicSubstitutions[S] = ((m1+m2)**2)*chi1*((1+delta)**2/4) + chi2*((1-delta)**2/4)

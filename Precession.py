@@ -63,4 +63,10 @@ print CCodeOutput([['return ', 'Omega_Omegavec_orb']])
 
 # <codecell>
 
+>>> from sympy.abc import x,y
+>>> x = y**2
+>>> print CCodeOutput(['x', 'say hello'])
+
+# <codecell>
+
 
