@@ -30,15 +30,15 @@ EnergyCoefficient = -(nu*v**2)/2
 # <codecell>
 
 EnergyTerms = {'Nonspinning':{},
-               'ExtraEMRI':{},
-               'SpinSpin':{},
+               'IncompleteNonspinning':{},
                'SpinOrbit':{},
+               'SpinSquared':{},
                'NSTidal':{},
                }
 
 # <markdowncell>
 
-# These terms come from Eq. (194) of [Blanchet (2006)](http://www.livingreviews.org/lrr-2006-4):
+# The nonspinning orbital binding energy is known through 3.5pN come from Eq. (194) of [Blanchet (2006)](http://www.livingreviews.org/lrr-2006-4).
 
 # <codecell>
 
@@ -54,27 +54,35 @@ EnergyTerms['Nonspinning'][7] = 0
 
 # <markdowncell>
 
-# The EMRI terms...
+# The 4pN term from Eq. (5.2d) of [Jaranowski and Schäfer](http://arxiv.org/abs/1303.3225v1) is almost known exactly, except that the $\nu$-linear piece of the 4pN term is known only numerically, to 7 decimal places.  The remaining terms are best summarized as Eq. (3.1) of [Barausse et al.](http://arxiv.org/abs/1111.5610v2)  They are only known exactly at lowest order in $\nu$, and numerically to first order in $\nu$, leaving remaining unkown terms at higher orders in $\nu$.
 
 # <codecell>
 
-EnergyTerms['ExtraEMRI'][8] = 
+EnergyTerms['IncompleteNonspinning'][8] = \
+    -frac(3969,128) + (153.8803)*nu + (-frac(498449,3456) + frac(3157,576)*pi**2)*nu**2 \
+    + frac(301,1728)*nu**3 + frac(77,31104)*nu**4 + frac(896,15)*nu*ln(v)
+EnergyTerms['IncompleteNonspinning'][9] = 0
+EnergyTerms['IncompleteNonspinning'][10] = -frac(45927,512) + (-55.13)*nu + (-frac(9976,35)-frac(3808,15)*nu)*nu*ln(v)
+EnergyTerms['IncompleteNonspinning'][11] = 0
+EnergyTerms['IncompleteNonspinning'][12] = -frac(264627,1024) + (588.)*nu - (2288.)*nu*ln(v)
 
 # <markdowncell>
 
-# The spin-spin terms in the energy are known to...
+# The spin-squared terms in the energy are known only at 2pN order (from [Kidder (1995)](http://link.aps.org/doi/10.1103/PhysRevD.52.821) and [Will and Wiseman (1996)](http://link.aps.org/doi/10.1103/PhysRevD.54.4813)).  They are most conveniently given in Eq. (C4) of [Arun et al.](http://arxiv.org/abs/0810.5336v3)  We first need to convert from Arun et al.'s slightly inconvenient spin definitions:
 
 # <codecell>
 
-EnergyTerms['SpinSpin'][0] = 
-EnergyTerms['SpinSpin'][1] = 
-EnergyTerms['SpinSpin'][2] = 
-EnergyTerms['SpinSpin'][3] = 
-EnergyTerms['SpinSpin'][4] = 
-EnergyTerms['SpinSpin'][5] = 
-EnergyTerms['SpinSpin'][6] = 
-EnergyTerms['SpinSpin'][7] = 
-EnergyTerms['SpinSpin'][8] = 
+chis = array([chi1_l+chi2_l,chi1_n+chi2_n,chi1_la+chi2_la])/2
+chia = array([chi1_l-chi2_l,chi1_n-chi2_n,chi1_la-chi2_la])/2
+chis_l = (chi1_l+chi2_l)/2
+chia_l = (chi1_l-chi2_l)/2
+SSTerm = nu*((dot(chis,chis) - dot(chia,chia)) - 3*((chis_l)**2 - (chia_l)**2)) \
+    + (frac(1,2) - nu)*(dot(chis,chis) + dot(chia,chia) - 3*((chis_l)**2 + (chia_l)**2)) \
+    + delta*(dot(chis,chia) - 3*(chis_l)*(chia_l))
+
+# <codecell>
+
+EnergyTerms['SpinSquared'][4] = SSTerm.expand().simplify()
 
 # <markdowncell>
 
@@ -82,9 +90,6 @@ EnergyTerms['SpinSpin'][8] =
 
 # <codecell>
 
-EnergyTerms['SpinOrbit'][0] = 0
-EnergyTerms['SpinOrbit'][1] = 0
-EnergyTerms['SpinOrbit'][2] = 0
 EnergyTerms['SpinOrbit'][3] = frac(14,3)*S_l + 2*delta*Sigma_l
 EnergyTerms['SpinOrbit'][4] = 0
 EnergyTerms['SpinOrbit'][5] = (11-61*nu/9)*S_l + (3-10*nu/3)*delta*Sigma_l
@@ -101,16 +106,6 @@ EnergyTerms['SpinOrbit'][8] = 0
 
 # <codecell>
 
-EnergyTerms['NSTidal'][0] = 0
-EnergyTerms['NSTidal'][1] = 0
-EnergyTerms['NSTidal'][2] = 0
-EnergyTerms['NSTidal'][3] = 0
-EnergyTerms['NSTidal'][4] = 0
-EnergyTerms['NSTidal'][5] = 0
-EnergyTerms['NSTidal'][6] = 0
-EnergyTerms['NSTidal'][7] = 0
-EnergyTerms['NSTidal'][8] = 0
-EnergyTerms['NSTidal'][9] = 0
 EnergyTerms['NSTidal'][10] = -9*(m1/m2)*lambda2 - 9*(m2/m1)*lambda1
 EnergyTerms['NSTidal'][11] = 0
 EnergyTerms['NSTidal'][12] = -frac(11,2)*(m1/m2)*(3+2*m2+3*m2**2)*lambda2 - frac(11,2)*(m2/m1)*(3+2*m1+3*m1**2)*lambda1
