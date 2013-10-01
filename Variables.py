@@ -62,11 +62,19 @@ v = symbols('v', real=True)
 
 # Any variable that can be derived from the variables above should be put in this section.
 # 
-# These variables should probably be left in arbitrary form, unless a particular simplification is desired.  The `BasicSubstitutions` dictionary should map between the general names and their definitions in terms of basic variables.  In numerical codes, their values can be calculated once and then stored, so that the values do not have to be re-calculated every time they appear in an expression.
+# These variables should probably be left in arbitrary form, unless a particular simplification is desired.  The `BasicSubstitutions` dictionary should map from the general names and their definitions in terms of basic variables.  In numerical codes, their values can be calculated once per time step and then stored, so that the values do not have to be re-calculated every time they appear in an expression.
 
 # <codecell>
 
 BasicSubstitutions = {} # For now, just initialize the dictionary
+
+# <markdowncell>
+
+# Of course, some variables will only need to be computed once for the entire system, and stored.  Just so that these quantities are not continually recalculated, we make a list of them for future reference.
+
+# <codecell>
+
+VariableConstants = []
 
 # <markdowncell>
 
@@ -76,15 +84,19 @@ BasicSubstitutions = {} # For now, just initialize the dictionary
 
 m = symbols('m', real=True);
 BasicSubstitutions[m] = m1+m2
+VariableConstants += [m]
 
 delta = symbols('delta', real=True);
-BasicSubstitutions[delta] = (m1-m2)/(m1+m2)
+BasicSubstitutions[delta] = m1-m2
+VariableConstants += [delta]
 
 nu = symbols('nu', real=True);
-BasicSubstitutions[nu] = m1*m2/(m1+m2)
+BasicSubstitutions[nu] = m1*m2
+VariableConstants += [nu]
 
 q = symbols('q', real=True);
 BasicSubstitutions[q] = m1/m2
+VariableConstants += [q]
 
 # <markdowncell>
 
@@ -117,16 +129,16 @@ BasicSubstitutions[chi1chi2] = dot(BasicSubstitutions[chi1], BasicSubstitutions[
 BasicSubstitutions[chi2chi2] = dot(BasicSubstitutions[chi2], BasicSubstitutions[chi2])
 
 S, S_l, S_n, S_la = symbols('S, S_l, S_n, S_lambda', real=True)
-BasicSubstitutions[S] = ((m1+m2)**2)*chi1*((1+delta)**2/4) + chi2*((1-delta)**2/4)
-BasicSubstitutions[S_l] = ((m1+m2)**2)*chi1_l*((1+delta)**2/4) + chi2_l*((1-delta)**2/4)
-BasicSubstitutions[S_n] = ((m1+m2)**2)*chi1_n*((1+delta)**2/4) + chi2_n*((1-delta)**2/4)
-BasicSubstitutions[S_la] = ((m1+m2)**2)*chi1_la*((1+delta)**2/4) + chi2_la*((1-delta)**2/4)
+BasicSubstitutions[S] = chi1*m1**2 + chi2*m2**2
+BasicSubstitutions[S_l] = chi1_l*m1**2 + chi2_l*m2**2
+BasicSubstitutions[S_n] = chi1_n*m1**2 + chi2_l*m2**2
+BasicSubstitutions[S_la] = chi1_la*m1**2 + chi2_la*m2**2
 
 Sigma, Sigma_l, Sigma_n, Sigma_la = symbols('Sigma, Sigma_l, Sigma_n, Sigma_lambda', real=True)
-BasicSubstitutions[Sigma] = ((m1+m2)**2)*(chi2*(1-delta)/2 - chi1*(1+delta)/2)
-BasicSubstitutions[Sigma_l] = ((m1+m2)**2)*(chi2_l*(1-delta)/2 - chi1_l*(1+delta)/2)
-BasicSubstitutions[Sigma_n] = ((m1+m2)**2)*(chi2_n*(1-delta)/2 - chi1_n*(1+delta)/2)
-BasicSubstitutions[Sigma_la] = ((m1+m2)**2)*(chi2_la*(1-delta)/2 - chi1_la*(1+delta)/2)
+BasicSubstitutions[Sigma] = chi2*m2 - chi1*m1
+BasicSubstitutions[Sigma_l] = chi2_l*m2 - chi1_l*m1
+BasicSubstitutions[Sigma_n] = chi2_n*m2 - chi1_n*m1
+BasicSubstitutions[Sigma_la] = chi2_la*m2 - chi1_la*m1
 
 # <markdowncell>
 
