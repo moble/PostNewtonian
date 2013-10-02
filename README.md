@@ -5,34 +5,30 @@ Sympy code to collect and process terms for various post-Newtonian
 (PN) equations, and to generate working python/C/C++ code to evolve PN
 systems
 
+
+Quick Start
+===========
+
+From the command line, change your directory to this code directory
+(with all the `.ipynb` files), and run
+
+    ipython notebook --pylab=inline
+
+Your browser should open automatically, and you should see a list of
+notebooks.  (If not, see the [Installation](#Installation) section
+below.)  Click one of those notebooks, which should open in a new tab.
+To run code, just put your cursor in any code cell and hit
+Shift-Enter, as with Mathematica.
+
 Introduction
 ============
 
-The current state of PN literature is somewhat confusing to anyone who
-is not already well versed in that literature---and even to some of
-those who are.  There is a huge array of sources, each of which
-provides partial or outdated listings of the various PN expressions.
-For example, a recent paper describing a new spin-orbit contribution
-to the gravitational-wave flux might give the complete expression for
-all known spin-orbit terms in the flux, but omit non-spinning and
-spin-spin terms.  This leaves anyone wishing to collect the most
-accurate and up-to-date PN expressions to search through a vast
-literature, sorting out various conventions.  Even worse, this is
-generally done in isolation by one person, whose work must then be
-duplicated by others.  We all make mistakes, which means that nobody
-has a good PN code.
+The aim of this project is to provide a simple centralized framework
+for collecting PN expressions, combining them to automatically
+calculate, e.g., TaylorTn expressions, and sharing them in a way that
+can be used by as many people as possible---through LaTeX, C, C++, or
+Mathematica code.
 
-This project aims to correct that situation by providing a simple
-framework for collecting PN expressions, combining them to
-automatically calculate the various TaylorTn approximants, for
-example, centralizing the results, and sharing them in a way that can
-be used by as many people as possible---for both analytical work and
-computational work.  In particular, the computational side is intended
-to support people working in pure python, C, C++, and Mathematica.
-
-This repository contains python notebooks which collect various PN
-expressions, allow for their symbolic manipulation using the `sympy`
-module, and generate C/C++ code which allows for efficient evaluation.
 To be more explicit, the tasks performed by code in this module will:
 
 - Collect various PN expressions, with annotations describing where
@@ -45,7 +41,7 @@ To be more explicit, the tasks performed by code in this module will:
   systems and waveforms with, e.g., precession effects, or
   neutron-star tidal effects, etc.
 
-- Generate C/C++ code for more efficient evaluation of those systems
+- Export C/C++ code for more efficient evaluation of those systems
 
 - Export expressions to Mathematica
 
@@ -64,22 +60,6 @@ request](https://help.github.com/articles/using-pull-requests) for the
 author to pull changes back into this main repository.  This is easier
 than it might sound.  The links listed here give more than enough
 information to do this.
-
-
-Getting Started
-===============
-
-The code in this directory is contained primarily in ipython notebooks
-(which are much like Mathematica notebooks, but use python).  To start
-it up, run
-
-    ipython notebook --pylab=inline
-
-Your browser should open automatically, and you should see a list of
-notebooks in this directory.  (If not, see the
-[Installation](#Installation) section below.)  Click one of those
-notebooks, which should open in a new tab.  To run code, just put your
-cursor in any code cell and hit Shift-Enter, as with Mathematica.
 
 
 Installation
@@ -101,8 +81,8 @@ pip install scipy
 pip install ipython[notebook]
 ```
 
-For tcsh users, the brackets in the last command will need to be
-escaped with backslashes.  If these fail, complaining about
-permissions, simply add `--user` to each command.
+If these fail, complaining about permissions, simply add `--user` to
+each command.  For tcsh users, the brackets in the last command will
+need to be escaped with backslashes.
 
 
