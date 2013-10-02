@@ -87,10 +87,10 @@ Installation
 
 All of the code here uses python and various python packages (though
 C/C++ code is generated).  So, you need an up-to-date installation of
-python, as well as various python packages.  Most package managers
-(apt, macports, homebrew, etc.) can install these packages for you.
-For manual installation, install python and pip (python's package
-manager), and then run
+python (version 2.7 or greater), as well as various python packages.
+Most package managers (apt, macports, homebrew, etc.) can install
+these packages for you.  For manual installation, install python and
+pip (python's package manager), and then run
 
 ```Shell
 pip install numpy

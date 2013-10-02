@@ -33,3 +33,6 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# Custom ignores
+EMRIGWFlux_7PN_Simplified.tex

@@ -22,9 +22,12 @@ init_printing()
 # We'll use the numpy `array` object for vectors
 from numpy import array, cross, dot
 
+# We'll use an orderd dictionary to satisfy dependencies
+from collections import OrderedDict
+
 # <headingcell level=1>
 
-# Define the basic variables
+# Fundamental variables
 
 # <markdowncell>
 
@@ -36,19 +39,19 @@ from numpy import array, cross, dot
 G,c = symbols('G,c', real=True)
 
 # Unit orbital angular velocity vector ("Newtonian" angular momentum)
-Lhat_N, Lhat_Nx, Lhat_Ny, Lhat_Nz = symbols('Lhat_N, Lhat_Nx, Lhat_Ny, Lhat_Nz', real=True)
+Lhat_Nx, Lhat_Ny, Lhat_Nz = symbols('Lhat_Nx, Lhat_Ny, Lhat_Nz', real=True)
 
 # Unit separation vector between the compact objects
-nhat, nhat_x, nhat_y, nhat_z = symbols('nhat, nhat_x, nhat_y, nhat_z', real=True)
+nhat_x, nhat_y, nhat_z = symbols('nhat_x, nhat_y, nhat_z', real=True)
 
-# Masses
-m1, m2 = symbols('m1, m2', real=True)
+# Mass of object 1.  Note that the total mass is assumed to be 1, so m2 is derived
+m1 = symbols('m1', real=True)
 
 # Spin vectors
-chi1, chi1_l, chi1_n, chi1_la = symbols('chi1, chi1_l, chi1_n, chi1_lambda', real=True)
-chi2, chi2_l, chi2_n, chi2_la = symbols('chi2, chi2_l, chi2_n, chi2_lambda', real=True)
+chi1_x, chi1_y, chi1_z = symbols('chi1_x, chi1_y, chi1_z', real=True)
+chi2_x, chi2_y, chi2_z = symbols('chi2_x, chi2_x, chi2_z', real=True)
 
-# Tidal deformabilities
+# Tidal deformabilities, in units where the total mass is 1
 lambda1, lambda2 = symbols('lambda1, lambda2', real=True)
 
 # v = x**(1/2) = Omega_orb**(1/3)
@@ -66,7 +69,7 @@ v = symbols('v', real=True)
 
 # <codecell>
 
-BasicSubstitutions = {} # For now, just initialize the dictionary
+BasicSubstitutions = OrderedDict() # For now, just initialize the dictionary
 
 # <markdowncell>
 
@@ -82,6 +85,10 @@ VariableConstants = []
 
 # <codecell>
 
+m2 = symbols('m2', real=True)
+BasicSubstitutions[m2] = 1-m1
+VariableConstants += [m2]
+
 m = symbols('m', real=True);
 BasicSubstitutions[m] = m1+m2
 VariableConstants += [m]
@@ -90,9 +97,11 @@ delta = symbols('delta', real=True);
 BasicSubstitutions[delta] = m1-m2
 VariableConstants += [delta]
 
-nu = symbols('nu', real=True);
+nu, nu__2, nu__3 = symbols('nu, nu__2, nu__3', real=True);
 BasicSubstitutions[nu] = m1*m2
-VariableConstants += [nu]
+BasicSubstitutions[nu__2] = (m1*m2)**2
+BasicSubstitutions[nu__3] = (m1*m2)**3
+VariableConstants += [nu, nu__2, nu__3]
 
 q = symbols('q', real=True);
 BasicSubstitutions[q] = m1/m2
@@ -103,6 +112,8 @@ VariableConstants += [q]
 # The system's vector basis is given by $(\hat{L}_{\text{N}}, \hat{n}, \hat{\lambda})$.  Here, we define the remaining element, and give the relevant substitutions in terms of Cartesian basis elements.
 
 # <codecell>
+
+Lhat_N, nhat = symbols('Lhat_N, nhat', real=True)
 
 lambdahat, lambdahat_x, lambdahat_y, lambdahat_z = symbols('lambdahat, lambdahat_x, lambdahat_y, lambdahat_z', real=True)
 
@@ -120,13 +131,27 @@ BasicSubstitutions[lambdahat_z] = BasicSubstitutions[lambdahat][2]
 
 # <codecell>
 
-BasicSubstitutions[chi1] = array([chi1_l, chi1_n, chi1_la])
-BasicSubstitutions[chi2] = array([chi2_l, chi2_n, chi2_la])
+chi1, chi2 = symbols('chi1, chi2', real=True)
+BasicSubstitutions[chi1] = array([chi1_x, chi1_y, chi1_z])
+BasicSubstitutions[chi2] = array([chi2_x, chi2_y, chi2_z])
 
 chi1chi1, chi1chi2, chi2chi2 = symbols('chi1chi1, chi1chi2, chi2chi2', real=True)
 BasicSubstitutions[chi1chi1] = dot(BasicSubstitutions[chi1], BasicSubstitutions[chi1])
 BasicSubstitutions[chi1chi2] = dot(BasicSubstitutions[chi1], BasicSubstitutions[chi2])
 BasicSubstitutions[chi2chi2] = dot(BasicSubstitutions[chi2], BasicSubstitutions[chi2])
+
+chi1_l, chi1_n, chi1_la = symbols('chi1_l, chi1_n, chi1_lambda', real=True)
+chi2_l, chi2_n, chi2_la = symbols('chi2_l, chi2_n, chi2_lambda', real=True)
+BasicSubstitutions[chi1_l]  = dot(BasicSubstitutions[chi1], BasicSubstitutions[Lhat_N])
+BasicSubstitutions[chi1_n]  = dot(BasicSubstitutions[chi1], BasicSubstitutions[nhat])
+BasicSubstitutions[chi1_la] = dot(BasicSubstitutions[chi1], BasicSubstitutions[lambdahat])
+BasicSubstitutions[chi2_l]  = dot(BasicSubstitutions[chi2], BasicSubstitutions[Lhat_N])
+BasicSubstitutions[chi2_n]  = dot(BasicSubstitutions[chi2], BasicSubstitutions[nhat])
+BasicSubstitutions[chi2_la] = dot(BasicSubstitutions[chi2], BasicSubstitutions[lambdahat])
+
+sqrt1Mchi1chi1, sqrt1Mchi2chi2 = symbols('sqrt1Mchi1chi1, sqrt1Mchi2chi2', real=True)
+BasicSubstitutions[sqrt1Mchi1chi1] = sqrt(1-chi1chi1)
+BasicSubstitutions[sqrt1Mchi2chi2] = sqrt(1-chi2chi2)
 
 S, S_l, S_n, S_la = symbols('S, S_l, S_n, S_lambda', real=True)
 BasicSubstitutions[S] = chi1*m1**2 + chi2*m2**2
@@ -146,7 +171,8 @@ BasicSubstitutions[Sigma_la] = chi2_la*m2 - chi1_la*m1
 
 # <codecell>
 
-x, Omega_orb = symbols('x, Omega_orb', real=True)
+x, Omega_orb, logv = symbols('x, Omega_orb, logv', real=True)
 BasicSubstitutions[x] = v**2
 BasicSubstitutions[Omega_orb] = v**3
+BasicSubstitutions[logv] = log(v)
 

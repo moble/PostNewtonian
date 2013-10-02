@@ -8,8 +8,10 @@
 #       define them in Variables.ipynb.  Variables.py will be automatically
 #       recreated when Variables.ipynb is saved.
 
-%run -i Variables.py
 from __future__ import division # This needs to be here, even though it's in Variables.py
+execfile('ExecNotebook.ipy')
+execnotebook('Variables.ipynb')
+execnotebook('CodeOutput.ipynb')
 
 # <headingcell level=1>
 
@@ -68,7 +70,8 @@ EnergyTerms['IncompleteNonspinning'][12] = -frac(264627,1024) + (588.)*nu - (228
 
 # <markdowncell>
 
-# The spin-squared terms in the energy are known only at 2pN order (from [Kidder (1995)](http://link.aps.org/doi/10.1103/PhysRevD.52.821) and [Will and Wiseman (1996)](http://link.aps.org/doi/10.1103/PhysRevD.54.4813)).  They are most conveniently given in Eq. (C4) of [Arun et al.](http://arxiv.org/abs/0810.5336v3)  We first need to convert from Arun et al.'s slightly inconvenient spin definitions:
+# ***(Is the following true?  What about [this paper](http://arxiv.org/abs/1302.6723v2)?)***
+# The spin-squared terms (by which I mean both spin-spin and spin-orbit squared terms) in the energy are known only at 2pN order (from [Kidder (1995)](http://link.aps.org/doi/10.1103/PhysRevD.52.821) and [Will and Wiseman (1996)](http://link.aps.org/doi/10.1103/PhysRevD.54.4813)).  They are most conveniently given in Eq. (C4) of [Arun et al.](http://arxiv.org/abs/0810.5336v3)  We first need to convert from Arun et al.'s slightly inconvenient spin definitions:
 
 # <codecell>
 
@@ -110,5 +113,27 @@ EnergyTerms['NSTidal'][10] = -9*(m1/m2)*lambda2 - 9*(m2/m1)*lambda1
 EnergyTerms['NSTidal'][11] = 0
 EnergyTerms['NSTidal'][12] = -frac(11,2)*(m1/m2)*(3+2*m2+3*m2**2)*lambda2 - frac(11,2)*(m2/m1)*(3+2*m1+3*m1**2)*lambda1
 
-# Note that the above terms should be divided by (m1+m2)**5, except that here we use units with m1+m2=1
+# Note that the above terms should be divided by (m1+m2)**5, and each occurence of m1 or m2 should be divided by (m1+m2),
+# except that here we use units with m1+m2=1
+
+# <headingcell level=1>
+
+# Collected terms
+
+# <codecell>
+
+def EnergySum(SpinTerms=True, IncompleteNonspinningTerms=False, NSTidalTerms=False) :
+    """
+    Return an expression for the orbital binding energy with the given options.
+    
+    """
+    E = sum([EnergyTerms['Nonspinning'][i]*v**i for i in sorted(EnergyTerms['Nonspinning'])])
+    if (SpinTerms) :
+        E += sum([EnergyTerms['SpinOrbit'][i]*v**i for i in sorted(EnergyTerms['SpinOrbit'])])
+        E += sum([EnergyTerms['SpinSquared'][i]*v**i for i in sorted(EnergyTerms['SpinSquared'])])
+    if (IncompleteNonspinningTerms) :
+        E += sum([EnergyTerms['IncompleteNonspinning'][i]*v**i for i in sorted(EnergyTerms['IncompleteNonspinning'])])
+    if (NSTidalTerms) :
+        E += sum([EnergyTerms['NSTidal'][i]*v**i for i in sorted(EnergyTerms['NSTidal'])])
+    return EnergyCoefficient*E
 

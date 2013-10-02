@@ -8,8 +8,10 @@
 #       define them in Variables.ipynb.  Variables.py will be automatically
 #       recreated when Variables.ipynb is saved.
 
-%run -i Variables.py
 from __future__ import division # This needs to be here, even though it's in Variables.py
+execfile('ExecNotebook.ipy')
+execnotebook('Variables.ipynb')
+execnotebook('CodeOutput.ipynb')
 
 # <headingcell level=1>
 
@@ -31,7 +33,7 @@ FluxCoefficient = frac(32,5)*nu**2*v**10
 
 FluxTerms = {'Nonspinning':{},
              'IncompleteNonspinning':{},
-             'SpinSpin':{},
+             'SpinSquared':{},
              'SpinOrbit':{},
              'NSTidal':{},
              }
@@ -65,7 +67,32 @@ FluxTerms['IncompleteNonspinning'][8] = \
 
 # <markdowncell>
 
-# The spin-squared terms in the flux are known only at 2pN order (from [Kidder (1995)](http://link.aps.org/doi/10.1103/PhysRevD.52.821) and [Will and Wiseman (1996)](http://link.aps.org/doi/10.1103/PhysRevD.54.4813)).  They are most conveniently given in Eq. (C10) of [Arun et al.](http://arxiv.org/abs/0810.5336v3)  We first need to convert from Arun et al.'s slightly inconvenient spin definitions:
+# The following are EMRI terms from Appendix A of [Fujita (2012)](http://arxiv.org/abs/1211.5535v1).  He computed them up to 22pN.  That seems like overkill, so we'll just go up to 6pN.
+
+# <codecell>
+
+FluxTerms['IncompleteNonspinning'][8] = \
+    232597*log(v)/4410 - 1369*pi**2/126 - 323105549467/3178375200 - 47385*log(3)/1568 + 232597*EulerGamma/4410 \
+    + 39931*log(2)/294
+FluxTerms['IncompleteNonspinning'][9] = \
+    -6848*pi*log(v)/105 - 13696*pi*log(2)/105 - 6848*EulerGamma*pi/105 + 265978667519*pi/745113600
+FluxTerms['IncompleteNonspinning'][10] = \
+    916628467*log(v)/7858620 - 2500861660823683/2831932303200 - 424223*pi**2/6804 - 83217611*log(2)/1122660 \
+    + 916628467*EulerGamma/7858620 + 47385*log(3)/196
+FluxTerms['IncompleteNonspinning'][11] = \
+    177293*pi*log(v)/1176 - 142155*pi*log(3)/784 + 8399309750401*pi/101708006400 + 177293*EulerGamma*pi/1176 \
+    + 8521283*pi*log(2)/17640
+FluxTerms['IncompleteNonspinning'][12] = \
+    1465472*log(v)**2/11025 - 246137536815857*log(v)/157329572400 - 27392*pi**2*log(v)/315 \
+    + 2930944*EulerGamma*log(v)/11025 + 5861888*log(2)*log(v)/11025 - 271272899815409*log(2)/157329572400 \
+    - 54784*pi**2*log(2)/315 - 246137536815857*EulerGamma/157329572400 - 437114506833*log(3)/789268480 - 256*pi**4/45 \
+    - 27392*EulerGamma*pi**2/315 - 27392*zeta(3)/105 - 37744140625*log(5)/260941824 + 1465472*EulerGamma**2/11025 \
+    + 5861888*EulerGamma*log(2)/11025 + 5861888*log(2)**2/11025 + 2067586193789233570693/602387400044430000 \
+    + 3803225263*pi**2/10478160
+
+# <markdowncell>
+
+# The spin-squared terms (by which I mean both spin-spin and spin-orbit squared terms) in the flux are known only at 2pN order (from [Kidder (1995)](http://link.aps.org/doi/10.1103/PhysRevD.52.821) and [Will and Wiseman (1996)](http://link.aps.org/doi/10.1103/PhysRevD.54.4813)).  They are most conveniently given in Eq. (C10) of [Arun et al.](http://arxiv.org/abs/0810.5336v3)  We first need to convert from Arun et al.'s slightly inconvenient spin definitions:
 
 # <codecell>
 
@@ -79,7 +106,7 @@ SSTerm = (frac(287,96) + nu/24)*(chis_l)**2 - (frac(89,96) + frac(7,24)*nu)*dot(
 
 # <codecell>
 
-FluxTerms['SpinSpin'][4] = horner(SSTerm.expand().simplify())
+FluxTerms['SpinSquared'][4] = horner(SSTerm.expand().simplify())
 
 # <markdowncell>
 
@@ -114,11 +141,7 @@ FluxTerms['NSTidal'][12] = (704+1803*m2-4501*m2**2+2170*m2**3)*lambda2/(28*m2) \
 
 # <codecell>
 
-print FluxTerms
-
-# <codecell>
-
-FluxCoefficient*sum([FluxTerms['Nonspinning'][i]*v**i for i in range(8)])
+#print FluxTerms
 
 # <headingcell level=1>
 
@@ -126,13 +149,23 @@ FluxCoefficient*sum([FluxTerms['Nonspinning'][i]*v**i for i in range(8)])
 
 # <codecell>
 
-def Flux(SpinTerms=True, PrecessingSpinTerms=False, NSTidalTerms=False, IncompleteNonspinningTerms=False) :
+def FluxSum(SpinTerms=True, IncompleteNonspinningTerms=False, NSTidalTerms=False) :
     """
     Return an expression for the GW flux with the given options.
     
     """
-    FluxSum = sum([ for ])
-    for
-    # This is not yet implemented (the above should break evaluation of this cell)
-    return FluxCoefficient*FluxSum
+    F = sum([FluxTerms['Nonspinning'][i]*v**i for i in sorted(FluxTerms['Nonspinning'])])
+    if (SpinTerms) :
+        F += sum([FluxTerms['SpinOrbit'][i]*v**i for i in sorted(FluxTerms['SpinOrbit'])])
+        F += sum([FluxTerms['SpinSquared'][i]*v**i for i in sorted(FluxTerms['SpinSquared'])])
+    if (IncompleteNonspinningTerms) :
+        F += sum([FluxTerms['IncompleteNonspinning'][i]*v**i for i in sorted(FluxTerms['IncompleteNonspinning'])])
+    if (NSTidalTerms) :
+        F += sum([FluxTerms['NSTidal'][i]*v**i for i in sorted(FluxTerms['NSTidal'])])
+    return FluxCoefficient*F
+
+# <codecell>
+
+#Flux = FluxSum(IncompleteNonspinningTerms=True).subs(log(v), logv).subs(Pow(nu,3), nu__3).subs(Pow(nu,2), nu__2)
+#print CCodeOutput(['Flux'])
 

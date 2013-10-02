@@ -36,7 +36,8 @@ def CCodeOutput(Quantities, Indent=4) :
     say hello
     """
     from sympy import Symbol, ccode, horner
-    ReturnList = ['']
+    ReturnList = []
+    # Find the atoms (most fundamental sympy objects) in the expressions
     Atoms = set([])
     if (not isinstance(Quantities, list)) :
         Quantities = [Quantities]
@@ -53,9 +54,20 @@ def CCodeOutput(Quantities, Indent=4) :
                 pass # Quantity will just get printed as is
         else :
             pass # Quantity will just get printed as is
-    for Atom in Atoms :
-        if (Atom in BasicSubstitutions and Atom not in VariableConstants) :
-            ReturnList += [ccode(N(BasicSubstitutions[Atom]), assign_to=str(Atom))]
+    # Iteratively find the atoms of the BasicSubstitutions of the atoms
+    LastAtomLength = 0
+    while(len(Atoms) != LastAtomLength) :
+        LastAtomLength = len(Atoms)
+        for Atom in list(Atoms) :
+            if (Atom in BasicSubstitutions) :
+                Atoms.update(BasicSubstitutions[Atom].atoms(Symbol))
+    # Re-calculate any atoms that need to be re-calculated
+    ReturnList += [' '*Indent+'\n'+' '*Indent+'// Non-fundamental atomic quantities']
+    for key in BasicSubstitutions.iterkeys() :
+        if (key in Atoms and key not in VariableConstants) :
+            ReturnList += [ccode(N(BasicSubstitutions[key]), assign_to='const double '+str(key))]
+    # Define the input quantities themselves
+    ReturnList += ['\n'+' '*Indent+'// Composite quantities']
     for Quantity in Quantities :
         if (isinstance(Quantity, list) and len(Quantity)==2) :
             if (isinstance(Quantity[1], basestring)) :
