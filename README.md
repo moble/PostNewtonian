@@ -47,6 +47,29 @@ To be more explicit, the tasks performed by code in this module will:
 
 - Export expressions to LaTeX
 
+One important feature of the `ipython notebook` is that it allows easy
+description of code, meaning that we can give very explicit citations
+and other explanations for where to find the collected terms in the
+literature.  The notebooks depend on each other, and build up more
+complicated expressions.  The rough order of this dependency is as
+follows.
+
+- `Variables.ipynb`: Define the fundamental variables, and write all
+  the non-fundamental variables in terms of them.  Centralizing these
+  definitions reduces mistakes.
+
+- `EnergyAbsorption.ipynb`, `Flux.ipynb`, `OrbitalEnergy.ipynb`:
+  Collect the PN expressions for these various quantities, classified
+  by their type and PN order.
+
+- `Precession.ipynb`: Define the precession system.
+
+- `OrbitalFrequencyEvolution.ipynb`: Derive the TaylorTn expressions
+  from the three notebooks above, and generate C/C++ code to
+  evolve or evaluate them.
+
+- [More to follow...]
+
 
 Contributing
 ============
