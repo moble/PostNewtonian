@@ -52,7 +52,7 @@ def FindAtoms(Expressions, PNVariables, ns) :
 		    BasicVariableAtoms += [key]
     return BasicConstantAtoms, BasicVariableAtoms, DerivedConstantAtoms, DerivedVariableAtoms
 
-def CCodeOutput(Quantities, PNVariables, ns, Indent=4) :
+def CCodeOutput(Quantities, PNVariables, ns, Utilities=[], Indent=[2,4,4,4]) :
     """
     Return four strings for C/C++ code compilations.
 
@@ -66,34 +66,39 @@ def CCodeOutput(Quantities, PNVariables, ns, Indent=4) :
     from sympy import ccode, horner, N
     from textwrap import TextWrapper
     wrapper = TextWrapper(width=120)
-    # PNVariables = ns['PNVariables']
+    def codify(s, **args) :
+        try :
+            s = horner(s)
+        except PolynomialError :
+            pass
+        return ccode(N(s), **args)
 
     # Accept a single string as input
     if (not isinstance(Quantities, list)) :
 	Quantities = [Quantities]
 
     # Get a list of names of sympy expressions in the input
-    Expressions = [E for Quantity in Quantities for E in [Expression(Quantity, ns)] if E]
+    Expressions = [E for Quantity in Quantities+Utilities for E in [Expression(Quantity, ns)] if E]
     BasicConstantAtoms, BasicVariableAtoms, DerivedConstantAtoms, DerivedVariableAtoms = FindAtoms(Expressions, PNVariables, ns)
 
     # basic const declarations
     names = ['{0}'.format(PNVariables[atom]) for atom in BasicConstantAtoms]
-    wrapper.initial_indent = ' '*Indent + "const double "
+    wrapper.initial_indent = ' '*Indent[0] + "const double "
     wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
     Declarations = wrapper.fill(', '.join(names)) + ";\n"
     # basic non-const declarations
     names = ['{0}'.format(PNVariables[atom]) for atom in BasicVariableAtoms]
-    wrapper.initial_indent = ' '*Indent + "double "
+    wrapper.initial_indent = ' '*Indent[0] + "double "
     wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
     Declarations += wrapper.fill(', '.join(names)) + ";\n"
     # variable const declarations
     names = ['{0}'.format(PNVariables[atom]) for atom in DerivedConstantAtoms]
-    wrapper.initial_indent = ' '*Indent + "const double "
+    wrapper.initial_indent = ' '*Indent[0] + "const double "
     wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
     Declarations += wrapper.fill(', '.join(names)) + ";\n"
     # variable non-const declarations
     names = ['{0}'.format(PNVariables[atom]) for atom in DerivedVariableAtoms]
-    wrapper.initial_indent = ' '*Indent + "double "
+    wrapper.initial_indent = ' '*Indent[0] + "double "
     wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
     Declarations += wrapper.fill(', '.join(names)) + ";"
 
@@ -102,35 +107,35 @@ def CCodeOutput(Quantities, PNVariables, ns, Indent=4) :
     names = ['{0}({0}_in)'.format(PNVariables[atom]) for atom in BasicConstantAtoms]
     names += ['{0}({0}_0)'.format(PNVariables[atom]) for atom in BasicVariableAtoms]
     names += ['{0}({1})'.format(PNVariables[atom],
-				ccode(N(atom.substitution))) for atom in DerivedConstantAtoms]
+				codify(atom.substitution)) for atom in DerivedConstantAtoms]
     names += ['{0}({1})'.format(PNVariables[atom],
-				ccode(N(atom.substitution))) for atom in DerivedVariableAtoms]
-    wrapper.initial_indent = ' '*Indent
+				codify(atom.substitution)) for atom in DerivedVariableAtoms]
+    wrapper.initial_indent = ' '*Indent[1]
     wrapper.subsequent_indent = wrapper.initial_indent
     Initializations = wrapper.fill(', '.join(names))
 
 
     # Evaluations
-    wrapper.initial_indent = ' '*Indent
+    wrapper.initial_indent = ' '*Indent[2]
     wrapper.subsequent_indent = wrapper.initial_indent+' '*4
     names = [wrapper.fill('{0} = {1};'.format(PNVariables[atom],
-					      ccode(N(atom.substitution)))) for atom in DerivedVariableAtoms]
+					      codify(atom.substitution))) for atom in DerivedVariableAtoms]
     Evaluations = '\n'.join(names)
 
 
     # Computations
-    wrapper.initial_indent = ' '*Indent
+    wrapper.initial_indent = ' '*Indent[3]
     wrapper.subsequent_indent = wrapper.initial_indent+' '*4
     names = []
     for Quantity in Quantities :
 	if (isinstance(Quantity, list) and len(Quantity)==2) :
 	    if (isinstance(Quantity[1], basestring)) :
-		names += [wrapper.fill(str(Quantity[0])+ccode(N(horner(eval(Quantity[1], ns)))))]
+		names += [wrapper.fill(str(Quantity[0])+codify(eval(Quantity[1], ns)))]
 	    elif ('sympy' in type(Quantity[1]).__name__) :
-		names += [wrapper.fill(str(Quantity[0])+ccode(N(horner(Quantity[1]))))]
+		names += [wrapper.fill(str(Quantity[0])+codify(Quantity[1]))]
 	elif (isinstance(Quantity, basestring)) :
 	    if (' ' not in Quantity) :
-		names += [wrapper.fill(ccode(N(horner(eval(Quantity, ns))), assign_to=Quantity))]
+		names += [wrapper.fill(codify(eval(Quantity, ns), assign_to='const double '+Quantity))]
 	    else :
 		names += [wrapper.fill(str(Quantity))]
 	else :
