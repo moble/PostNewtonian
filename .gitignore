@@ -11,3 +11,9 @@
 *.lai
 *.la
 *.a
+
+# Specific for this project
+build
+Quaternions
+Quaternions.py
+Quaternions_wrap.cpp
