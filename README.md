@@ -58,7 +58,7 @@ follows.
   the non-fundamental variables in terms of them.  Centralizing these
   definitions reduces mistakes.
 
-- `EnergyAbsorption.ipynb`, `Flux.ipynb`, `OrbitalEnergy.ipynb`:
+- `EnergyAbsorption.ipynb`, `Flux.ipynb`, `BindingEnergy.ipynb`:
   Collect the PN expressions for these various quantities, classified
   by their type and PN order.
 
