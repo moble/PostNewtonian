@@ -52,7 +52,7 @@ def FindAtoms(Expressions, PNVariables, ns) :
 		    BasicVariableAtoms += [key]
     return BasicConstantAtoms, BasicVariableAtoms, DerivedConstantAtoms, DerivedVariableAtoms
 
-def CCodeOutput(Quantities, PNVariables, ns, Utilities=[], Indent=[2,4,4,4]) :
+def CCodeOutput(Quantities, PNVariables, ns, Utilities=[], Indent=[12,2,4,4,4]) :
     """
     Return four strings for C/C++ code compilations.
 
@@ -81,24 +81,32 @@ def CCodeOutput(Quantities, PNVariables, ns, Utilities=[], Indent=[2,4,4,4]) :
     Expressions = [E for Quantity in Quantities+Utilities for E in [Expression(Quantity, ns)] if E]
     BasicConstantAtoms, BasicVariableAtoms, DerivedConstantAtoms, DerivedVariableAtoms = FindAtoms(Expressions, PNVariables, ns)
 
+    # InputArguments
+    names = ['const double {0}_in'.format(PNVariables[atom]) for atom in BasicConstantAtoms]
+    names += ['double {0}_0'.format(PNVariables[atom]) for atom in BasicVariableAtoms]
+    wrapper.initial_indent = ''
+    wrapper.subsequent_indent = ' '*Indent[0]
+    InputArguments = wrapper.fill(', '.join(names))
+
+    # Declarations
     # basic const declarations
     names = ['{0}'.format(PNVariables[atom]) for atom in BasicConstantAtoms]
-    wrapper.initial_indent = ' '*Indent[0] + "const double "
+    wrapper.initial_indent = ' '*Indent[1] + "const double "
     wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
     Declarations = wrapper.fill(', '.join(names)) + ";\n"
     # basic non-const declarations
     names = ['{0}'.format(PNVariables[atom]) for atom in BasicVariableAtoms]
-    wrapper.initial_indent = ' '*Indent[0] + "double "
+    wrapper.initial_indent = ' '*Indent[1] + "double "
     wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
     Declarations += wrapper.fill(', '.join(names)) + ";\n"
     # variable const declarations
     names = ['{0}'.format(PNVariables[atom]) for atom in DerivedConstantAtoms]
-    wrapper.initial_indent = ' '*Indent[0] + "const double "
+    wrapper.initial_indent = ' '*Indent[1] + "const double "
     wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
     Declarations += wrapper.fill(', '.join(names)) + ";\n"
     # variable non-const declarations
     names = ['{0}'.format(PNVariables[atom]) for atom in DerivedVariableAtoms]
-    wrapper.initial_indent = ' '*Indent[0] + "double "
+    wrapper.initial_indent = ' '*Indent[1] + "double "
     wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
     Declarations += wrapper.fill(', '.join(names)) + ";"
 
@@ -110,13 +118,13 @@ def CCodeOutput(Quantities, PNVariables, ns, Utilities=[], Indent=[2,4,4,4]) :
 				codify(atom.substitution)) for atom in DerivedConstantAtoms]
     names += ['{0}({1})'.format(PNVariables[atom],
 				codify(atom.substitution)) for atom in DerivedVariableAtoms]
-    wrapper.initial_indent = ' '*Indent[1]
+    wrapper.initial_indent = ' '*Indent[2]
     wrapper.subsequent_indent = wrapper.initial_indent
     Initializations = wrapper.fill(', '.join(names))
 
 
     # Evaluations
-    wrapper.initial_indent = ' '*Indent[2]
+    wrapper.initial_indent = ' '*Indent[3]
     wrapper.subsequent_indent = wrapper.initial_indent+' '*4
     names = [wrapper.fill('{0} = {1};'.format(PNVariables[atom],
 					      codify(atom.substitution))) for atom in DerivedVariableAtoms]
@@ -124,7 +132,7 @@ def CCodeOutput(Quantities, PNVariables, ns, Utilities=[], Indent=[2,4,4,4]) :
 
 
     # Computations
-    wrapper.initial_indent = ' '*Indent[3]
+    wrapper.initial_indent = ' '*Indent[4]
     wrapper.subsequent_indent = wrapper.initial_indent+' '*4
     names = []
     for Quantity in Quantities :
@@ -142,4 +150,4 @@ def CCodeOutput(Quantities, PNVariables, ns, Utilities=[], Indent=[2,4,4,4]) :
 	    names += [wrapper.fill(str(Quantity))]
     Computations = '\n'.join(names)
 
-    return Declarations, Initializations, Evaluations, Computations
+    return InputArguments, Declarations, Initializations, Evaluations, Computations
