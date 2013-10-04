@@ -36,5 +36,3 @@ nosetests.xml
 
 # Custom ignores
 EMRIGWFlux_7PN_Simplified.tex
-C/TaylorApproximants.cpp
-TaylorApproximants.cpp
