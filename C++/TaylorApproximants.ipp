@@ -8,9 +8,9 @@ inline void cross(const double* a, const double* b, double* c) {
   return;
 }
 
-const GWFrames::Quaternion xHat(0,1.0,0,0);
-const GWFrames::Quaternion yHat(0,0,1.0,0);
-const GWFrames::Quaternion zHat(0,0,0,1.0);
+const Quaternions::Quaternion xHat(0,1.0,0,0);
+const Quaternions::Quaternion yHat(0,0,1.0,0);
+const Quaternions::Quaternion zHat(0,0,0,1.0);
 
 class TaylorTn {
 private:
@@ -63,10 +63,10 @@ public:
     Lhat_Ny = y[9];
     Lhat_Nz = y[10];
     gamma = y[11];
-    const GWFrames::Quaternion Rax =
-        GWFrames::sqrtOfRotor(-GWFrames::normalized(GWFrames::Quaternion(0., Lhat_Nx, Lhat_Ny, Lhat_Nz))*zHat);
-    const GWFrames::Quaternion R = Rax * GWFrames::exp(((gamma+Phi)/2.)*zHat);
-    const GWFrames::Quaternion nhatQ = R*xHat*R.conjugate();
+    const Quaternions::Quaternion Rax =
+        Quaternions::sqrtOfRotor(-Quaternions::normalized(Quaternions::Quaternion(0., Lhat_Nx, Lhat_Ny, Lhat_Nz))*zHat);
+    const Quaternions::Quaternion R = Rax * Quaternions::exp(((gamma+Phi)/2.)*zHat);
+    const Quaternions::Quaternion nhatQ = R*xHat*R.conjugate();
     nhat_x = nhatQ[1];
     nhat_y = nhatQ[2];
     nhat_z = nhatQ[3];
@@ -224,11 +224,11 @@ public:
     cross(&Omega1[0], &y[2], &dydt[2]);
     cross(&Omega2[0], &y[5], &dydt[5]);
     cross(&OmegaL[0], &y[8], &dydt[8]);
-    const GWFrames::Quaternion adot(0., dydt[8], dydt[9], dydt[10]);
-    const GWFrames::Quaternion Rax =
-      GWFrames::sqrtOfRotor(-GWFrames::normalized(GWFrames::Quaternion(0., OmegaL[0], OmegaL[1], OmegaL[2]))*zHat);
-    const GWFrames::Quaternion Raxdot = ( (-1.0/std::sqrt(2+2*y[10]))*adot*zHat - (dydt[10]/(2+2*y[10]))*Rax );
-    const GWFrames::Quaternion dgammadt = 2*(Rax.conjugate() * Raxdot * zHat);
+    const Quaternions::Quaternion adot(0., dydt[8], dydt[9], dydt[10]);
+    const Quaternions::Quaternion Rax =
+      Quaternions::sqrtOfRotor(-Quaternions::normalized(Quaternions::Quaternion(0., OmegaL[0], OmegaL[1], OmegaL[2]))*zHat);
+    const Quaternions::Quaternion Raxdot = ( (-1.0/std::sqrt(2+2*y[10]))*adot*zHat - (dydt[10]/(2+2*y[10]))*Rax );
+    const Quaternions::Quaternion dgammadt = 2*(Rax.conjugate() * Raxdot * zHat);
     dydt[11] = dgammadt[0];
     return GSL_SUCCESS; // GSL expects this if everything went well
   }
