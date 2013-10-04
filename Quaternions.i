@@ -72,7 +72,7 @@
 //   $result = PyArray_Return(npy_arr);
 // }
 
-// %include "../Docs/Quaternions_Doc.i"
+%include "docs/Quaternions_Doc.i"
 
 ///////////////////////////////////
 //// Handle exceptions cleanly ////
