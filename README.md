@@ -19,15 +19,18 @@ frame that has a particular angular velocity.
 Compiling with other code
 =========================
 
-This library is fairly simple, and should be trivial to compile; only
-the header `Quaternions.hpp` needs to be included, and only the file
-`Quaternions.cpp` needs to be compiled.
+This main library is fairly simple, and should be trivial to compile;
+only the header `Quaternions.hpp` needs to be included, and only the
+file `Quaternions.cpp` needs to be compiled.
 
-The second set of files contains just one function, but depends on GSL
-for ODE integration.  So GSL must be installed separately, compiled as
-a shared library, and the `-I` and `-L` flags variables set
-appropriately on whatever compilation is done.
+The second paoir of files, `IntegrateAngularVelocity.{ch}pp` contains
+just one function, but depends on GSL for ODE integration.  So GSL
+must be installed separately, compiled as a shared library, and the
+`-I` and `-L` flags variables set appropriately on whatever
+compilation is done.
 
+For python, compilation is done automatically, and assumes the
+presence of GSL.
 
 
 Installing the python module
@@ -41,9 +44,10 @@ also be used on its own as a python module.  Just run
 The `--user` flag installs the module to the user's home directory,
 which means that no root permissions are necessary.
 
-As mentioned above, GSL must be installed, and the `IncDirs` and
-`LibDirs` variables set appropriately in `setup.py`.  Sensible
-defaults are given.
+As mentioned above, GSL must be installed as a shared library, and the
+`IncDirs` and `LibDirs` variables set appropriately in `setup.py`.
+Sensible defaults are given, so this may only need to be done if the
+compilation fails.
 
 If the build succeeds, just open an python session and type
 
