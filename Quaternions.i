@@ -134,6 +134,7 @@
   #include <iomanip>
   #include <complex>
   #include "Quaternions.hpp"
+  #include "IntegrateAngularVelocity.hpp"
 %}
 
 
@@ -176,6 +177,7 @@ namespace std {
 %rename(__getitem__) Quaternions::Quaternion::operator [](const unsigned int) const;
 %rename(__setitem__) Quaternions::Quaternion::operator [](const unsigned int);
 %include "Quaternions.hpp"
+%include "IntegrateAngularVelocity.hpp"
 %extend Quaternions::Quaternion {
   // This function is called when printing a Quaternion object
   const char* __str__() {

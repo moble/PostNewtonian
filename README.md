@@ -23,10 +23,10 @@ This library is fairly simple, and should be trivial to compile; only
 the header `Quaternions.hpp` needs to be included, and only the file
 `Quaternions.cpp` needs to be compiled.
 
-However, because there are things like ODE integrations that need to
-happen, the code depends on GSL.  So GSL must be installed separately,
-and the `-I` and `-L` flags variables set appropriately on whatever
-compilation is done.
+The second set of files contains just one function, but depends on GSL
+for ODE integration.  So GSL must be installed separately, compiled as
+a shared library, and the `-I` and `-L` flags variables set
+appropriately on whatever compilation is done.
 
 
 

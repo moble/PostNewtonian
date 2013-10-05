@@ -59,11 +59,11 @@ OPT = -O3 -fopenmp -Wall -Wno-deprecated
 .PHONY : all cpp clean allclean realclean swig
 
 # If needed, we can also make object files to use in other C++ programs
-cpp : Quaternions.o
+cpp : Quaternions.o IntegrateAngularVelocity.o
 
 # This is how to build those object files
-%.o : %.cpp %.hpp Errors.hpp
-	$(C++) $(OPT) -DCodeRevision=3 -c $(INCFLAGS) $< -o $@
+%.o : %.cpp %.hpp
+	$(C++) $(OPT) -DCodeRevision=1 -c $(INCFLAGS) $< -o $@
 
 # The following are just handy targets for removing compiled stuff
 clean :
