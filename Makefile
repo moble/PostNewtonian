@@ -63,7 +63,7 @@ cpp : Quaternions.o IntegrateAngularVelocity.o
 
 # This is how to build those object files
 %.o : %.cpp %.hpp
-	$(C++) $(OPT) -DCodeRevision=1 -c $(INCFLAGS) $< -o $@
+	$(C++) $(OPT) -c $(INCFLAGS) $< -o $@
 
 # The following are just handy targets for removing compiled stuff
 clean :
