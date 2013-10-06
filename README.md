@@ -23,7 +23,7 @@ This main library is fairly simple, and should be trivial to compile;
 only the header `Quaternions.hpp` needs to be included, and only the
 file `Quaternions.cpp` needs to be compiled.
 
-The second paoir of files, `IntegrateAngularVelocity.{ch}pp` contains
+The second pair of files, `IntegrateAngularVelocity.{ch}pp` contains
 just one function, but depends on GSL for ODE integration.  So GSL
 must be installed separately, compiled as a shared library, and the
 `-I` and `-L` flags variables set appropriately on whatever
