@@ -24,13 +24,15 @@ only the header `Quaternions.hpp` needs to be included, and only the
 file `Quaternions.cpp` needs to be compiled.
 
 The second pair of files, `IntegrateAngularVelocity.{ch}pp` contains
-just one function, but depends on GSL for ODE integration.  So GSL
-must be installed separately, compiled as a shared library, and the
-`-I` and `-L` flags variables set appropriately on whatever
-compilation is done.
+just one function, but depends on the GNU Scientific Library (GSL) for
+interpolation and ODE integration.  So GSL must be installed
+separately, compiled as a shared library, and the `-I` and `-L` flags
+variables set appropriately on whatever compilation is done.
 
 For python, compilation is done automatically, and assumes the
-presence of GSL.
+presence of GSL.  However, if desired, references to GSL and
+`IntegrateAngularVelocity.{ch}pp` can be deleted from the file
+`setup.py` to remove this dependency.
 
 
 Installing the python module
