@@ -291,7 +291,7 @@ std::vector<Quaternion> Quaternions::MinimalRotation(const std::vector<Quaternio
   vector<double> gammaover2dot(Size);
   vector<Quaternion> Rreturn(R);
   for(unsigned int iteration=0; iteration<NIterations; ++iteration) {
-    cout << "\t\tIteration " << iteration << endl;
+    // cout << "\t\tIteration " << iteration << endl;
     const vector<Quaternion> Rdot = Quaternions::QuaternionDerivative(Rreturn, T);
     for(unsigned int i=0; i<Size; ++i) {
       gammaover2dot[i] = ( Rreturn[i].inverse() * Rdot[i] * z )[0];
@@ -301,7 +301,7 @@ std::vector<Quaternion> Quaternions::MinimalRotation(const std::vector<Quaternio
       Rreturn[i] = Rreturn[i] * (gammaover2[i]*z).exp();
     }
   }
-  cout << "\tFinished" << endl;
+  // cout << "\tFinished" << endl;
   return Rreturn;
 }
 
@@ -402,11 +402,11 @@ std::vector<Quaternion> Quaternions::FrameFromZ(const std::vector<Quaternion>& Z
   const unsigned int Size=Z.size();
   const Quaternion z(0,0,0,1);
   vector<Quaternion> R(Size);
-  cout << "\tComputing basic frame" << endl;
+  // cout << "\tComputing basic frame" << endl;
   for(unsigned int k=0; k<Size; ++k) {
     R[k] = Quaternions::sqrt(-Z[k]*z);
   }
-  cout << "\tRemoving rotation:" << endl;
+  // cout << "\tRemoving rotation:" << endl;
   return Quaternions::MinimalRotation(Quaternions::UnflipRotors(R), T, NIterations);
 }
 
