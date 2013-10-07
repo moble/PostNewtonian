@@ -364,27 +364,6 @@ Squad interpolation of Quaternion time series.
   
 """
 
-%feature("docstring") Quaternions::FrameFromAngularVelocity """
-
-
-  Parameters
-  ----------
-    const vector<Quaternion>& Omega
-      Vector of Quaternions.
-    const vector<double>& T
-      Vector of corresponding times.
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-  Description
-  -----------
-    Note that each element of Omega should be a pure-vector Quaternion,
-    corresponding to the angular-velocity vector at the instant of time.
-  
-"""
-
 %feature("docstring") Quaternions::exp """
 
 
@@ -596,6 +575,17 @@ Input frame with prescribed rate of rotation about Z axis.
   -------
     double
   
+
+
+
+  Parameters
+  ----------
+    const double& x
+  
+  Returns
+  -------
+    double
+  
 """
 
 %feature("docstring") Quaternions::commutator """
@@ -612,16 +602,65 @@ Input frame with prescribed rate of rotation about Z axis.
   
 """
 
-%feature("docstring") Quaternions::normsquared """
+%feature("docstring") Quaternions::operator/ """
 
 
   Parameters
   ----------
+    const double a
     const Quaternion& Q
   
   Returns
   -------
-    double
+    Quaternion
+  
+
+
+
+  Parameters
+  ----------
+    const double a
+    const vector<Quaternion>& Q
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& a
+    const Quaternion& Q
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<double>& a
+    const vector<Quaternion>& Q
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const Quaternion& a
+    const vector<Quaternion>& Q
+  
+  Returns
+  -------
+    vector<Quaternion>
   
 
 
@@ -629,10 +668,59 @@ Input frame with prescribed rate of rotation about Z axis.
   Parameters
   ----------
     const vector<Quaternion>& Q
+    const Quaternion& a
   
   Returns
   -------
-    vector<double>
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& Q
+    const double a
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const Quaternion& Q
+    const vector<double>& a
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& Q
+    const vector<double>& a
+  
+  Returns
+  -------
+    vector<Quaternion>
+  
+
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& P
+    const vector<Quaternion>& Q
+  
+  Returns
+  -------
+    vector<Quaternion>
   
 """
 
@@ -1009,125 +1097,24 @@ Construct minimal-rotation frame from Z basis vector of that frame.
   
 """
 
-%feature("docstring") Quaternions::operator/ """
+%feature("docstring") Quaternions::FrameFromAngularVelocity """
 
 
   Parameters
   ----------
-    const double a
-    const Quaternion& Q
-  
-  Returns
-  -------
-    Quaternion
-  
-
-
-
-  Parameters
-  ----------
-    const double a
-    const vector<Quaternion>& Q
+    const vector<Quaternion>& Omega
+      Vector of Quaternions.
+    const vector<double>& T
+      Vector of corresponding times.
   
   Returns
   -------
     vector<Quaternion>
   
-
-
-
-  Parameters
-  ----------
-    const vector<double>& a
-    const Quaternion& Q
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<double>& a
-    const vector<Quaternion>& Q
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const Quaternion& a
-    const vector<Quaternion>& Q
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<Quaternion>& Q
-    const Quaternion& a
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<Quaternion>& Q
-    const double a
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const Quaternion& Q
-    const vector<double>& a
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<Quaternion>& Q
-    const vector<double>& a
-  
-  Returns
-  -------
-    vector<Quaternion>
-  
-
-
-
-  Parameters
-  ----------
-    const vector<Quaternion>& P
-    const vector<Quaternion>& Q
-  
-  Returns
-  -------
-    vector<Quaternion>
+  Description
+  -----------
+    Note that each element of Omega should be a pure-vector Quaternion,
+    corresponding to the angular-velocity vector at the instant of time.
   
 """
 
@@ -1775,6 +1762,30 @@ Return exponent of Quaternion.
   Returns
   -------
     Quaternion
+  
+"""
+
+%feature("docstring") Quaternions::normsquared """
+
+
+  Parameters
+  ----------
+    const Quaternion& Q
+  
+  Returns
+  -------
+    double
+  
+
+
+
+  Parameters
+  ----------
+    const vector<Quaternion>& Q
+  
+  Returns
+  -------
+    vector<double>
   
 """
 
