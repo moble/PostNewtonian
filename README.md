@@ -30,9 +30,8 @@ separately, compiled as a shared library, and the `-I` and `-L` flags
 variables set appropriately on whatever compilation is done.
 
 For python, compilation is done automatically, and assumes the
-presence of GSL.  However, if desired, references to GSL and
-`IntegrateAngularVelocity.{ch}pp` can be deleted from the file
-`setup.py` to remove this dependency.
+presence of GSL.  However, if desired, this dependency can be removed
+by using the flag `--no-GSL` when compiling the python module.
 
 
 Installing the python module
@@ -46,10 +45,15 @@ also be used on its own as a python module.  Just run
 The `--user` flag installs the module to the user's home directory,
 which means that no root permissions are necessary.
 
-As mentioned above, GSL must be installed as a shared library, and the
-`IncDirs` and `LibDirs` variables set appropriately in `setup.py`.
-Sensible defaults are given, so this may only need to be done if the
-compilation fails.
+As mentioned above, GSL is assumed to be installed as a shared
+library, and the `IncDirs` and `LibDirs` variables set appropriately
+in `setup.py`.  Sensible defaults are given, so this may only need to
+be done if the compilation fails.  If GSL is not installed, you can
+still build most of this module by using
+
+    python setup.py install --user --no-GSL
+
+
 
 If the build succeeds, just open an python session and type
 

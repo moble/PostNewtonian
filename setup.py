@@ -16,6 +16,14 @@ Now, 'import Quaternions' may be run from a python
 instance started in any directory on the system.
 """
 
+## Check for `--no-GSL` option
+from sys import argv
+if '--no-GSL' in argv:
+    GSL=False
+    argv.remove('--no-GSL')
+else:
+    GSL=True
+
 ## If PRD won't let me keep a subdirectory, make one
 from os.path import exists
 from os import makedirs
@@ -47,12 +55,26 @@ from subprocess import check_output, CalledProcessError
 from os import devnull, environ
 
 ## See if GSL_HOME is set; if so, use it
-if "GSL_HOME" in environ :
-    IncDirs = [environ["GSL_HOME"]+'/include', '/opt/local/include']
-    LibDirs = [environ["GSL_HOME"]+'/lib', '/opt/local/lib']
+if GSL :
+    SourceFiles = ['Quaternions.cpp',
+                   'IntegrateAngularVelocity.cpp',
+                   'Quaternions.i']
+    Dependencies = ['Quaternions.hpp',
+                    'IntegrateAngularVelocity.hpp']
+    Libraries = ['gsl', 'gslcblas']
+    if "GSL_HOME" in environ :
+        IncDirs = [environ["GSL_HOME"]+'/include', '/opt/local/include']
+        LibDirs = [environ["GSL_HOME"]+'/lib', '/opt/local/lib']
+    else :
+        IncDirs = ['/opt/local/include']
+        LibDirs = ['/opt/local/lib']
 else :
-    IncDirs = ['/opt/local/include']
-    LibDirs = ['/opt/local/lib']
+    SourceFiles = ['Quaternions.cpp',
+                   'Quaternions.i']
+    Dependencies = ['Quaternions.hpp']
+    Libraries = []
+    IncDirs = []
+    LibDirs = []
 
 ## Remove a compiler flag that doesn't belong there for C++
 import distutils.sysconfig as ds
@@ -91,14 +113,12 @@ setup(name="Quaternions",
       # py_modules = ['Quaternions'],
       # scripts = ['Scripts/RunExtrapolations.py', 'Scripts/ConvertGWDatToH5.py'],
       ext_modules = [
-        Extension('_Quaternions', ['Quaternions.cpp',
-                                   'IntegrateAngularVelocity.cpp',
-                                   'Quaternions.i'],
-                  depends = ['Quaternions.hpp',
-                             'IntegrateAngularVelocity.hpp'],
+        Extension('_Quaternions',
+                  sources=SourceFiles,
+                  depends=Dependencies,
                   include_dirs=IncDirs,
                   library_dirs=LibDirs,
-                  libraries=['gsl', 'gslcblas',],
+                  libraries=Libraries,
                   #define_macros = [('CodeRevision', CodeRevision)],
                   language='c++',
                   swig_opts=['-globals', 'constants', '-c++'],

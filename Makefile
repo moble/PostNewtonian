@@ -12,8 +12,12 @@
 all :
 	python setup.py install --user
 
+# Optionally, exclude GSL and the dependent functions
+no-GSL :
+	python setup.py install --user --no-GSL
 
-
+# If needed, we can also make object files to use in other C++ programs
+cpp : Quaternions.o IntegrateAngularVelocity.o
 
 
 
