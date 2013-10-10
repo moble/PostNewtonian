@@ -116,7 +116,7 @@ public:
         2)*(logv*pow(nu, 2)*(1523.2*nu + 1710.17142857143) + nu*(330.78*nu + 538.20703125) + pow(v,
         2)*(16016.0*logv*pow(nu, 2) + nu*(-4116.0*nu + 1808.9736328125)))))))))));
     const double Flux = pow(v, 10)*(6.4*nu__2 + pow(v, 2)*(-18.6666666666667*nu*nu__2 - 23.752380952381*nu__2 +
-        v*(25.6*S_l*nu__2 - 8.0*Sigma_l*delta*nu__2 + 80.4247719318987*nu__2 + v*(chi1_l*(chi1_l*(6.6*delta*nu__2 -
+        v*(-25.6*S_l*nu__2 - 8.0*Sigma_l*delta*nu__2 + 80.4247719318987*nu__2 + v*(chi1_l*(chi1_l*(6.6*delta*nu__2 -
         13.2*nu*nu__2 + 6.6*nu__2) + 24.8*chi2_l*nu*nu__2) + chi1_la*(chi1_la*(-2.96666666666667*delta*nu__2 +
         5.93333333333333*nu*nu__2 - 2.96666666666667*nu__2) - 13.7333333333333*chi2_la*nu*nu__2) +
         chi1_n*(chi1_n*(-2.96666666666667*delta*nu__2 + 5.93333333333333*nu*nu__2 - 2.96666666666667*nu__2) -
@@ -151,9 +151,9 @@ public:
         chi1_la*(15.5333333333333*chi1_la*nu__2 - 32.9333333333333*chi2_la*nu__2) +
         chi1_n*(15.5333333333333*chi1_n*nu__2 - 32.9333333333333*chi2_n*nu__2) - 32.4*pow(chi2_l, 2)*nu__2 +
         15.5333333333333*pow(chi2_la, 2)*nu__2 + 15.5333333333333*pow(chi2_n, 2)*nu__2 - 2.93333333333333*nu*nu__2 +
-        43.368253968254*nu__2 + v*(542.4*S_l*nu__2 + 224.8*Sigma_l*delta*nu__2 + chi1_l*pow(m1, 3)*(-4.8*chi1chi1*nu__2
-        - 1.6*nu__2)/nu + chi2_l*pow(m2, 3)*(-4.8*chi2chi2*nu__2 - 1.6*nu__2)/nu - 475.008809222777*nu__2 +
-        v*(chi1_l*(chi1_l*(-23.7*delta*nu__2 + 47.4*nu*nu__2 - 29.8428571428571*nu__2) +
+        43.368253968254*nu__2 + v*(533.866666666667*S_l*nu__2 + 224.8*Sigma_l*delta*nu__2 + chi1_l*pow(m1,
+        3)*(-4.8*chi1chi1*nu__2 - 1.6*nu__2)/nu + chi2_l*pow(m2, 3)*(-4.8*chi2chi2*nu__2 - 1.6*nu__2)/nu -
+        475.008809222777*nu__2 + v*(chi1_l*(chi1_l*(-23.7*delta*nu__2 + 47.4*nu*nu__2 - 29.8428571428571*nu__2) +
         chi2_l*(-95.0666666666667*nu*nu__2 + 9.88571428571429*nu__2)) + chi1_la*(chi1_la*(11.9055555555556*delta*nu__2 -
         23.8111111111111*nu*nu__2 + 13.9769841269841*nu__2) + chi2_la*(47.3111111111111*nu*nu__2 -
         6.94285714285714*nu__2)) + chi1_n*(chi1_n*(11.9055555555556*delta*nu__2 - 23.8111111111111*nu*nu__2 +
@@ -161,20 +161,20 @@ public:
         2)*(23.7*delta*nu__2 + 47.4*nu*nu__2 - 29.8428571428571*nu__2) + pow(chi2_la, 2)*(-11.9055555555556*delta*nu__2
         - 23.8111111111111*nu*nu__2 + 13.9769841269841*nu__2) + pow(chi2_n, 2)*(-11.9055555555556*delta*nu__2 -
         23.8111111111111*nu*nu__2 + 13.9769841269841*nu__2) + nu*(-0.488888888888889*nu*nu__2 + 128.228042328042*nu__2)
-        + nu__2*(1.78518518518519*nu__2 - 1058.43868227317) + (S_l*(572.444444444444*S_l*nu__2 +
-        712.0*Sigma_l*delta*nu__2 - 1259.98809359975*nu__2) + Sigma_l*(200.0*Sigma_l*pow(delta, 2)*nu__2 -
+        + nu__2*(1.78518518518519*nu__2 - 1058.43868227317) + (S_l*(1169.77777777778*S_l*nu__2 +
+        968.0*Sigma_l*delta*nu__2 - 1259.98809359975*nu__2) + Sigma_l*(200.0*Sigma_l*pow(delta, 2)*nu__2 -
         506.005856738196*delta*nu__2) + pow(chi1_l, 2)*(3.07142857142857*delta*nu__2 + 3.07142857142857*nu__2) +
         pow(chi1_la, 2)*(-1.03571428571429*delta*nu__2 - 1.03571428571429*nu__2) + pow(chi1_n,
         2)*(-1.03571428571429*delta*nu__2 - 1.03571428571429*nu__2) + pow(chi2_l, 2)*(-3.07142857142857*delta*nu__2 +
         3.07142857142857*nu__2) + pow(chi2_la, 2)*(1.03571428571429*delta*nu__2 - 1.03571428571429*nu__2) + pow(chi2_n,
         2)*(1.03571428571429*delta*nu__2 - 1.03571428571429*nu__2) - 104.350476190476*logv*nu__2 +
         nu__2*(-124.363756613757*nu__2 - 15.1358024691358*nu__3 + 1090.32725114508) - 204.89320622011*nu__2)/nu) +
-        (-183.688888888889*S_l*nu__2 - 61.6380952380952*Sigma_l*delta*nu__2 - 124.43698901219*nu__2)/nu) + (pow(chi1_l,
+        (-260.488888888889*S_l*nu__2 - 61.6380952380952*Sigma_l*delta*nu__2 - 124.43698901219*nu__2)/nu) + (pow(chi1_l,
         2)*(16.2*delta*nu__2 + 16.2*nu__2) + pow(chi1_la, 2)*(-7.76666666666667*delta*nu__2 - 7.76666666666667*nu__2) +
         pow(chi1_n, 2)*(-7.76666666666667*delta*nu__2 - 7.76666666666667*nu__2) + pow(chi2_l, 2)*(-16.2*delta*nu__2 +
         16.2*nu__2) + pow(chi2_la, 2)*(7.76666666666667*delta*nu__2 - 7.76666666666667*nu__2) + pow(chi2_n,
         2)*(7.76666666666667*delta*nu__2 - 7.76666666666667*nu__2) + nu__2*(23.9111111111111*nu__2 +
-        12.0292768959436))/nu) + (-49.0666666666667*S_l*nu__2 - 40.0*Sigma_l*delta*nu__2 + 80.4247719318987*nu__2)/nu) -
+        12.0292768959436))/nu) + (-100.266666666667*S_l*nu__2 - 40.0*Sigma_l*delta*nu__2 + 80.4247719318987*nu__2)/nu) -
         14.152380952381*nu__2/nu) + 6.4*nu__2/nu);
     if(dvdt<0.0) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt, t, y, dydt);
@@ -185,8 +185,8 @@ public:
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
     const double dtdv = chi1_l*pow(m1, 3)*(0.1171875*chi1chi1*nu + 0.0390625*nu)/(nu__2*pow(v, 4)) + chi2_l*pow(m2,
         3)*(0.1171875*chi2chi2*nu + 0.0390625*nu)/(nu__2*pow(v, 4)) + (nu*(-3.2543041087963*nu + 0.454443876074735) -
-        0.583767361111111*nu/pow(v, 2))/pow(v, 3) + (S_l*(-4.79166666666667*S_l*nu - 2.40885416666667*Sigma_l*delta*nu +
-        0.654498469497875*nu) + Sigma_l*(1.220703125*Sigma_l*pow(delta, 2)*nu - 12.1900339943979*delta*nu) +
+        0.583767361111111*nu/pow(v, 2))/pow(v, 3) + (S_l*(9.79166666666667*S_l*nu + 6.96614583333333*Sigma_l*delta*nu -
+        30.7614280664001*nu) + Sigma_l*(1.220703125*Sigma_l*pow(delta, 2)*nu - 12.1900339943979*delta*nu) +
         chi1_l*(chi1_l*(delta*nu*(-1.5966796875*nu - 1.82416643415179) + nu*(nu*(3.193359375*nu + 2.05165318080357) -
         1.82416643415179)) + chi2_l*pow(nu, 2)*(-6.16536458333333*nu - 7.06531343005952)) +
         chi1_la*(chi1_la*(delta*nu*(0.752224392361111*nu + 0.863884819878472) + nu*(nu*(-1.50444878472222*nu -
@@ -199,7 +199,7 @@ public:
         2)*(delta*nu*(-0.752224392361111*nu - 0.863884819878472) + nu*(nu*(-1.50444878472222*nu - 0.975545247395833) +
         0.863884819878472)) + 2.54761904761905*logv*nu + nu*(nu*(nu*(3.65532769097222*nu - 0.798297861896495) +
         25.8462542787179) + 0.369526427469136*nu__3 - 1.55461636218371) + 5.00227554248315*nu +
-        (S_l*nu*(-6.65364583333333*nu + 9.78252108134921) + Sigma_l*delta*nu*(-0.1171875*nu + 5.82380022321429) +
+        (S_l*nu*(0.429687499999999*nu + 17.185794890873) + Sigma_l*delta*nu*(-0.1171875*nu + 5.82380022321429) +
         nu*(0.797670009700533*nu - 5.64577976646101) + (chi1_l*(chi1_l*(-0.3955078125*delta*nu + nu*(0.791015625*nu -
         0.3955078125)) - 1.54296875*chi2_l*pow(nu, 2)) + chi1_la*(chi1_la*(0.189615885416667*delta*nu +
         nu*(-0.379231770833333*nu + 0.189615885416667)) + 0.804036458333333*chi2_la*pow(nu, 2)) +
@@ -207,7 +207,7 @@ public:
         0.804036458333333*chi2_n*pow(nu, 2)) + pow(chi2_l, 2)*(0.3955078125*delta*nu + nu*(0.791015625*nu -
         0.3955078125)) + pow(chi2_la, 2)*(-0.189615885416667*delta*nu + nu*(-0.379231770833333*nu + 0.189615885416667))
         + pow(chi2_n, 2)*(-0.189615885416667*delta*nu + nu*(-0.379231770833333*nu + 0.189615885416667)) +
-        nu*(nu*(1.25325520833333*nu + 0.841548859126984) + 0.4703617648593) + (1.19791666666667*S_l*nu +
+        nu*(nu*(1.25325520833333*nu + 0.841548859126984) + 0.4703617648593) + (2.44791666666667*S_l*nu +
         0.9765625*Sigma_l*delta*nu - 1.96349540849362*nu + (nu*(0.4296875*nu + 0.345517113095238) + 0.15625*nu/pow(v,
         2))/v)/v)/v)/v)/(nu__2*pow(v, 3));
     const double dvdt = 1.0/dtdv;
@@ -220,13 +220,13 @@ public:
     dydt[1] = v*v*v;
     const double Omega1[3] = {Omega1Mag*Lhat_Nx, Omega1Mag*Lhat_Ny, Omega1Mag*Lhat_Nz};
     const double Omega2[3] = {Omega2Mag*Lhat_Nx, Omega2Mag*Lhat_Ny, Omega2Mag*Lhat_Nz};
-    const double OmegaL[3]  = {OmegaLMag*nhat_x,  OmegaLMag*nhat_y,  OmegaLMag*nhat_z};
+    const double OmegaL[3] = {OmegaLMag*nhat_x,  OmegaLMag*nhat_y,  OmegaLMag*nhat_z};
     cross(&Omega1[0], &y[2], &dydt[2]);
     cross(&Omega2[0], &y[5], &dydt[5]);
     cross(&OmegaL[0], &y[8], &dydt[8]);
     const Quaternions::Quaternion adot(0., dydt[8], dydt[9], dydt[10]);
     const Quaternions::Quaternion Rax =
-      Quaternions::sqrtOfRotor(-Quaternions::normalized(Quaternions::Quaternion(0., OmegaL[0], OmegaL[1], OmegaL[2]))*zHat);
+        Quaternions::sqrtOfRotor(-Quaternions::normalized(Quaternions::Quaternion(0., OmegaL[0], OmegaL[1], OmegaL[2]))*zHat);
     const Quaternions::Quaternion Raxdot = ( (-1.0/std::sqrt(2+2*y[10]))*adot*zHat - (dydt[10]/(2+2*y[10]))*Rax );
     const Quaternions::Quaternion dgammadt = 2*(Rax.conjugate() * Raxdot * zHat);
     dydt[11] = dgammadt[0];
