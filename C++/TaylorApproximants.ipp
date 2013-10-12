@@ -100,6 +100,21 @@ public:
         0.1875) + 0.84375) + 0.5625) + 0.75);
   }
 
+  vector<double> L() const {
+    // Eq. (4.7) of Bohé et al.(2012)
+    // <http://arxiv.org/abs/1212.5520v1>.
+    const double S_la = chi1_la*m1*m1 + chi2_la*m2*m2;
+    const double Sigma_la = chi2_la*m2 - chi1_la*m1;
+    const Quaternions::Quaternion ellHatQ(0., Lhat_Nx, Lhat_Ny, Lhat_Nz);
+    const Quaternions::Quaternion nHatQ(0., nhat_x, nhat_y, nhat_z);
+    const Quaternions::Quaternion lambdaHatQ = ellHatQ.cross(nHatQ);
+    const Quaternions::Quaternion L =
+      ellHatQ*(nu + pow(v, 2)*(nu*(0.1666666666666667*nu + 1.5) + v*(-5.833333333333333*S_l*nu - 2.5*Sigma_l*delta*nu + v*(nu*(nu*(0.04166666666666667*nu - 2.375) + 3.375) + v*(S_l*nu*(5.930555555555556*nu - 9.625) + Sigma_l*delta*nu*(2.916666666666667*nu - 2.625) + v*(nu*(nu*(nu*(0.005401234567901235*nu + 1.291666666666667) - 30.97970359258346) + 8.4375) + v*(S_l*nu*(nu*(-1.8125*nu + 68.8125) - 25.3125) + Sigma_l*delta*nu*(nu*(-0.9375*nu + 29.25) - 5.0625))))))))/v
+      +nHatQ*pow(v, 2)*(0.5*S_n*nu + 0.5*Sigma_n*delta*nu + pow(v, 2)*(S_n*nu*(-0.7916666666666667*nu + 1.375) + Sigma_n*delta*nu*(-0.4166666666666667*nu + 1.375) + pow(v, 2)*(S_n*nu*(nu*(0.2291666666666667*nu - 27.72916666666667) + 3.8125) + Sigma_n*delta*nu*(nu*(0.1041666666666667*nu - 15.29166666666667) + 3.8125))))
+      +lambdaHatQ*pow(v, 2)*(-3.0*S_la*nu - Sigma_la*delta*nu + pow(v, 2)*(S_la*nu*(3.0*nu - 3.5) + Sigma_la*delta*nu*(1.333333333333333*nu - 0.5) + pow(v, 2)*(S_la*nu*(nu*(-1.333333333333333*nu + 0.08333333333333333) - 7.25) + Sigma_la*delta*nu*(nu*(-0.6666666666666667*nu - 3.291666666666667) - 0.5))));
+    return L.vec();
+  }
+
   int TaylorT1RHS(double t, const double* y, double* dydt) {
     Recalculate(t, y);
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
