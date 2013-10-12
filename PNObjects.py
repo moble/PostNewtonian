@@ -18,10 +18,18 @@ class _PNSymbol(Symbol) :
     def __new__(cls, name, constant, fundamental, substitution, **assumptions) :
         from sympy import Symbol
         return Symbol.__new__(cls, name, **assumptions)
-    def __init__(self, name, constant, fundamental, substitution, **kwargs) :
+    def __init__(self, name, constant, fundamental, substitution, atoms, **kwargs) :
         self.constant = constant
         self.fundamental = fundamental
         self.substitution = substitution
+        if atoms:
+            self.atoms = atoms
+        else:
+            try:
+                self.atoms = self.substitution.atoms(Symbol)
+            except AttributeError:
+                self.atoms = None
+
 class _PNFunction(Function) :
     """
     This is the basic object created by calls to `AddFunction`,
@@ -39,10 +47,17 @@ class _PNFunction(Function) :
     def __new__(cls, name, constant, fundamental, substitution, **assumptions) :
         from sympy import Function
         return Function.__new__(cls, name, **assumptions)
-    def __init__(self, name, constant, fundamental, substitution, **kwargs) :
+    def __init__(self, name, constant, fundamental, substitution, atoms, **kwargs) :
         self.constant = constant
         self.fundamental = fundamental
         self.substitution = substitution
+        if atoms:
+            self.atoms = atoms
+        else:
+            try:
+                self.atoms = self.substitution.atoms(Symbol)
+            except AttributeError:
+                self.atoms = None
 
 class PNVariablesCollection(OrderedDict) : # subclass of OrderedDict
     """Subclass of `OrderedDict` to hold PN variables, each of which is a subclasses sympy `Symbol`
@@ -58,7 +73,7 @@ class PNVariablesCollection(OrderedDict) : # subclass of OrderedDict
     """
     def __init__(self, *args):
         OrderedDict.__init__(self, *args)
-    def _AddVariable(self, name, constant=False, fundamental=False, substitution=None, **args) :
+    def _AddVariable(self, name, constant=False, fundamental=False, substitution=None, atoms=None, **args) :
         from inspect import currentframe
         from sympy import Basic, FunctionClass
         frame = currentframe().f_back.f_back
@@ -66,6 +81,7 @@ class PNVariablesCollection(OrderedDict) : # subclass of OrderedDict
             args['constant'] = constant
             args['fundamental'] = fundamental
             args['substitution'] = substitution
+            args['atoms'] = atoms
             cls = args.pop('cls', _PNSymbol)
             sym = cls(name, **args)
             if sym is not None:
@@ -77,24 +93,24 @@ class PNVariablesCollection(OrderedDict) : # subclass of OrderedDict
             del frame
         self[sym] = name
         return sym
-    def AddVariable(self, name, constant=False, fundamental=False, substitution=None, **args) :
-        return self._AddVariable(name, constant, fundamental, substitution, **args)
-    def AddBasicConstants(self, names) :
+    def AddVariable(self, name, constant=False, fundamental=False, substitution=None, atoms=None, **args) :
+        return self._AddVariable(name, constant, fundamental, substitution, atoms, **args)
+    def AddBasicConstants(self, names, **args) :
         from re import split
         names = split(',| ', names)
         for name in names :
             if name :
-                self._AddVariable(name, constant=True, substitution=None)
-    def AddBasicVariables(self, names) :
+                self._AddVariable(name, constant=True, substitution=None, **args)
+    def AddBasicVariables(self, names, **args) :
         from re import split
         names = split(',| ', names)
         for name in names :
             if name :
-                self._AddVariable(name, constant=False, substitution=None)
-    def AddFunction(self, name, **args) :
+                self._AddVariable(name, constant=False, substitution=None, **args)
+    def AddFunction(self, name, code='', atoms=None, **args) :
         from sympy import Function
-        return self._AddVariable(name, True, True, None, cls=Function, **args)
-    def AddDerivedConstant(self, name, substitution) :
-        self._AddVariable(name, constant=True, substitution=substitution)
-    def AddDerivedVariable(self, name, substitution) :
-        self._AddVariable(name, constant=False, substitution=substitution)
+        return self._AddVariable(name, constant=True, fundamental=True, substitution=code, atoms=atoms, cls=Function, **args)
+    def AddDerivedConstant(self, name, substitution, **args) :
+        self._AddVariable(name, constant=True, substitution=substitution, **args)
+    def AddDerivedVariable(self, name, substitution, **args) :
+        self._AddVariable(name, constant=False, substitution=substitution, **args)
