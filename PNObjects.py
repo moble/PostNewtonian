@@ -1,4 +1,48 @@
 from collections import OrderedDict
+from sympy import Symbol, Function
+
+class _PNSymbol(Symbol) :
+    """
+    This is the basic object created by calls to `AddVariable`,
+    etc., and is a simple subclass of python.Symbol, as described
+    above.
+
+    The method `__new__` is always called first, since this is an
+    immutable object, which creates the object, allocating memory
+    for it.  Since `__new__` actually returns an object,
+    `__init__` is then called with the same arguments as
+    `__new__`.  This is why we throw away the three custom
+    arguments in `__new__`, and throw away the rest in `__init__`.
+
+    """
+    def __new__(cls, name, constant, fundamental, substitution, **assumptions) :
+        from sympy import Symbol
+        return Symbol.__new__(cls, name, **assumptions)
+    def __init__(self, name, constant, fundamental, substitution, **kwargs) :
+        self.constant = constant
+        self.fundamental = fundamental
+        self.substitution = substitution
+class _PNFunction(Function) :
+    """
+    This is the basic object created by calls to `AddFunction`,
+    etc., and is a simple subclass of python.Function, as described
+    above.
+
+    The method `__new__` is always called first, since this is an
+    immutable object, which creates the object, allocating memory
+    for it.  Since `__new__` actually returns an object,
+    `__init__` is then called with the same arguments as
+    `__new__`.  This is why we throw away the three custom
+    arguments in `__new__`, and throw away the rest in `__init__`.
+
+    """
+    def __new__(cls, name, constant, fundamental, substitution, **assumptions) :
+        from sympy import Function
+        return Function.__new__(cls, name, **assumptions)
+    def __init__(self, name, constant, fundamental, substitution, **kwargs) :
+        self.constant = constant
+        self.fundamental = fundamental
+        self.substitution = substitution
 
 class PNVariablesCollection(OrderedDict) : # subclass of OrderedDict
     """Subclass of `OrderedDict` to hold PN variables, each of which is a subclasses sympy `Symbol`
@@ -14,29 +58,6 @@ class PNVariablesCollection(OrderedDict) : # subclass of OrderedDict
     """
     def __init__(self, *args):
         OrderedDict.__init__(self, *args)
-    from sympy import Symbol
-    class _PNSymbol(Symbol) :
-        """a
-
-        This is the basic object created by calls to `AddVariable`,
-        etc., and is a simple subclass of python.Symbol, as described
-        above.
-
-        The method `__new__` is always called first, since this is an
-        immutable object, which creates the object, allocating memory
-        for it.  Since `__new__` actually returns an object,
-        `__init__` is then called with the same arguments as
-        `__new__`.  This is why we throw away the three custom
-        arguments in `__new__`, and throw away the rest in `__init__`.
-
-        """
-        def __new__(cls, name, constant, fundamental, substitution, **assumptions) :
-            from sympy import Symbol
-            return Symbol.__new__(cls, name, **assumptions)
-        def __init__(self, name, constant, fundamental, substitution, **kwargs) :
-            self.constant = constant
-            self.fundamental = fundamental
-            self.substitution = substitution
     def _AddVariable(self, name, constant=False, fundamental=False, substitution=None, **args) :
         from inspect import currentframe
         from sympy import Basic, FunctionClass
@@ -45,7 +66,8 @@ class PNVariablesCollection(OrderedDict) : # subclass of OrderedDict
             args['constant'] = constant
             args['fundamental'] = fundamental
             args['substitution'] = substitution
-            sym = self._PNSymbol(name, **args)
+            cls = args.pop('cls', _PNSymbol)
+            sym = cls(name, **args)
             if sym is not None:
                 if isinstance(sym, Basic):
                     frame.f_globals[sym.name] = sym
@@ -69,6 +91,9 @@ class PNVariablesCollection(OrderedDict) : # subclass of OrderedDict
         for name in names :
             if name :
                 self._AddVariable(name, constant=False, substitution=None)
+    def AddFunction(self, name, **args) :
+        from sympy import Function
+        return self._AddVariable(name, True, True, None, cls=Function, **args)
     def AddDerivedConstant(self, name, substitution) :
         self._AddVariable(name, constant=True, substitution=substitution)
     def AddDerivedVariable(self, name, substitution) :
