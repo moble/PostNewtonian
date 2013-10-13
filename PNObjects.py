@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from sympy import Symbol, Function
 
-class _PNSymbol(Symbol) :
+class PNSymbol(Symbol) :
     """This is the basic object created by calls to `AddVariable`, etc.,
     and is a simple subclass of python.Symbol, as described above.
 
@@ -48,7 +48,7 @@ class _PNSymbol(Symbol) :
             pass
         return ccode(code, **args)
 
-class PNVariablesCollection(OrderedDict) : # subclass of OrderedDict
+class PNCollection(OrderedDict) : # subclass of OrderedDict
     """Subclass of `OrderedDict` to hold PN variables, each of which is a
     subclass sympy `Symbol`
 
@@ -76,7 +76,7 @@ class PNVariablesCollection(OrderedDict) : # subclass of OrderedDict
             args['substitution'] = substitution
             args['atoms'] = atoms
             args['datatype'] = datatype
-            sym = _PNSymbol(name, **args)
+            sym = PNSymbol(name, **args)
             if sym is not None:
                 if isinstance(sym, Basic):
                     frame.f_globals[sym.name] = sym
