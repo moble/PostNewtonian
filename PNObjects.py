@@ -15,7 +15,7 @@ class _PNSymbol(Symbol) :
     arguments in `__new__`, and throw away the rest in `__init__`.
 
     """
-    def __new__(cls, name, constant, fundamental, substitution, **assumptions) :
+    def __new__(cls, name, constant, fundamental, substitution, atoms, **assumptions) :
         from sympy import Symbol
         return Symbol.__new__(cls, name, **assumptions)
     def __init__(self, name, constant, fundamental, substitution, atoms, **kwargs) :
@@ -44,7 +44,7 @@ class _PNFunction(Function) :
     arguments in `__new__`, and throw away the rest in `__init__`.
 
     """
-    def __new__(cls, name, constant, fundamental, substitution, **assumptions) :
+    def __new__(cls, name, constant, fundamental, substitution, atoms, **assumptions) :
         from sympy import Function
         return Function.__new__(cls, name, **assumptions)
     def __init__(self, name, constant, fundamental, substitution, atoms, **kwargs) :
@@ -109,8 +109,8 @@ class PNVariablesCollection(OrderedDict) : # subclass of OrderedDict
                 self._AddVariable(name, constant=False, substitution=None, **args)
     def AddFunction(self, name, code='', atoms=None, **args) :
         from sympy import Function
-        return self._AddVariable(name, constant=True, fundamental=True, substitution=code, atoms=atoms, cls=Function, **args)
-    def AddDerivedConstant(self, name, substitution, **args) :
-        self._AddVariable(name, constant=True, substitution=substitution, **args)
-    def AddDerivedVariable(self, name, substitution, **args) :
-        self._AddVariable(name, constant=False, substitution=substitution, **args)
+        return self._AddVariable(name, constant=True, fundamental=True, substitution=code, atoms=atoms, cls=_PNFunction, **args)
+    def AddDerivedConstant(self, name, substitution, atoms=None, **args) :
+        self._AddVariable(name, constant=True, fundamental=False, substitution=substitution, atoms=atoms, **args)
+    def AddDerivedVariable(self, name, substitution, atoms=None, **args) :
+        self._AddVariable(name, constant=False, fundamental=False, substitution=substitution, atoms=atoms, **args)
