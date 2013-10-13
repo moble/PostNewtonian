@@ -30,35 +30,6 @@ class _PNSymbol(Symbol) :
             except AttributeError:
                 self.atoms = None
 
-class _PNFunction(Function) :
-    """
-    This is the basic object created by calls to `AddFunction`,
-    etc., and is a simple subclass of python.Function, as described
-    above.
-
-    The method `__new__` is always called first, since this is an
-    immutable object, which creates the object, allocating memory
-    for it.  Since `__new__` actually returns an object,
-    `__init__` is then called with the same arguments as
-    `__new__`.  This is why we throw away the three custom
-    arguments in `__new__`, and throw away the rest in `__init__`.
-
-    """
-    def __new__(cls, name, constant, fundamental, substitution, atoms, **assumptions) :
-        from sympy import Function
-        return Function.__new__(cls, name, **assumptions)
-    def __init__(self, name, constant, fundamental, substitution, atoms, **kwargs) :
-        self.constant = constant
-        self.fundamental = fundamental
-        self.substitution = substitution
-        if atoms:
-            self.atoms = atoms
-        else:
-            try:
-                self.atoms = self.substitution.atoms(Symbol)
-            except AttributeError:
-                self.atoms = None
-
 class PNVariablesCollection(OrderedDict) : # subclass of OrderedDict
     """Subclass of `OrderedDict` to hold PN variables, each of which is a subclasses sympy `Symbol`
 
@@ -107,9 +78,6 @@ class PNVariablesCollection(OrderedDict) : # subclass of OrderedDict
         for name in names :
             if name :
                 self._AddVariable(name, constant=False, substitution=None, **args)
-    def AddFunction(self, name, code='', atoms=None, **args) :
-        from sympy import Function
-        return self._AddVariable(name, constant=True, fundamental=True, substitution=code, atoms=atoms, cls=_PNFunction, **args)
     def AddDerivedConstant(self, name, substitution, atoms=None, **args) :
         self._AddVariable(name, constant=True, fundamental=False, substitution=substitution, atoms=atoms, **args)
     def AddDerivedVariable(self, name, substitution, atoms=None, **args) :
