@@ -27,16 +27,9 @@ using std::endl;
 using std::flush;
 using std::vector;
 
-const Quaternion  one(1,0,0,0);
-const Quaternion xHat(0,1,0,0);
-const Quaternion yHat(0,0,1,0);
-const Quaternion zHat(0,0,0,1);
-inline double SQR(const double& x) { return x*x; }
-
 
 // Define some error codes, which will be used in python
 #define FailedGSLCall 6
-
 
 
 #ifndef DOXYGEN
@@ -51,28 +44,20 @@ typedef struct {
 int FrameFromAngularVelocity_RHS(double t, const double ri[], double drdt[], void* mu) {
   // Interpolate and unpack some values
   ParameterSet* params = (ParameterSet*) mu;
-  const double OmegaX = gsl_spline_eval(params->splineX, t, params->accX);
-  const double OmegaY = gsl_spline_eval(params->splineY, t, params->accY);
-  const double OmegaZ = gsl_spline_eval(params->splineZ, t, params->accZ);
-  drdt[0] = OmegaX/2.0;
-  drdt[1] = OmegaY/2.0;
-  drdt[2] = OmegaZ/2.0;
-  const double absquatlogR = std::sqrt(ri[0]*ri[0]+ri[1]*ri[1]+ri[2]*ri[2]);
-  const double absOmega = std::sqrt(OmegaX*OmegaX+OmegaY*OmegaY+OmegaZ*OmegaZ);
-  if(absquatlogR < Quaternion_Epsilon * absOmega) { // If the matrix is really close to the identity, return
-    return GSL_SUCCESS;
-  }
-  if(std::abs(std::sin(absquatlogR)) < Quaternion_Epsilon) { // If the matrix is really close to singular, it's equivalent to the identity, so return
-    return GSL_SUCCESS;
-  }
-
-  const Quaternion OmegaOver2(0., drdt[0], drdt[1], drdt[2]);
-  const Quaternion rQ(0., ri[0], ri[1], ri[2]);
-  const Quaternion rHat = rQ/absquatlogR;
-  const Quaternion drdtQ = (OmegaOver2 - rHat*(rHat.dot(OmegaOver2)))*(absquatlogR/std::tan(absquatlogR)) + rHat*(rHat.dot(OmegaOver2)) + OmegaOver2.cross(rQ);
-  drdt[0] = drdtQ[1];
-  drdt[1] = drdtQ[2];
-  drdt[2] = drdtQ[3];
+  vector<double> rfrak(3);
+  rfrak[0] = ri[0];
+  rfrak[1] = ri[1];
+  rfrak[2] = ri[2];
+  vector<double> Omega(3);
+  Omega[0] = gsl_spline_eval(params->splineX, t, params->accX);
+  Omega[1] = gsl_spline_eval(params->splineY, t, params->accY);
+  Omega[2] = gsl_spline_eval(params->splineZ, t, params->accZ);
+  // Evaluate the RHS and unpack
+  const std::vector<double> rfrakDot = Quaternions::FrameFromAngularVelocity_Integrand(rfrak, Omega);
+  drdt[0] = rfrakDot[0];
+  drdt[1] = rfrakDot[1];
+  drdt[2] = rfrakDot[2];
+  // GSL wants to hear that everything went okay
   return GSL_SUCCESS;
 }
 #endif // DOXYGEN

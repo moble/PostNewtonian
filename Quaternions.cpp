@@ -1,28 +1,29 @@
 // Copyright (c) 2013, Michael Boyle
 // See LICENSE file for details
 
+#include "Quaternions.hpp"
+
 #include <cmath>
 #include <iostream>
 #include <iomanip>
+#include <math.h> // acosh is in math.h, but not cmath
 
-#include "Quaternions.hpp"
+
+// Note: Don't do 'using namespace Quaternions' because we don't want
+// to confuse which log, exp, etc., is being used in any instance.
 using Quaternions::Quaternion;
 using Quaternions::QuaternionArray;
+using Quaternions::yHat;
+using Quaternions::zHat;
 
-// Note: Don't do 'using namespace std' because we don't want to
-// confuse which log, exp, etc., is being used in any instance.
+
+// Note: Don't do 'using namespace std' because we don't want
+// to confuse which log, exp, etc., is being used in any instance.
 using std::cout;
 using std::cerr;
 using std::endl;
 using std::flush;
 using std::vector;
-
-const Quaternion  one(1,0,0,0);
-const Quaternion xHat(0,1,0,0);
-const Quaternion yHat(0,0,1,0);
-const Quaternion zHat(0,0,0,1);
-inline double SQR(const double& x) { return x*x; }
-
 
 
 // Define some error codes, which will be used in python
@@ -32,9 +33,6 @@ inline double SQR(const double& x) { return x*x; }
 #define VectorSizeNotUnderstood 3
 #define VectorSizeMismatch 4
 #define CannotExtrapolateQuaternions 5
-
-// So that we can use acosh below (not included in cmath)
-#include <math.h>
 
 
 
@@ -59,6 +57,59 @@ std::vector<double> ScalarIntegral(const std::vector<double>& fdot, const std::v
   }
   return f;
 }
+
+inline double SQR(const double& x) { return x*x; }
+
+// Some utility operators for std::vector
+namespace Quaternions {
+  std::vector<double> operator+(const std::vector<double>& v1, const std::vector<double>& v2) {
+    const unsigned int size = v1.size();
+    vector<double> v3(v1);
+    for(unsigned int i=0; i<size; ++i) {
+      v3[i] += v2[i];
+    }
+    return v3;
+  }
+  std::vector<double> operator-(const std::vector<double>& v1, const std::vector<double>& v2) {
+    const unsigned int size = v1.size();
+    vector<double> v3(v1);
+    for(unsigned int i=0; i<size; ++i) {
+      v3[i] -= v2[i];
+    }
+    return v3;
+  }
+  std::vector<double> operator*(const std::vector<double>& v, const double a) {
+    const unsigned int size = v.size();
+    vector<double> v2(v);
+    for(unsigned int i=0; i<size; ++i) {
+      v2[i] *= a;
+    }
+    return v2;
+  }
+  vector<double> operator/(const vector<double>& v, const double a) {
+    const unsigned int size = v.size();
+    vector<double> v2(v);
+    for(unsigned int i=0; i<size; ++i) {
+      v2[i] /= a;
+    }
+    return v2;
+  }
+  std::vector<double> cross(const std::vector<double>& v1, const std::vector<double>& v2) {
+    vector<double> v3(3);
+    v3[0] = -v1[2]*v2[1]+v1[1]*v2[2];
+    v3[1] = v1[2]*v2[0]-v1[0]*v2[2];
+    v3[2] = -v1[1]*v2[0]+v1[0]*v2[1];
+    return v3;
+  }
+  double dot(const std::vector<double>& v1, const std::vector<double>& v2) {
+    const unsigned int size = v1.size();
+    double d=0.0;
+    for(unsigned int i=0; i<size; ++i) {
+      d += v1[i]*v2[i];
+    }
+    return d;
+  }
+};
 
 
 
@@ -321,7 +372,9 @@ std::vector<Quaternion> Quaternions::PrescribedRotation(const std::vector<double
   /// with the given rotation rate.
 
   if(T.size() != R.size() || T.size() != RotationRateAboutZ.size()) {
-    cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": T.size()=" << T.size() << " != R.size()=" << R.size() << " != RotationRateAboutZ.size()=" << RotationRateAboutZ.size() << endl;
+    cerr << "\n\n" << __FILE__ << ":" << __LINE__
+	 << ": T.size()=" << T.size() << " != R.size()=" << R.size()
+	 << " != RotationRateAboutZ.size()=" << RotationRateAboutZ.size() << endl;
     throw(VectorSizeMismatch);
   }
   const unsigned int Size=T.size();
@@ -441,6 +494,51 @@ std::vector<Quaternion> Quaternions::FrameFromPrescribedRotation(const std::vect
 }
 
 
+/// Time-derivative of the quaternion logarithm for frame with given angular velocity
+std::vector<double> Quaternions::FrameFromAngularVelocity_Integrand(const std::vector<double>& rfrak, const std::vector<double>& Omega) {
+  ///
+  /// \param r Quaternion logarithm corresponding to the current frame
+  /// \param Omega Quaternion vector giving instantaneous orbital velocity of frame
+  ///
+  /// This function returns the time-derivative of the quaternion
+  /// logarithm of the frame with angular velocity `Omega`.  This can
+  /// be integrated to give the quaternion logarithm of the frame,
+  /// which can then be exponentiated to give the frame rotor.
+  const double rfrakMag = std::sqrt(rfrak[0]*rfrak[0]+rfrak[1]*rfrak[1]+rfrak[2]*rfrak[2]);
+  const double OmegaMag = std::sqrt(Omega[0]*Omega[0]+Omega[1]*Omega[1]+Omega[2]*Omega[2]);
+  if(rfrakMag < Quaternion_Epsilon * OmegaMag) { // If the matrix is really close to the identity, return
+    return Omega/2.0;
+  }
+  if(std::abs(std::sin(rfrakMag)) < Quaternion_Epsilon) { // If the matrix is really close to singular, it's equivalent to the identity, so return
+    return Omega/2.0;
+  }
+  const vector<double> OmegaOver2 = Omega/2.0;
+  const vector<double> rfrakHat = rfrak/rfrakMag;
+  return (OmegaOver2 - rfrakHat*dot(rfrakHat,OmegaOver2))*(rfrakMag/std::tan(rfrakMag)) + rfrakHat*dot(rfrakHat,OmegaOver2) + cross(OmegaOver2,rfrak);
+}
+
+/// Time-derivative of 2-D quaternion logarithm for vector with given angular velocity
+void Quaternions::FrameFromAngularVelocity_2D_Integrand(const double rfrak_x, const double rfrak_y,
+							const std::vector<double>& Omega,
+							double& rfrakDot_x, double& rfrakDot_y) {
+  const double rfrakMag = std::sqrt(rfrak_x*rfrak_x+rfrak_y*rfrak_y);
+  const double OmegaMag = std::sqrt(Omega[0]*Omega[0]+Omega[1]*Omega[1]+Omega[2]*Omega[2]);
+  if(rfrakMag < Quaternion_Epsilon * OmegaMag) { // If the matrix is really close to the identity, return
+    rfrakDot_x = Omega[0]/2.0;
+    rfrakDot_y = Omega[1]/2.0;
+    return;
+  }
+  if(std::abs(std::sin(rfrakMag)) < Quaternion_Epsilon) { // If the matrix is really close to singular, it's equivalent to the identity, so return
+    rfrakDot_x = Omega[0]/2.0;
+    rfrakDot_y = Omega[1]/2.0;
+    return;
+  }
+  const double dotTerm = (rfrak_x*Omega[0]+rfrak_y*Omega[1])/(rfrakMag*rfrakMag);
+  const double cotTerm = rfrakMag/(2*tan(rfrakMag));
+  rfrakDot_x = (Omega[0] - rfrak_x*dotTerm)*cotTerm + rfrak_x*dotTerm - 0.5*Omega[2]*rfrak_y;
+  rfrakDot_y = (Omega[1] - rfrak_y*dotTerm)*cotTerm + rfrak_y*dotTerm + 0.5*Omega[2]*rfrak_x;
+  return;
+}
 
 
 /// Remove sign-ambiguity of rotors.
