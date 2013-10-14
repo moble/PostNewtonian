@@ -31,7 +31,7 @@ class PNSymbol(Symbol) :
             except AttributeError:
                 self.substitution_atoms = None
         self.datatype = datatype
-    def ccode(**args):
+    def ccode(self, **args):
         from sympy import ccode, horner, N
         if self.fundamental:
             return str(self)
