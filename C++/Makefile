@@ -17,8 +17,11 @@ OPT = -O3 -fopenmp -Wall -Wno-deprecated
 # Tell 'make' not to look for files with the following names
 .PHONY : all
 
-all : PNEvolution.o
+all : PNEvolution.o EvolvePN
 
 # This is how to build those object files
 %.o : %.cpp %.hpp
 	$(C++) $(OPT) -c $(INCFLAGS) $< -o $@
+
+EvolvePN : EvolvePN.cpp PNEvolution.cpp PNEvolution.hpp
+	$(C++) $(OPT) $(INCFLAGS) $(LIBFLAGS) PNEvolution.o Quaternions/Quaternions.o Quaternions/IntegrateAngularVelocity.o EvolvePN.cpp -o EvolvePN
