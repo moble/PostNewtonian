@@ -16,6 +16,16 @@ class CodeConstructor:
     Support for other languages or constructions can be added by
     adding more method functions to this class.
 
+    Note that it is generally necessary to obey a strict ordering for
+    defining variables.  The functions of this class assume that the
+    ordering in which the variables were defined in python should
+    remain the same in the output code.  Because of the structure of
+    the `PNCollection` objects, it should be hard to define the
+    variables out of order, so this should not require anything from
+    the user.  (That is why `PNCollection` is a subclass of the basic
+    `OrderedDictionary` object.)  However, if new functions are added
+    here, they must obey that ordering.
+
     """
     def __init__(self, Variables, Expressions):
         AtomSet = set([])
@@ -32,6 +42,36 @@ class CodeConstructor:
         self.Atoms = []
         for sym in self.Variables:
             if sym in AtomSet:
+                self.Atoms.append(sym)
+
+    @staticmethod
+    def const(e):
+        if e.constant:
+            return 'const '
+        else:
+            return ''
+
+    @staticmethod
+    def dtype(e):
+        if e.datatype:
+            return e.datatype
+        else:
+            return 'double'
+
+    def AddDependencies(self, Expressions):
+        AtomSet = set([])
+        for Expression in Expressions:
+            AtomSet.update(Expression.substitution_atoms)
+        LastAtomsLength = 0
+        while(len(AtomSet) != LastAtomsLength):
+            LastAtomsLength = len(AtomSet)
+            for Atom in list(AtomSet):
+                if (Atom.substitution_atoms):
+                    AtomSet.update(Atom.substitution_atoms)
+        OldAtoms = self.Atoms[:]
+        self.Atoms = []
+        for sym in self.Variables:
+            if sym in AtomSet or sym in OldAtoms:
                 self.Atoms.append(sym)
 
     def CppDeclarations(self, Indent=4):
@@ -53,18 +93,23 @@ class CodeConstructor:
         """
         from textwrap import TextWrapper
         wrapper = TextWrapper(width=120)
-        wrapper.initial_indent = ' '*Indent + "const double "
-        wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
-        Declarations = wrapper.fill(', '.join([self.Variables[atom] for atom in self.Atoms if atom.constant and not atom.datatype])) + ";\n"
+        wrapper.initial_indent = ''
+        wrapper.subsequent_indent = ''
+        datatype = ''
+        Declarations = ''
+        Names = []
         for atom in self.Atoms:
-            if atom.constant and atom.datatype:
-                Declarations += ' '*Indent + "const {0} {1};\n".format(atom.datatype, self.Variables[atom])
-        wrapper.initial_indent = ' '*Indent + "double "
-        wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
-        Declarations += wrapper.fill(', '.join([self.Variables[atom] for atom in self.Atoms if not atom.constant and not atom.datatype])) + ";\n"
-        for atom in self.Atoms:
-            if not atom.constant and atom.datatype:
-                Declarations += ' '*Indent + "{0} {1};\n".format(atom.datatype, self.Variables[atom])
+            thisdatatype = CodeConstructor.const(atom) + CodeConstructor.dtype(atom) + ' '
+            if thisdatatype != datatype:
+                if Names:
+                    Declarations += wrapper.fill(', '.join(Names)) + ";\n"
+                Names = []
+                datatype = thisdatatype
+                wrapper.initial_indent = ' '*Indent + thisdatatype
+                wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
+            Names.append(self.Variables[atom])
+        if Names:
+            Declarations += wrapper.fill(', '.join(Names)) + ";\n"
         return Declarations.rstrip()
 
     def CppInputArguments(self, Indent=12):
@@ -84,16 +129,11 @@ class CodeConstructor:
             const double m1_i, const double m2_i, double t_i, double x_i
 
         """
-        def dtype(t):
-            if t:
-                return t
-            else:
-                return 'double'
         from textwrap import TextWrapper
         wrapper = TextWrapper(width=120)
         wrapper.initial_indent = ' '*Indent
         wrapper.subsequent_indent = wrapper.initial_indent
-        InputArguments = ['const {0} {1}_i'.format(dtype(atom.datatype), self.Variables[atom])
+        InputArguments = ['const {0} {1}_i'.format(self.dtype(atom), self.Variables[atom])
                           for atom in self.Atoms if atom.fundamental]
         return wrapper.fill(', '.join(InputArguments)).lstrip()
 
@@ -115,8 +155,12 @@ class CodeConstructor:
         wrapper = TextWrapper(width=120)
         wrapper.initial_indent = ' '*Indent
         wrapper.subsequent_indent = wrapper.initial_indent
-        Initializations = ['{0}({0}_i)'.format(self.Variables[atom]) for atom in self.Atoms if atom.fundamental]
-        Initializations += ['{0}({1})'.format(self.Variables[atom], atom.ccode()) for atom in self.Atoms if not atom.fundamental]
+        def Initialization(atom):
+            if atom.fundamental:
+                return '{0}({0}_i)'.format(self.Variables[atom])
+            else:
+                return '{0}({1})'.format(self.Variables[atom], atom.ccode())
+        Initializations  = [Initialization(atom) for atom in self.Atoms]
         return wrapper.fill(', '.join(Initializations))
 
     def CppEvaluations(self, Indent=4):
@@ -131,9 +175,9 @@ class CodeConstructor:
         from textwrap import TextWrapper
         wrapper = TextWrapper(width=120)
         wrapper.initial_indent = ' '*Indent
-        wrapper.subsequent_indent = wrapper.initial_indent
+        wrapper.subsequent_indent = wrapper.initial_indent + '  '
         return '\n'.join([wrapper.fill('{0} = {1};'.format(self.Variables[atom], atom.ccode()))
-                          for atom in self.Atoms if not atom.fundamental])
+                          for atom in self.Atoms if not atom.fundamental and not atom.constant])
 
     def CppEvaluateExpressions(self, Indent=4, Expressions=None):
         """Declare and define the `Expressions` for C++
@@ -145,25 +189,15 @@ class CodeConstructor:
         will be output.
 
         """
-        def const(e):
-            if e.constant:
-                return 'const '
-            else:
-                return ''
-        def dtype(e):
-            if e.datatype:
-                return e.datatype
-            else:
-                return 'double'
         from textwrap import TextWrapper
         wrapper = TextWrapper(width=120)
         wrapper.initial_indent = ' '*Indent
-        wrapper.subsequent_indent = wrapper.initial_indent
+        wrapper.subsequent_indent = wrapper.initial_indent+'  '
         Evaluations = []
         if not Expressions:
             Expressions=self.Expressions
         for Expression in Expressions:
-            Evaluations.append(wrapper.fill('{0}{1} {2} = {3};'.format(const(Expression), dtype(Expression),
+            Evaluations.append(wrapper.fill('{0}{1} {2} = {3};'.format(self.const(Expression), self.dtype(Expression),
                                                                        Expressions[Expression], Expression.ccode())))
         return '\n'.join(Evaluations)
 
