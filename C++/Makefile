@@ -1,12 +1,12 @@
 INCFLAGS = -IQuaternions -I/opt/local/include -I/usr/local/include
-LIBFLAGS = -L/opt/local/lib -L/usr/local/lib
+LIBFLAGS = -L/opt/local/lib -L/usr/local/lib -lgsl
 ifdef GSL_HOME
 	INCFLAGS = -I${GSL_HOME}/include ${INCFLAGS}
 	LIBFLAGS = -L${GSL_HOME}/lib ${LIBFLAGS}
 endif
 # Set compiler name and optimization flags here, if desired
 C++ = g++
-OPT = -O3 -fopenmp -Wall -Wno-deprecated -lgsl
+OPT = -O3 -fopenmp -Wall -Wno-deprecated
 ## DON'T USE -ffast-math in OPT
 
 
