@@ -19,7 +19,7 @@ class PNSymbol(Symbol) :
     def __init__(self, name, constant, fundamental, substitution, substitution_atoms, datatype, **kwargs) :
         if not fundamental and isinstance(substitution, basestring) and not substitution_atoms:
             raise ValueError('Either `substitution` must be a sympy expression, '
-                             +'or `substitution_atoms` must be non-empty for derived variables.')
+                             +'or `substitution_atoms` must be non-empty for derived quantities.')
         self.constant = constant
         self.fundamental = fundamental
         self.substitution = substitution
@@ -69,10 +69,19 @@ class PNCollection(OrderedDict) : # subclass of OrderedDict
     def _AddVariable(self, name, **args) :
         from inspect import currentframe
         from sympy import Basic, FunctionClass
+        add_to_globals = args.pop('add_to_globals', True)
         frame = currentframe().f_back.f_back
+        if not args['fundamental'] and isinstance(args['substitution'], basestring) and not args['substitution_atoms']:
+            # Try to add appropriate PNSymbols to list of atoms in substitution
+            from sympy import sympify
+            args['substitution_atoms'] = list(sympify(args['substitution']).atoms(Symbol))
+            atom_strings = [str(a) for a in args['substitution_atoms']]
+            for k,v in self.items():
+                if v in atom_strings:
+                    args['substitution_atoms'][atom_strings.index(v)] = k
         try:
             sym = PNSymbol(name, **args)
-            if sym is not None:
+            if sym is not None and add_to_globals:
                 if isinstance(sym, Basic):
                     frame.f_globals[sym.name] = sym
                 elif isinstance(sym, FunctionClass):
