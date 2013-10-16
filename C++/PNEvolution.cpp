@@ -111,9 +111,9 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   const unsigned int MinSteps = 100000; // This is only a very rough lower limit
   const unsigned int MaxSteps = 10000000; // This is a hard upper limit
   double h = 1.0;
-  const double eps_abs = 1.e-12;
-  const double eps_rel = 1.e-10;
-  const double hmin = 1.0e-6;
+  const double eps_abs = 1.e-13;
+  const double eps_rel = 1.e-13;
+  const double hmin = 1.0e-7;
   const double hmax = (endtime-time) / (2.0*MinSteps);
 
   // We will be using `push_back`, so we first reserve the rough lower
@@ -153,9 +153,9 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
     t.push_back(time);
     v.push_back(y[0]);
     const Quaternion R_chi1_i = exp(Quaternion(0.0, y[1], y[2], 0.0));
-    chi1.push_back((R_chi1_i*zHat*R_chi1_i.conjugate()).vec());
+    chi1.push_back((chi1Mag_i*R_chi1_i*zHat*R_chi1_i.conjugate()).vec());
     const Quaternion R_chi2_i = exp(Quaternion(0.0, y[3], y[4], 0.0));
-    chi2.push_back((R_chi2_i*zHat*R_chi2_i.conjugate()).vec());
+    chi2.push_back((chi2Mag_i*R_chi2_i*zHat*R_chi2_i.conjugate()).vec());
     const Quaternion R_frame_i = exp(Quaternion(0.0, y[5], y[6], y[7]));
     // const Quaternion R_frame_i = Unflipped(R_frame.back(), exp(Quaternion(0.0, y[5], y[6], y[7])));
     R_frame.push_back(R_frame_i);
@@ -173,10 +173,10 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
 
     // Check if it worked and the system is still reasonable
     if(status == GSL_EDOM) {
-      std::cout << "Velocity v has become greater than 1.0" << std::endl;
+      // std::cout << "Velocity v has become greater than 1.0" << std::endl;
       break;
     } else if(status == GSL_EDIVERGE) {
-      std::cout << "Velocity is no longer increasing" << std::endl;
+      // std::cout << "Velocity is no longer increasing" << std::endl;
       break;
     } else if(status != GSL_SUCCESS) {
       std::cerr << "GSL odeiv2 error.  Return value=" << status << "\n" << std::endl;
@@ -189,9 +189,9 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
       t.push_back(time);
       v.push_back(y[0]);
       const Quaternion R_chi1_i = exp(Quaternion(0.0, y[1], y[2], 0.0));
-      chi1.push_back((R_chi1_i*zHat*R_chi1_i.conjugate()).vec());
+      chi1.push_back((chi1Mag_i*R_chi1_i*zHat*R_chi1_i.conjugate()).vec());
       const Quaternion R_chi2_i = exp(Quaternion(0.0, y[3], y[4], 0.0));
-      chi2.push_back((R_chi2_i*zHat*R_chi2_i.conjugate()).vec());
+      chi2.push_back((chi2Mag_i*R_chi2_i*zHat*R_chi2_i.conjugate()).vec());
       const Quaternion R_frame_i = Unflipped(R_frame.back(), exp(Quaternion(0.0, y[5], y[6], y[7])));
       R_frame.push_back(R_frame_i);
       Phi.push_back(y[8]);
@@ -212,10 +212,10 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
     }
 
     // Check if we should stop because the step has gotten too small,
-    // but make sure we at least take 20 steps since the last
+    // but make sure we at least take 500 steps since the last
     // disruption.  [This is the condition that we expect to stop us
     // near merger.]
-    if(nSteps>20 && h<hmin) { break; }
+    if(nSteps>500 && h<hmin) { break; }
 
     // Reset values of quaternion logarithms to smaller sizes, if
     // necessary.  If this resets, we reset nSteps to zero, because

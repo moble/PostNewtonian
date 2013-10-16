@@ -20,8 +20,12 @@ OPT = -O3 -fopenmp -Wall -Wno-deprecated
 all : PNEvolution.o EvolvePN
 
 # This is how to build those object files
+PNEvolution.o : PNEvolution.cpp PNEvolution.hpp PNApproximants.ipp
+	$(C++) $(OPT) -c $(INCFLAGS) $< -o $@
+
+# This is how to build those object files
 %.o : %.cpp %.hpp
 	$(C++) $(OPT) -c $(INCFLAGS) $< -o $@
 
-EvolvePN : EvolvePN.cpp PNEvolution.cpp PNEvolution.hpp
+EvolvePN : EvolvePN.cpp PNEvolution.cpp PNEvolution.hpp PNApproximants.ipp
 	$(C++) $(OPT) $(INCFLAGS) $(LIBFLAGS) PNEvolution.o Quaternions/Quaternions.o Quaternions/IntegrateAngularVelocity.o EvolvePN.cpp -o EvolvePN

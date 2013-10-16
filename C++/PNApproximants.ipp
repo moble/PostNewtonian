@@ -45,7 +45,7 @@ public:
     chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
     chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z), sqrt1Mchi1chi1(sqrt(-chi1chi1 + 1.0)),
     sqrt1Mchi2chi2(sqrt(-chi2chi2 + 1.0)), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) +
-    chi2_l*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)),
+    chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)),
     Omega_chi1_ellHat(pow(v, 5)*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
     nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
     nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75)), Omega_chi2_ellHat(pow(v,
@@ -84,7 +84,7 @@ public:
     rfrak_chi2_y = y[4];
     rfrak_ell_x = y[5];
     rfrak_ell_y = y[6];
-    rfrak_ell_x = y[7];
+    rfrak_ell_z = y[7];
     Phi = y[8];
 
     R = exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat);
@@ -117,10 +117,10 @@ public:
     chi2_n = chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z;
     chi2_la = chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z;
     S_l = chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2);
-    S_n = chi1_n*pow(m1, 2) + chi2_l*pow(m2, 2);
+    S_n = chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2);
     Sigma_l = -chi1_l*m1 + chi2_l*m2;
     Sigma_n = -chi1_n*m1 + chi2_n*m2;
-    logv = log(v);
+    logv = std::log(v);
     Omega_chi1_ellHat = pow(v, 5)*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
       nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
       nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75);
@@ -159,7 +159,7 @@ public:
     return Omega_chi2_ellHat*ellHat;
   }
   Quaternion Omega_ellHat() {
-    return Omega_ellHat_nHat*nHat;
+    return Omega_ellHat_nHat*nHat + ellHat*pow(v, 3);
   }
 
   int TaylorT1_3p5PN(double t, const double* y, double* dydt) {
@@ -318,13 +318,20 @@ public:
     rfrak_ellHat[0] = y[5];
     rfrak_ellHat[1] = y[6];
     rfrak_ellHat[2] = y[7];
-    const std::vector<double> rfrakdot_ell = FrameFromAngularVelocity_Integrand(rfrak_ellHat, Omega_ellHat().vec());
+    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, Omega_ellHat().vec());
     dydt[0] = dvdt;
-    FrameFromAngularVelocity_2D_Integrand(y[1], y[2], Omega_chi1().vec(), dydt[1], dydt[2]);
-    FrameFromAngularVelocity_2D_Integrand(y[3], y[4], Omega_chi2().vec(), dydt[3], dydt[4]);
-    dydt[5] = rfrakdot_ell[0];
-    dydt[6] = rfrakdot_ell[1];
-    dydt[7] = rfrakdot_ell[2];
+    double a,b,c,d;
+    FrameFromAngularVelocity_2D_Integrand(y[1], y[2], Omega_chi1().vec(), a,b);
+    FrameFromAngularVelocity_2D_Integrand(y[3], y[4], Omega_chi2().vec(), c,d);
+    dydt[1] = a;
+    dydt[2] = b;
+    dydt[3] = c;
+    dydt[4] = d;
+    // FrameFromAngularVelocity_2D_Integrand(y[1], y[2], Omega_chi1().vec(), dydt[1], dydt[2]);
+    // FrameFromAngularVelocity_2D_Integrand(y[3], y[4], Omega_chi2().vec(), dydt[3], dydt[4]);
+    dydt[5] = rfrakdot_ellHat[0];
+    dydt[6] = rfrakdot_ellHat[1];
+    dydt[7] = rfrakdot_ellHat[2];
     dydt[8] = v*v*v;
 
     return GSL_SUCCESS; // GSL expects this if everything went well
