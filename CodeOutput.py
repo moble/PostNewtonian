@@ -1,153 +1,234 @@
-def Expression(Quantity, ns) :
-    if (isinstance(Quantity, list) and len(Quantity)==2) :
-	if (isinstance(Quantity[1], basestring)) :
-	    try :
-		# test if it names something that exists
-		eval(Quantity[1], ns)
-		return Quantity[1]
-	    except NameError :
-		return None
-	elif ('sympy' in type(Quantity[1]).__name__) :
-	    return str(Quantity[1])
-    elif (isinstance(Quantity, basestring)) :
-	if (' ' not in Quantity) :
-	    try :
-		# test if it names a variable that exists
-		eval(Quantity, ns)
-		return Quantity
-	    except NameError :
-		return None
-	else :
-	    return None
-    else :
-	return None
+class CodeConstructor:
+    """Contains lists of variables and expressions to be written as code.
 
+    `CodeConstructor` objects contain:
+      1) An ordered list of atoms for the code to use
+      2) A PNCollection of PNSymbol objects
+      3) A PNCollection of expressions to be calculated
 
-def FindAtoms(Expressions, PNVariables, ns) :
-    from sympy import Symbol
-    Atoms = set([])
-    for Expression in Expressions :
-	Atoms.update(eval(Expression, ns).atoms(Symbol))
-    LastAtomsLength = 0
-    while(len(Atoms) != LastAtomsLength) :
-	LastAtomsLength = len(Atoms)
-	for Atom in list(Atoms) :
-	    if (Atom.substitution) :
-		Atoms.update(Atom.substitution.atoms(Symbol))
-    BasicConstantAtoms = []
-    BasicVariableAtoms = []
-    DerivedConstantAtoms = []
-    DerivedVariableAtoms = []
-    for key in PNVariables.iterkeys() :
-	if (key in Atoms) :
-	    if (key.constant) :
-		if (key.substitution) :
-		    DerivedConstantAtoms += [key]
-		else :
-		    BasicConstantAtoms += [key]
-	    else :
-		if (key.substitution) :
-		    DerivedVariableAtoms += [key]
-		else :
-		    BasicVariableAtoms += [key]
-    return BasicConstantAtoms, BasicVariableAtoms, DerivedConstantAtoms, DerivedVariableAtoms
+    Once the `CodeConstructor` is initialized with these objects, it
+    can be used to construct various types of code.  For example, the
+    `CppDeclarations` method will output a list of declarations of the
+    atoms.  Similar methods are available for function input
+    arguments, class initializer lists, and the final evaluations
+    needed to calculate the input `Expressions`.
 
-def CCodeOutput(Quantities, PNVariables, ns, Utilities=[], Indent=[12,2,4,4,4]) :
+    Support for other languages or constructions can be added by
+    adding more method functions to this class.
+
+    Note that it is generally necessary to obey a strict ordering for
+    defining variables.  The functions of this class assume that the
+    ordering in which the variables were defined in python should
+    remain the same in the output code.  Because of the structure of
+    the `PNCollection` objects, it should be hard to define the
+    variables out of order, so this should not require anything from
+    the user.  (That is why `PNCollection` is a subclass of the basic
+    `OrderedDictionary` object.)  However, if new functions are added
+    here, they must obey that ordering.
+
     """
-    Return four strings for C/C++ code compilations.
+    def __init__(self, Variables, Expressions):
+        AtomSet = set([])
+        self.Variables = Variables.copy()
+        self.Expressions = Expressions.copy()
+        for Expression in self.Expressions:
+            AtomSet.update(Expression.substitution_atoms)
+        LastAtomsLength = 0
+        while(len(AtomSet) != LastAtomsLength):
+            LastAtomsLength = len(AtomSet)
+            for Atom in list(AtomSet):
+                if (Atom.substitution_atoms):
+                    AtomSet.update(Atom.substitution_atoms)
+        self.Atoms = []
+        for sym in self.Variables:
+            if sym in AtomSet:
+                self.Atoms.append(sym)
 
-    The four strings are:
+    @staticmethod
+    def const(e):
+        if e.constant:
+            return 'const '
+        else:
+            return ''
 
-      * `Declarations`: Declarations of the variables
-      * `Initializations`: Initializer list of the variables
-      * `Evaluations`: Re-evaluation of all non-constant variables
-      * `Computations`: Computation of the requested quantities themselves
-    """
-    from sympy import ccode, horner, N
-    from textwrap import TextWrapper
-    wrapper = TextWrapper(width=120)
-    def codify(s, **args) :
-        try :
-            s = horner(s)
-        except PolynomialError :
-            pass
-        return ccode(N(s), **args)
+    @staticmethod
+    def dtype(e):
+        if e.datatype:
+            return e.datatype
+        else:
+            return 'double'
 
-    # Accept a single string as input
-    if (not isinstance(Quantities, list)) :
-	Quantities = [Quantities]
+    def AddDependencies(self, Expressions):
+        AtomSet = set([])
+        for Expression in Expressions:
+            AtomSet.update(Expression.substitution_atoms)
+        LastAtomsLength = 0
+        while(len(AtomSet) != LastAtomsLength):
+            LastAtomsLength = len(AtomSet)
+            for Atom in list(AtomSet):
+                if (Atom.substitution_atoms):
+                    AtomSet.update(Atom.substitution_atoms)
+        OldAtoms = self.Atoms[:]
+        self.Atoms = []
+        for sym in self.Variables:
+            if sym in AtomSet or sym in OldAtoms:
+                self.Atoms.append(sym)
 
-    # Get a list of names of sympy expressions in the input
-    Expressions = [E for Quantity in Quantities+Utilities for E in [Expression(Quantity, ns)] if E]
-    BasicConstantAtoms, BasicVariableAtoms, DerivedConstantAtoms, DerivedVariableAtoms = FindAtoms(Expressions, PNVariables, ns)
+    def CppDeclarations(self, Indent=4):
+        """Create declaration statements for C++
 
-    # InputArguments
-    names = ['const double {0}_in'.format(PNVariables[atom]) for atom in BasicConstantAtoms]
-    names += ['double {0}_0'.format(PNVariables[atom]) for atom in BasicVariableAtoms]
-    wrapper.initial_indent = ''
-    wrapper.subsequent_indent = ' '*Indent[0]
-    InputArguments = wrapper.fill(', '.join(names))
+        For example, if the `Variables` object contains atoms m1, m2,
+        t, and x referred to in the `Expressions` object, where m1 and
+        m2 are constant, and t and x are variables, the declaration
+        list should be
 
-    # Declarations
-    # basic const declarations
-    names = ['{0}'.format(PNVariables[atom]) for atom in BasicConstantAtoms]
-    wrapper.initial_indent = ' '*Indent[1] + "const double "
-    wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
-    Declarations = wrapper.fill(', '.join(names)) + ";\n"
-    # basic non-const declarations
-    names = ['{0}'.format(PNVariables[atom]) for atom in BasicVariableAtoms]
-    wrapper.initial_indent = ' '*Indent[1] + "double "
-    wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
-    Declarations += wrapper.fill(', '.join(names)) + ";\n"
-    # variable const declarations
-    names = ['{0}'.format(PNVariables[atom]) for atom in DerivedConstantAtoms]
-    wrapper.initial_indent = ' '*Indent[1] + "const double "
-    wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
-    Declarations += wrapper.fill(', '.join(names)) + ";\n"
-    # variable non-const declarations
-    names = ['{0}'.format(PNVariables[atom]) for atom in DerivedVariableAtoms]
-    wrapper.initial_indent = ' '*Indent[1] + "double "
-    wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
-    Declarations += wrapper.fill(', '.join(names)) + ";"
+            const double m1, m2;
+            double t, x;
 
+        The code knows which atoms need to be declared at the
+        beginning, and which ones should be `const`, for example.  For
+        C++, the default datatype is `double`; if the atom was created
+        with a different datatype, that will be used appropriately.
 
-    # Initializations
-    names = ['{0}({0}_in)'.format(PNVariables[atom]) for atom in BasicConstantAtoms]
-    names += ['{0}({0}_0)'.format(PNVariables[atom]) for atom in BasicVariableAtoms]
-    names += ['{0}({1})'.format(PNVariables[atom],
-				codify(atom.substitution)) for atom in DerivedConstantAtoms]
-    names += ['{0}({1})'.format(PNVariables[atom],
-				codify(atom.substitution)) for atom in DerivedVariableAtoms]
-    wrapper.initial_indent = ' '*Indent[2]
-    wrapper.subsequent_indent = wrapper.initial_indent
-    Initializations = wrapper.fill(', '.join(names))
+        """
+        from textwrap import TextWrapper
+        wrapper = TextWrapper(width=120)
+        wrapper.initial_indent = ''
+        wrapper.subsequent_indent = ''
+        datatype = ''
+        Declarations = ''
+        Names = []
+        for atom in self.Atoms:
+            thisdatatype = CodeConstructor.const(atom) + CodeConstructor.dtype(atom) + ' '
+            if thisdatatype != datatype:
+                if Names:
+                    Declarations += wrapper.fill(', '.join(Names)) + ";\n"
+                Names = []
+                datatype = thisdatatype
+                wrapper.initial_indent = ' '*Indent + thisdatatype
+                wrapper.subsequent_indent = ' '*len(wrapper.initial_indent)
+            Names.append(self.Variables[atom])
+        if Names:
+            Declarations += wrapper.fill(', '.join(Names)) + ";\n"
+        return Declarations.rstrip()
 
+    def CppInputArguments(self, Indent=12):
+        """Create basic input arguments for C++
 
-    # Evaluations
-    wrapper.initial_indent = ' '*Indent[3]
-    wrapper.subsequent_indent = wrapper.initial_indent+' '*4
-    names = [wrapper.fill('{0} = {1};'.format(PNVariables[atom],
-					      codify(atom.substitution))) for atom in DerivedVariableAtoms]
-    Evaluations = '\n'.join(names)
+        The fundamental variables are listed, along with their data
+        types and `const` if the variable is constant.  This would be
+        an appropriate string to represent the input arguments for a
+        function or class constructor to calculate the `Expressions`
+        of this CodeConstructor object.
 
+        For example, if the `Variables` object contains atoms m1, m2,
+        t, and x referred to in the `Expressions` object, where m1 and
+        m2 are constant, and t and x are variables, the input argument
+        list should be
 
-    # Computations
-    wrapper.initial_indent = ' '*Indent[4]
-    wrapper.subsequent_indent = wrapper.initial_indent+' '*4
-    names = []
-    for Quantity in Quantities :
-	if (isinstance(Quantity, list) and len(Quantity)==2) :
-	    if (isinstance(Quantity[1], basestring)) :
-		names += [wrapper.fill(str(Quantity[0])+codify(eval(Quantity[1], ns)))]
-	    elif ('sympy' in type(Quantity[1]).__name__) :
-		names += [wrapper.fill(str(Quantity[0])+codify(Quantity[1]))]
-	elif (isinstance(Quantity, basestring)) :
-	    if (' ' not in Quantity) :
-		names += [wrapper.fill(codify(eval(Quantity, ns), assign_to='const double '+Quantity))]
-	    else :
-		names += [wrapper.fill(str(Quantity))]
-	else :
-	    names += [wrapper.fill(str(Quantity))]
-    Computations = '\n'.join(names)
+            const double m1_i, const double m2_i, double t_i, double x_i
 
-    return InputArguments, Declarations, Initializations, Evaluations, Computations
+        """
+        from textwrap import TextWrapper
+        wrapper = TextWrapper(width=120)
+        wrapper.initial_indent = ' '*Indent
+        wrapper.subsequent_indent = wrapper.initial_indent
+        InputArguments = ['const {0} {1}_i'.format(self.dtype(atom), self.Variables[atom])
+                          for atom in self.Atoms if atom.fundamental]
+        return wrapper.fill(', '.join(InputArguments)).lstrip()
+
+    def CppInitializations(self, Indent=4):
+        """Create initialization list for C++
+
+        For example, if the `Variables` object contains atoms m1, m2,
+        t, and x referred to in the `Expressions` object, where m1 and
+        m2 are constant, and t and x are variables, the initialization
+        list should be
+
+            m1(m1_i), m2(m2_i), t(t_i), x(x_i)
+
+        The quantities m1_i, etc., appear in the input-argument list
+        output by the method `CppInputArguments`.
+
+        """
+        from textwrap import TextWrapper
+        wrapper = TextWrapper(width=120)
+        wrapper.initial_indent = ' '*Indent
+        wrapper.subsequent_indent = wrapper.initial_indent
+        def Initialization(atom):
+            if atom.fundamental:
+                return '{0}({0}_i)'.format(self.Variables[atom])
+            else:
+                return '{0}({1})'.format(self.Variables[atom], atom.ccode())
+        Initializations  = [Initialization(atom) for atom in self.Atoms]
+        return wrapper.fill(', '.join(Initializations))
+
+    def CppEvaluations(self, Indent=4):
+        """Evaluate all derived variables in C++
+
+        This function uses the `substitution` expressions for the
+        derived variables.  This output is appropriate for updating
+        the values of the variables at each step of an integration,
+        for example.
+
+        """
+        from textwrap import TextWrapper
+        wrapper = TextWrapper(width=120)
+        wrapper.initial_indent = ' '*Indent
+        wrapper.subsequent_indent = wrapper.initial_indent + '  '
+        return '\n'.join([wrapper.fill('{0} = {1};'.format(self.Variables[atom], atom.ccode()))
+                          for atom in self.Atoms if not atom.fundamental and not atom.constant])
+
+    def CppEvaluateExpressions(self, Indent=4, Expressions=None):
+        """Declare and define the `Expressions` for C++
+
+        The output of this function declares are defines the
+        `Expressions` as individual variables.  An optional dictionary
+        of expressions allows just a subset of this object's
+        expressions to be output; if this argument is not present, all
+        will be output.
+
+        """
+        from textwrap import TextWrapper
+        wrapper = TextWrapper(width=120)
+        wrapper.initial_indent = ' '*Indent
+        wrapper.subsequent_indent = wrapper.initial_indent+'  '
+        Evaluations = []
+        if not Expressions:
+            Expressions=self.Expressions
+        for Expression in Expressions:
+            Evaluations.append(wrapper.fill('{0}{1} {2} = {3};'.format(self.const(Expression), self.dtype(Expression),
+                                                                       Expressions[Expression], Expression.ccode())))
+        return '\n'.join(Evaluations)
+
+    def CppExpressionsAsFunctions(self, Indent=4, Expressions=None):
+        """Define functions to calculate the `Expressions` in C++
+
+        The output of this function gives C++ functions to calculate
+        the `Expressions`, assuming the functions are member methods
+        in a class, and so can access the atoms of the expression
+        without explicit arguments.  An optional dictionary of
+        expressions allows just a subset of this object's expressions
+        to be output; if this argument is not present, all will be
+        output.
+
+        """
+        def dtype(e):
+            if e.datatype:
+                return e.datatype
+            else:
+                return 'double'
+        from textwrap import TextWrapper
+        wrapper = TextWrapper(width=120)
+        wrapper.initial_indent = ' '*Indent + '  return '
+        wrapper.subsequent_indent = ' '*Indent + '    '
+        Evaluations = []
+        if not Expressions:
+            Expressions=self.Expressions
+        for Expression in Expressions:
+            Evaluations.append(
+                ' '*Indent + dtype(Expression) + ' ' + Expressions[Expression] + '() {\n'
+                + wrapper.fill(Expression.ccode())
+                + ';\n' + ' '*Indent + '}'
+            )
+        return '\n'.join(Evaluations)
