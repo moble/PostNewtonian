@@ -7,7 +7,7 @@
 
 
 int main() {
-  const std::string Approximant = "TaylorT4";
+  const std::string Approximant = "TaylorT5";
   const double PNOrder = 3.5;
   const double v0 = 0.3073533404944769;
   const double v_i = v0;

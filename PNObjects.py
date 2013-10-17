@@ -35,6 +35,8 @@ class PNSymbol(Symbol) :
         from sympy import ccode, horner, N
         if self.fundamental:
             return str(self)
+        if hasattr(self.substitution, '__iter__'): # Check for __iter__ only, so strings don't get caught
+            return '{' + ', '.join([ccode(x, **args) for x in self.substitution]) + '}'
         if isinstance(self.substitution, basestring):
             return self.substitution
         code = self.substitution
@@ -100,7 +102,7 @@ class PNCollection(OrderedDict) : # subclass of OrderedDict
         args['fundamental'] = True
         args['substitution'] = args.pop('substitution', None)
         args['substitution_atoms'] = args.pop('substitution_atoms', None)
-        args['datatype'] = args.pop('datatype', None)
+        args['datatype'] = args.pop('datatypes', None)
         for name in names :
             if name :
                 self._AddVariable(name, **args)
