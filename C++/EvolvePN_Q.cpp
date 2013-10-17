@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
 			  );
 
   std::stringstream FileName("");
-  FileName << "EvolvePN_" << Approximant << "_"<< int(PNOrder) <<"p"<< (PNOrder-int(PNOrder))*10 << "PN.dat";
+  FileName << "EvolvePN_" << Approximant << "_"<< int(PNOrder) <<"p"<< (PNOrder-int(PNOrder))*10 << "PN_Q.dat";
 
   std::cerr << "NTimes = " << t.size()
 	    << "\nPrinting results to " << FileName.str() << "... "

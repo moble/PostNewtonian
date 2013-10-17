@@ -13,7 +13,6 @@ using Quaternions::yHat;
 using Quaternions::zHat;
 using Quaternions::FrameFromAngularVelocity_Integrand;
 using Quaternions::FrameFromAngularVelocity_2D_Integrand;
-using std::vector;
 
 #define QuatLogDiscontinuity 1.4142135623730951
 inline Quaternion Unflipped(const Quaternion& R0, const Quaternion& R1) {
@@ -24,32 +23,9 @@ inline Quaternion Unflipped(const Quaternion& R0, const Quaternion& R1) {
   }
 }
 
-std::vector<double> operator*(const double a, const std::vector<double>& b) {
-  std::vector<double> c(b.size());
-  for(unsigned int i=0; i<b.size(); ++i) {
-    c[i] = a*b[i];
-  }
-  return c;
-}
-
-std::vector<double> operator*(const std::vector<double>& b, const double a) {
-  std::vector<double> c(b.size());
-  for(unsigned int i=0; i<b.size(); ++i) {
-    c[i] = a*b[i];
-  }
-  return c;
-}
-
-std::vector<double> operator+(const std::vector<double>& a, const std::vector<double>& b) {
-  std::vector<double> c(b.size());
-  for(unsigned int i=0; i<b.size(); ++i) {
-    c[i] = a[i]+b[i];
-  }
-  return c;
-}
 
 
-#include "PNApproximants.ipp"
+#include "PNApproximants_Q.ipp"
 
 
 void PostNewtonian::EvolvePN(const std::string& Approximant,
@@ -103,31 +79,30 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   std::cerr << __FILE__ << ":" << __LINE__ << ": Add option to evolve in reverse, and option to run both ways." << std::endl;
 
   // Transform the input into the forms we will actually use
-  const std::vector<double> ellHat_i = (R_frame_i*zHat*R_frame_i.conjugate()).vec();
-  const std::vector<double> nHat_i = (R_frame_i*xHat*R_frame_i.conjugate()).vec();
+  const double chi1Mag_i = std::sqrt(chi1_i[0]*chi1_i[0] + chi1_i[1]*chi1_i[1] + chi1_i[2]*chi1_i[2]);
+  const double chi2Mag_i = std::sqrt(chi2_i[0]*chi2_i[0] + chi2_i[1]*chi2_i[1] + chi2_i[2]*chi2_i[2]);
+  const std::vector<double> rfrak_chi1_i = sqrtOfRotor(-Quaternion(chi1_i).normalized()*zHat).log().vec();
+  const std::vector<double> rfrak_chi2_i = sqrtOfRotor(-Quaternion(chi2_i).normalized()*zHat).log().vec();
+  const std::vector<double> rfrak_ell_i = R_frame_i.log().vec();
 
   // These are the basic variables to be evolved
-  std::vector<double> y(12);
+  std::vector<double> y(9);
   y[0] = v_i;
-  y[1] = chi1_i[0];
-  y[2] = chi1_i[1];
-  y[3] = chi1_i[2];
-  y[4] = chi2_i[0];
-  y[5] = chi2_i[1];
-  y[6] = chi2_i[2];
-  y[7] = ellHat_i[0];
-  y[8] = ellHat_i[1];
-  y[9] = ellHat_i[2];
-  y[10] = 0.0;
-  y[11] = 0.0;
+  y[1] = rfrak_chi1_i[0];
+  y[2] = rfrak_chi1_i[1];
+  y[3] = rfrak_chi2_i[0];
+  y[4] = rfrak_chi2_i[1];
+  y[5] = rfrak_ell_i[0];
+  y[6] = rfrak_ell_i[1];
+  y[7] = rfrak_ell_i[2];
+  y[8] = 0.0;
 
   // Tn encapsulates all the actual PN calculations -- especially the
   // right-hand sides of the evolution system
-  TaylorTn Tn(m1, v_i,
-	      chi1_i[0], chi1_i[1], chi1_i[2],
-	      chi2_i[0], chi2_i[1], chi2_i[2],
-	      ellHat_i[0], ellHat_i[1], ellHat_i[2],
-	      nHat_i[0], nHat_i[1], nHat_i[2]);
+  TaylorTn Tn(xHat, yHat, zHat, m1, v_i,
+	      chi1Mag_i, chi2Mag_i,
+	      rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+	      rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
 
   // Here are the parameters for the evolution
   const double nu = m1*(1-m1);
@@ -175,30 +150,26 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   // Store the data at the first step
   {
     Tn.Recalculate(time, &y[0]);
-    vector<double> chi1_i(3), chi2_i(3);
-    chi1_i[0] = y[1];
-    chi1_i[1] = y[2];
-    chi1_i[2] = y[3];
-    chi2_i[0] = y[4];
-    chi2_i[1] = y[5];
-    chi2_i[2] = y[6];
-    const Quaternion Rax =
-      sqrtOfRotor(-normalized(Quaternion(0., y[7], y[8], y[9]))*zHat);
-    const Quaternion R_frame_i = Rax * exp(((y[10]+y[11])/2.)*zHat);
     t.push_back(time);
     v.push_back(y[0]);
-    chi1.push_back(chi1_i);
-    chi2.push_back(chi2_i);
+    const Quaternion R_chi1_i = exp(Quaternion(0.0, y[1], y[2], 0.0));
+    chi1.push_back((chi1Mag_i*R_chi1_i*zHat*R_chi1_i.conjugate()).vec());
+    const Quaternion R_chi2_i = exp(Quaternion(0.0, y[3], y[4], 0.0));
+    chi2.push_back((chi2Mag_i*R_chi2_i*zHat*R_chi2_i.conjugate()).vec());
+    const Quaternion R_frame_i = exp(Quaternion(0.0, y[5], y[6], y[7]));
+    // const Quaternion R_frame_i = Unflipped(R_frame.back(), exp(Quaternion(0.0, y[5], y[6], y[7])));
     R_frame.push_back(R_frame_i);
-    Phi.push_back(y[10]);
+    Phi.push_back(y[8]);
   }
 
   // Run the integration
   unsigned int NSteps = 0;
+  unsigned int nSteps = 0;
   while (time < endtime) {
     // Take a step
     int status = gsl_odeiv2_evolve_apply(e, c, s, sys, &time, time+hmax, &h, &y[0]);
     ++NSteps;
+    ++nSteps;
 
     // Check if it worked and the system is still reasonable
     if(status == GSL_EDOM) {
@@ -215,22 +186,15 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
     // If it worked, store the data
     {
       Tn.Recalculate(time, &y[0]);
-      vector<double> chi1_i(3), chi2_i(3);
-      chi1_i[0] = y[1];
-      chi1_i[1] = y[2];
-      chi1_i[2] = y[3];
-      chi2_i[0] = y[4];
-      chi2_i[1] = y[5];
-      chi2_i[2] = y[6];
-      const Quaternion Rax =
-	sqrtOfRotor(-normalized(Quaternion(0., y[7], y[8], y[9]))*zHat);
-      const Quaternion R_frame_i = Rax * exp(((y[10]+y[11])/2.)*zHat);
       t.push_back(time);
       v.push_back(y[0]);
-      chi1.push_back(chi1_i);
-      chi2.push_back(chi2_i);
+      const Quaternion R_chi1_i = exp(Quaternion(0.0, y[1], y[2], 0.0));
+      chi1.push_back((chi1Mag_i*R_chi1_i*zHat*R_chi1_i.conjugate()).vec());
+      const Quaternion R_chi2_i = exp(Quaternion(0.0, y[3], y[4], 0.0));
+      chi2.push_back((chi2Mag_i*R_chi2_i*zHat*R_chi2_i.conjugate()).vec());
+      const Quaternion R_frame_i = Unflipped(R_frame.back(), exp(Quaternion(0.0, y[5], y[6], y[7])));
       R_frame.push_back(R_frame_i);
-      Phi.push_back(y[10]);
+      Phi.push_back(y[8]);
     }
 
     // Check if we should stop because this has gone on suspiciously long
@@ -248,9 +212,33 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
     }
 
     // Check if we should stop because the step has gotten too small,
-    // but make sure we at least take 100 steps since the beginning.
-    // [This is the condition that we expect to stop us near merger.]
-    if(NSteps>100 && h<hmin) { break; }
+    // but make sure we at least take 500 steps since the last
+    // disruption.  [This is the condition that we expect to stop us
+    // near merger.]
+    if(nSteps>500 && h<hmin) { break; }
+
+    // Reset values of quaternion logarithms to smaller sizes, if
+    // necessary.  If this resets, we reset nSteps to zero, because
+    // this may make the time stepper take smaller steps
+    const double rfrakMag_chi1 = std::sqrt(y[1]*y[1]+y[2]*y[2]);
+    if(rfrakMag_chi1>M_PI/2.) {
+      y[1] = (rfrakMag_chi1-M_PI)*y[1]/rfrakMag_chi1;
+      y[2] = (rfrakMag_chi1-M_PI)*y[2]/rfrakMag_chi1;
+      nSteps=0; // This may make the integrator take a few small steps at first
+    }
+    const double rfrakMag_chi2 = std::sqrt(y[3]*y[3]+y[4]*y[4]);
+    if(rfrakMag_chi2>M_PI/2.) {
+      y[3] = (rfrakMag_chi2-M_PI)*y[3]/rfrakMag_chi2;
+      y[4] = (rfrakMag_chi2-M_PI)*y[4]/rfrakMag_chi2;
+      nSteps=0; // This may make the integrator take a few small steps at first
+    }
+    const double rfrakMag_ellHat = std::sqrt(y[5]*y[5]+y[6]*y[6]+y[7]*y[7]);
+    if(rfrakMag_ellHat>M_PI/2.) {
+      y[5] = (rfrakMag_ellHat-M_PI)*y[5]/rfrakMag_ellHat;
+      y[6] = (rfrakMag_ellHat-M_PI)*y[6]/rfrakMag_ellHat;
+      y[7] = (rfrakMag_ellHat-M_PI)*y[7]/rfrakMag_ellHat;
+      nSteps=0; // This may make the integrator take a few small steps at first
+    }
   }
 
   // Free the gsl storage
