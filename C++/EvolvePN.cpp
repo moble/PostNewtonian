@@ -1,13 +1,15 @@
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <string>
+#include <sstream>
 
 #include "PNEvolution.hpp"
 
 
-int main() {
-  const std::string Approximant = "TaylorT5";
+int main(int argc, char *argv[]) {
+  const std::string Approximant = (argc==2 ? argv[1] : "TaylorT1");
   const double PNOrder = 3.5;
   const double v0 = 0.3073533404944769;
   const double v_i = v0;
@@ -40,47 +42,54 @@ int main() {
 			  Phi
 			  );
 
+  std::stringstream FileName("");
+  FileName << "EvolvePN_" << Approximant << "_"<< int(PNOrder) <<"p"<< (PNOrder-int(PNOrder))*10 << "PN.dat";
+
   std::cerr << "NTimes = " << t.size()
-	    << "\nPrinting results to std::cout... "
+	    << "\nPrinting results to " << FileName.str() << "... "
 	    << std::flush;
 
-  std::cout << std::setprecision(12)
-	    << "## const std::string Approximant = \"" << Approximant << "\";\n"
-	    << "## const double PNOrder = " << PNOrder << ";\n"
-	    << "## const double v0 = " << v0 << ";\n"
-	    << "## const double v_i = " << v_i << ";\n"
-	    << "## const double m1 = " << m1 << ";\n"
-	    << "## std::vector<double> chi1_i(3);\n"
-	    << "## std::vector<double> chi2_i(3);\n"
-	    << "## const Quaternions::Quaternion R_frame_i("
-	    << R_frame_i[0] << ", " << R_frame_i[1] << ", " << R_frame_i[2] << ", " << R_frame_i[3] << ");\n"
-	    << "## chi1_i[0] = " << chi1_i[0] << ";\n"
-	    << "## chi1_i[1] = " << chi1_i[1] << ";\n"
-	    << "## chi1_i[2] = " << chi1_i[2] << ";\n"
-	    << "## chi2_i[0] = " << chi2_i[0] << ";\n"
-	    << "## chi2_i[1] = " << chi2_i[1] << ";\n"
-	    << "## chi2_i[2] = " << chi2_i[2] << ";\n"
-	    << "# [1] = t/m\n"
-	    << "# [2] = v\n"
-	    << "# [3] = chi1_x\n"
-	    << "# [4] = chi1_y\n"
-	    << "# [5] = chi1_z\n"
-	    << "# [6] = chi2_x\n"
-	    << "# [7] = chi2_y\n"
-	    << "# [8] = chi2_z\n"
-	    << "# [9] = R_frame[0]\n"
-	    << "# [10] = R_frame[1]\n"
-	    << "# [11] = R_frame[2]\n"
-	    << "# [12] = R_frame[3]\n"
-	    << "# [13] = Phi\n";
+  std::ofstream File(FileName.str().c_str());
+
+  File << std::setprecision(12)
+       << "## const std::string Approximant = \"" << Approximant << "\";\n"
+       << "## const double PNOrder = " << PNOrder << ";\n"
+       << "## const double v0 = " << v0 << ";\n"
+       << "## const double v_i = " << v_i << ";\n"
+       << "## const double m1 = " << m1 << ";\n"
+       << "## std::vector<double> chi1_i(3);\n"
+       << "## std::vector<double> chi2_i(3);\n"
+       << "## const Quaternions::Quaternion R_frame_i("
+       << R_frame_i[0] << ", " << R_frame_i[1] << ", " << R_frame_i[2] << ", " << R_frame_i[3] << ");\n"
+       << "## chi1_i[0] = " << chi1_i[0] << ";\n"
+       << "## chi1_i[1] = " << chi1_i[1] << ";\n"
+       << "## chi1_i[2] = " << chi1_i[2] << ";\n"
+       << "## chi2_i[0] = " << chi2_i[0] << ";\n"
+       << "## chi2_i[1] = " << chi2_i[1] << ";\n"
+       << "## chi2_i[2] = " << chi2_i[2] << ";\n"
+       << "# [1] = t/m\n"
+       << "# [2] = v\n"
+       << "# [3] = chi1_x\n"
+       << "# [4] = chi1_y\n"
+       << "# [5] = chi1_z\n"
+       << "# [6] = chi2_x\n"
+       << "# [7] = chi2_y\n"
+       << "# [8] = chi2_z\n"
+       << "# [9] = R_frame[0]\n"
+       << "# [10] = R_frame[1]\n"
+       << "# [11] = R_frame[2]\n"
+       << "# [12] = R_frame[3]\n"
+       << "# [13] = Phi\n";
   const unsigned int tsize = t.size();
   for(unsigned int i=0; i<tsize; ++i) {
-    std::cout << t[i] << " " << v[i]
-	      << " " << chi1[i][0] << " " << chi1[i][1] << " " << chi1[i][2]
-	      << " " << chi2[i][0] << " " << chi2[i][1] << " " << chi2[i][2]
-	      << " " << R_frame[i][0] << " " << R_frame[i][1] << " " << R_frame[i][2] << " " << R_frame[i][3]
-	      << " " << Phi[i] << std::endl;
+    File << t[i] << " " << v[i]
+	 << " " << chi1[i][0] << " " << chi1[i][1] << " " << chi1[i][2]
+	 << " " << chi2[i][0] << " " << chi2[i][1] << " " << chi2[i][2]
+	 << " " << R_frame[i][0] << " " << R_frame[i][1] << " " << R_frame[i][2] << " " << R_frame[i][3]
+	 << " " << Phi[i] << std::endl;
   }
+
+  File.close();
 
   std::cerr << "succeeded." << std::endl;
 
