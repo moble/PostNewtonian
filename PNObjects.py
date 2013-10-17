@@ -13,10 +13,10 @@ class PNSymbol(Symbol) :
     rest in `__init__`.
 
     """
-    def __new__(cls, name, constant, fundamental, substitution, substitution_atoms, datatype, **assumptions) :
+    def __new__(cls, name, constant=None, fundamental=None, substitution=None, substitution_atoms=None, datatype=None, **assumptions) :
         from sympy import Symbol
         return Symbol.__new__(cls, name, **assumptions)
-    def __init__(self, name, constant, fundamental, substitution, substitution_atoms, datatype, **kwargs) :
+    def __init__(self, name, constant=None, fundamental=None, substitution=None, substitution_atoms=None, datatype=None, **kwargs) :
         if not fundamental and isinstance(substitution, basestring) and not substitution_atoms:
             raise ValueError('Either `substitution` must be a sympy expression, '
                              +'or `substitution_atoms` must be non-empty for derived quantities.')
@@ -131,3 +131,4 @@ class PNCollection(OrderedDict) : # subclass of OrderedDict
         args['substitution_atoms'] = args.pop('substitution_atoms', None)
         args['datatype'] = args.pop('datatype', None)
         self._AddVariable(name, **args)
+PNCollection.AddExpression = PNCollection.AddDerivedVariable
