@@ -164,6 +164,8 @@ class CodeConstructor:
         wrapper.initial_indent = ' '*Indent
         wrapper.subsequent_indent = wrapper.initial_indent
         def Initialization(atom):
+            if atom.datatype and atom.datatype=='std::vector<double>':
+                return '{0}({1})'.format(self.Variables[atom], len(atom.substitution))
             if atom.fundamental:
                 return '{0}({0}_i)'.format(self.Variables[atom])
             else:
@@ -184,8 +186,13 @@ class CodeConstructor:
         wrapper = TextWrapper(width=120)
         wrapper.initial_indent = ' '*Indent
         wrapper.subsequent_indent = wrapper.initial_indent + '  '
-        return '\n'.join([wrapper.fill('{0} = {1};'.format(self.Variables[atom], atom.ccode()))
-                          for atom in self.Atoms if not atom.fundamental and not atom.constant])
+        def Evaluation(atom):
+            if atom.datatype and atom.datatype=='std::vector<double>':
+                return '\n'.join([wrapper.fill('{0}[{1}] = {2};'.format(self.Variables[atom], i, atom.substitution[i].ccode()))
+                                  for i in range(len(atom.substitution))])
+            else:
+                return wrapper.fill('{0} = {1};'.format(self.Variables[atom], atom.ccode()))
+        return '\n'.join([Evaluation(atom) for atom in self.Atoms if not atom.fundamental and not atom.constant])
 
     def CppEvaluateExpressions(self, Indent=4, Expressions=None):
         """Declare and define the `Expressions` for C++

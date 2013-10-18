@@ -139,16 +139,16 @@ public:
     double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
     double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
       3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    Quaternion OmegaVec1_coeff = ellHat*pow(v, 5);
-    return OmegaVec1_coeff*(OmegaVec1_0 + pow(v, 2)*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2)));
+    double OmegaVec1_coeff = pow(v, 5);
+    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + pow(v, 2)*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2)));
   }
   Quaternion OmegaVec_chiVec_2() {
     double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    Quaternion OmegaVec2_coeff = ellHat*pow(v, 5);
+    double OmegaVec2_coeff = pow(v, 5);
     double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
     double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
       3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*(OmegaVec2_0 + pow(v, 2)*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2)));
+    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + pow(v, 2)*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2)));
   }
   Quaternion OmegaVec_ellHat() {
     double OmegaVec_ellHat_4 = S_n*(9.0*pow(nu, 2) - 29.5*nu - 1.5) + Sigma_n*delta*(4.33333333333333*pow(nu, 2) -
@@ -170,7 +170,7 @@ public:
     const double Absorption = Fcal_coeff*MDot_Alvi_5*pow(v, 5);
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
     if(dvdt_T1<0.0) { return GSL_EDIVERGE; } // v is decreasing
-    return CommonRHS(dvdt_T1, t, y, dydt);
+    return CommonRHS(dvdt_T1, y, dydt);
   }
 
   int TaylorT4_3p5PN(double t, const double* y, double* dydt) {
@@ -189,7 +189,7 @@ public:
       (-0.5*Fcal_3 - 0.5*Fcal_SO_3 + 1.25*E_SO_3*Fcal_0/E_0)/E_0) + (-0.5*Fcal_2 + 1.0*E_2*Fcal_0/E_0)/E_0) -
       0.5*Fcal_0/E_0)/(nu*v);
     if(dvdt_T4<0.0) { return GSL_EDIVERGE; } // v is decreasing
-    return CommonRHS(dvdt_T4, t, y, dydt);
+    return CommonRHS(dvdt_T4, y, dydt);
   }
 
   int TaylorT5_3p5PN(double t, const double* y, double* dydt) {
@@ -211,10 +211,10 @@ public:
       5.0*E_SO_3)/Fcal_0) + (2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
     if(dvdt_T5<0.0) { return GSL_EDIVERGE; } // v is decreasing
-    return CommonRHS(dvdt_T5, t, y, dydt);
+    return CommonRHS(dvdt_T5, y, dydt);
   }
 
-  int CommonRHS(const double dvdt, double t, const double* y, double* dydt) {
+  int CommonRHS(const double dvdt, const double* y, double* dydt) {
     std::vector<double> rfrak_ellHat(3);
     rfrak_ellHat[0] = y[5];
     rfrak_ellHat[1] = y[6];

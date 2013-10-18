@@ -55,10 +55,10 @@ class PNSymbol(Symbol) :
                 self.substitution_atoms = None
         self.datatype = datatype
     def ccode(self, **args):
-        from sympy import ccode, horner, N
+        from sympy import ccode, N#, horner
         if self.fundamental:
             return str(self)
-        if hasattr(self.substitution, '__iter__'): # Check for __iter__ only, so strings don't get caught
+        if hasattr(self.substitution, '__iter__'): # Check only for __iter__ so that strings don't get caught
             return '{' + ', '.join([ccode(x, **args) for x in self.substitution]) + '}'
         if isinstance(self.substitution, basestring):
             return self.substitution
