@@ -1,6 +1,29 @@
 from collections import OrderedDict
 from sympy import Symbol, Function
 
+def collect_recursively(expr, syms, func=None, evaluate=True, exact=False, distribute_order_term=True):
+    """
+    Use `sympy.collect` function recursively.
+
+    This function behaves just like the standard sympy `collect`
+    function, except that each of the collected terms is then
+    collected again with the next tuple of symbols in the `syms`
+    list.
+
+    The optional arguments are the same as the usual function,
+    except that func is only applied at the innermost level.
+
+    """
+    from sympy import collect
+    if len(syms)==0:
+        return collect(expr) # should raise an exception
+    def collect_factory(syms, func, evaluate, exact, distribute_order_term):
+        return lambda x: collect(x, syms, func, evaluate, exact, distribute_order_term)
+    syms[-1] = collect_factory(syms[-1], func, evaluate, exact, distribute_order_term)
+    for i in range(len(syms)-2, -1, -1):
+        syms[i] = collect_factory(syms[i], syms[i+1], evaluate, exact, distribute_order_term)
+    return syms[0](expr)
+
 class PNSymbol(Symbol) :
     """This is the basic object created by calls to `AddVariable`, etc.,
     and is a simple subclass of python.Symbol, as described above.
