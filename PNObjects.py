@@ -67,10 +67,10 @@ class PNSymbol(Symbol) :
             code=N(code)
         except:
             pass
-        try:
-            code=horner(code, wrt=args.pop('wrt', None))
-        except:
-            pass
+        # try:
+        #     code=horner(code, wrt=args.pop('wrt', None))
+        # except:
+        #     pass
         return ccode(code, **args)
 
 class PNCollection(OrderedDict) : # subclass of OrderedDict

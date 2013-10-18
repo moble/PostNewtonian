@@ -29,8 +29,8 @@ class CodeConstructor:
     """
     def __init__(self, Variables, Expressions):
         AtomSet = set([])
-        self.Variables = Variables.copy()
-        self.Expressions = Expressions.copy()
+        self.Variables = Variables
+        self.Expressions = Expressions
         for Expression in self.Expressions:
             AtomSet.update(Expression.substitution_atoms)
         LastAtomsLength = 0
@@ -74,6 +74,13 @@ class CodeConstructor:
         for sym in self.Variables:
             if sym in AtomSet or sym in OldAtoms:
                 self.Atoms.append(sym)
+        # for Expression in Expressions:
+        #     try:
+        #         for sym in Expression.Variables:
+        #             if sym in AtomSet or sym in OldAtoms:
+        #                 self.Atoms.append(sym)
+        #     except:
+        #         pass
 
     def CppDeclarations(self, Indent=4):
         """Create declaration statements for C++
@@ -220,6 +227,7 @@ class CodeConstructor:
             else:
                 return 'double'
         from textwrap import TextWrapper
+        from PNObjects import PNCollection
         wrapper = TextWrapper(width=120)
         wrapper.initial_indent = ' '*Indent + '  return '
         wrapper.subsequent_indent = ' '*Indent + '    '
@@ -227,8 +235,16 @@ class CodeConstructor:
         if not Expressions:
             Expressions=self.Expressions
         for Expression in Expressions:
+            ExprColl = PNCollection()
+            for atom in Expression.substitution_atoms:
+                if atom not in self.Variables:
+                    ExprColl.AddDerivedVariable(str(atom), atom.substitution,
+                                                substitution_atoms=atom.substitution_atoms,
+                                                datatype=atom.datatype)
+            MiniConstructor = CodeConstructor(self.Variables, ExprColl)
             Evaluations.append(
                 ' '*Indent + dtype(Expression) + ' ' + Expressions[Expression] + '() {\n'
+                + MiniConstructor.CppEvaluateExpressions(Indent+2) + '\n'
                 + wrapper.fill(Expression.ccode())
                 + ';\n' + ' '*Indent + '}'
             )
