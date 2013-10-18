@@ -61,7 +61,8 @@ class CodeConstructor:
     def AddDependencies(self, Expressions):
         AtomSet = set([])
         for Expression in Expressions:
-            AtomSet.update(Expression.substitution_atoms)
+            if (Expression.substitution_atoms):
+                AtomSet.update(Expression.substitution_atoms)
         LastAtomsLength = 0
         while(len(AtomSet) != LastAtomsLength):
             LastAtomsLength = len(AtomSet)
