@@ -150,14 +150,21 @@ public:
       3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
     return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + pow(v, 2)*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2)));
   }
-  Quaternion OmegaVec_ellHat() {
-    double OmegaVec_ellHat_4 = S_n*(9.0*pow(nu, 2) - 29.5*nu - 1.5) + Sigma_n*delta*(4.33333333333333*pow(nu, 2) -
-      9.625*nu - 1.5);
-    double OmegaVec_ellHat_coeff = pow(v, 6);
-    double OmegaVec_ellHat_2 = S_n*(-12.0*nu - 3.0) + Sigma_n*delta*(-5.5*nu - 3.0);
-    double OmegaVec_ellHat_0 = 7.0*S_n + 3.0*Sigma_n*delta;
-    return OmegaVec_ellHat_coeff*nHat*(OmegaVec_ellHat_0 + pow(v, 2)*(OmegaVec_ellHat_2 + OmegaVec_ellHat_4*pow(v, 2)))
-      + ellHat*pow(v, 3);
+  Quaternion OmegaVec() {
+    double gamma_PN_2 = -0.333333333333333*nu + 1.0;
+    double gamma_PN_6 = 0.0123456790123457*pow(nu, 3) + 6.36111111111111*pow(nu, 2) - 2.98177812235564*nu + 1.0;
+    double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
+    double gamma_PN_3 = 1.66666666666667*S_l + Sigma_l*delta;
+    double gamma_PN_7 = S_l*(-6.0*pow(nu, 2) - 10.5833333333333*nu + 5.0) - 2.66666666666667*Sigma_l*delta*pow(nu, 2) +
+      Sigma_l*delta*(-10.1666666666667*nu + 3.0);
+    double gamma_PN_5 = S_l*(0.888888888888889*nu + 3.33333333333333) + 2.0*Sigma_l*delta;
+    double gamma_PN_0 = 1.00000000000000;
+    double a_ell_2 = S_n*(-9.66666666666667*nu - 10.0) + Sigma_n*delta*(-4.5*nu - 6.0);
+    double gamma_PN_4 = -5.41666666666667*nu + 1.0;
+    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
+      9.125*nu + 1.5);
+    return ellHat*pow(v, 3) + nHat*pow(v, 6)*(a_ell_0 + pow(v, 2)*(a_ell_2 + a_ell_4*pow(v, 2)))*(gamma_PN_0 + pow(v,
+      2)*(gamma_PN_2 + v*(gamma_PN_3 + v*(gamma_PN_4 + v*(gamma_PN_5 + v*(gamma_PN_6 + gamma_PN_7*v))))));
   }
 
   int TaylorT1_3p5PN(double t, const double* y, double* dydt) {
@@ -219,7 +226,7 @@ public:
     rfrak_ellHat[0] = y[5];
     rfrak_ellHat[1] = y[6];
     rfrak_ellHat[2] = y[7];
-    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec_ellHat().vec());
+    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
     dydt[0] = dvdt;
     FrameFromAngularVelocity_2D_Integrand(y[1], y[2], OmegaVec_chiVec_1().vec(), dydt[1], dydt[2]);
     FrameFromAngularVelocity_2D_Integrand(y[3], y[4], OmegaVec_chiVec_2().vec(), dydt[3], dydt[4]);

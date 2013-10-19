@@ -32,7 +32,10 @@ class CodeConstructor:
         self.Variables = Variables
         self.Expressions = Expressions
         for Expression in self.Expressions:
-            AtomSet.update(Expression.substitution_atoms)
+            try:
+                AtomSet.update(Expression.substitution_atoms)
+            except TypeError:
+                pass
         LastAtomsLength = 0
         while(len(AtomSet) != LastAtomsLength):
             LastAtomsLength = len(AtomSet)
@@ -212,8 +215,11 @@ class CodeConstructor:
         if not Expressions:
             Expressions=self.Expressions
         for Expression in Expressions:
-            Evaluations.append(wrapper.fill('{0}{1} {2} = {3};'.format(self.const(Expression), self.dtype(Expression),
-                                                                       Expressions[Expression], Expression.ccode())))
+            try:
+                Evaluations.append(wrapper.fill('{0}{1} {2} = {3};'.format(self.const(Expression), self.dtype(Expression),
+                                                                           Expressions[Expression], Expression.ccode())))
+            except TypeError:
+                pass
         return '\n'.join(Evaluations)
 
     def CppExpressionsAsFunctions(self, Indent=4, Expressions=None):
@@ -245,9 +251,12 @@ class CodeConstructor:
             ExprColl = PNCollection()
             for atom in Expression.substitution_atoms:
                 if atom not in self.Variables:
-                    ExprColl.AddDerivedVariable(str(atom), atom.substitution,
-                                                substitution_atoms=atom.substitution_atoms,
-                                                datatype=atom.datatype)
+                    try:
+                        ExprColl.AddDerivedVariable(str(atom), atom.substitution,
+                                                    substitution_atoms=atom.substitution_atoms,
+                                                    datatype=atom.datatype)
+                    except TypeError:
+                        pass
             MiniConstructor = CodeConstructor(self.Variables, ExprColl)
             Evaluations.append(
                 ' '*Indent + dtype(Expression) + ' ' + Expressions[Expression] + '() {\n'

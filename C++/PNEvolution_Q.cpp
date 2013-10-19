@@ -76,7 +76,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
 			     std::vector<double>& Phi
 			     )
 {
-  std::cerr << __FILE__ << ":" << __LINE__ << ": Add option to evolve in reverse, and option to run both ways." << std::endl;
+  std::cerr << __FILE__ << ":" << __LINE__ << ": Add nice method for running both ways." << std::endl;
 
   // Transform the input into the forms we will actually use
   const double chi1Mag_i = std::sqrt(chi1_i[0]*chi1_i[0] + chi1_i[1]*chi1_i[1] + chi1_i[2]*chi1_i[2]);

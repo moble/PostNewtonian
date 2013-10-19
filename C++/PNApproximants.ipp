@@ -149,12 +149,20 @@ public:
     return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + pow(v, 2)*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2)));
   }
   std::vector<double> OmegaVec_ellHat() {
-    double OmegaVec_ellHat_4 = S_n*(9.0*pow(nu, 2) - 29.5*nu - 1.5) + Sigma_n*delta*(4.33333333333333*pow(nu, 2) -
-      9.625*nu - 1.5);
-    double OmegaVec_ellHat_coeff = pow(v, 6);
-    double OmegaVec_ellHat_2 = S_n*(-12.0*nu - 3.0) + Sigma_n*delta*(-5.5*nu - 3.0);
-    double OmegaVec_ellHat_0 = 7.0*S_n + 3.0*Sigma_n*delta;
-    return OmegaVec_ellHat_coeff*nHat*(OmegaVec_ellHat_0 + pow(v, 2)*(OmegaVec_ellHat_2 + OmegaVec_ellHat_4*pow(v, 2)));
+    double gamma_PN_2 = -0.333333333333333*nu + 1.0;
+    double gamma_PN_6 = 0.0123456790123457*pow(nu, 3) + 6.36111111111111*pow(nu, 2) - 2.98177812235564*nu + 1.0;
+    double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
+    double gamma_PN_3 = 1.66666666666667*S_l + Sigma_l*delta;
+    double gamma_PN_7 = S_l*(-6.0*pow(nu, 2) - 10.5833333333333*nu + 5.0) - 2.66666666666667*Sigma_l*delta*pow(nu, 2) +
+      Sigma_l*delta*(-10.1666666666667*nu + 3.0);
+    double gamma_PN_5 = S_l*(0.888888888888889*nu + 3.33333333333333) + 2.0*Sigma_l*delta;
+    double gamma_PN_0 = 1.00000000000000;
+    double a_ell_2 = S_n*(-9.66666666666667*nu - 10.0) + Sigma_n*delta*(-4.5*nu - 6.0);
+    double gamma_PN_4 = -5.41666666666667*nu + 1.0;
+    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
+      9.125*nu + 1.5);
+    return nHat*pow(v, 6)*(a_ell_0 + pow(v, 2)*(a_ell_2 + a_ell_4*pow(v, 2)))*(gamma_PN_0 + pow(v, 2)*(gamma_PN_2 +
+      v*(gamma_PN_3 + v*(gamma_PN_4 + v*(gamma_PN_5 + v*(gamma_PN_6 + gamma_PN_7*v))))));
   }
 
   int TaylorT1_3p5PN(double t, const double* y, double* dydt) {
