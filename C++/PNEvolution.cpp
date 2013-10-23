@@ -162,6 +162,34 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   // right-hand sides of the evolution system
   TaylorTn* Tn;
   switch(int(2*PNOrder)) {
+  case 0:
+    Tn = new TaylorTn_0PN(m1, v_i,
+			  chi1_i[0], chi1_i[1], chi1_i[2],
+			  chi2_i[0], chi2_i[1], chi2_i[2],
+			  ellHat_i[0], ellHat_i[1], ellHat_i[2],
+			  nHat_i[0], nHat_i[1], nHat_i[2]);
+    break;
+  case 1:
+    Tn = new TaylorTn_0p50PN(m1, v_i,
+			     chi1_i[0], chi1_i[1], chi1_i[2],
+			     chi2_i[0], chi2_i[1], chi2_i[2],
+			     ellHat_i[0], ellHat_i[1], ellHat_i[2],
+			     nHat_i[0], nHat_i[1], nHat_i[2]);
+    break;
+  case 2:
+    Tn = new TaylorTn_1p0PN(m1, v_i,
+			    chi1_i[0], chi1_i[1], chi1_i[2],
+			    chi2_i[0], chi2_i[1], chi2_i[2],
+			    ellHat_i[0], ellHat_i[1], ellHat_i[2],
+			    nHat_i[0], nHat_i[1], nHat_i[2]);
+    break;
+  case 3:
+    Tn = new TaylorTn_1p5PN(m1, v_i,
+			    chi1_i[0], chi1_i[1], chi1_i[2],
+			    chi2_i[0], chi2_i[1], chi2_i[2],
+			    ellHat_i[0], ellHat_i[1], ellHat_i[2],
+			    nHat_i[0], nHat_i[1], nHat_i[2]);
+    break;
   case 4:
     Tn = new TaylorTn_2p0PN(m1, v_i,
 			    chi1_i[0], chi1_i[1], chi1_i[2],

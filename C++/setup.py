@@ -68,6 +68,8 @@ SourceFiles = ['PNEvolution.cpp',
                'Quaternions/Quaternions.cpp',
                'PNEvolution.i']
 Dependencies = ['PNEvolution.hpp',
+                'PNApproximants.ipp',
+                'PNApproximants_Q.ipp',
                 'Quaternions/Quaternions.hpp']
 Libraries = ['gsl', 'gslcblas']
 

@@ -17,12 +17,12 @@ OPT = -O3 -fopenmp -Wall -Wno-deprecated
 #############################################################################
 
 # Tell 'make' not to look for files with the following names
-.PHONY : all clean python
+.PHONY : all clean cpp
 
-all : PNEvolution.o EvolvePN PNEvolution_Q.o EvolvePN_Q
-
-python:
+all :
 	python setup.py install --user
+
+cpp : PNEvolution.o EvolvePN PNEvolution_Q.o EvolvePN_Q
 
 # This is how to build those object files
 PNEvolution.o : PNEvolution.cpp PNEvolution.hpp PNApproximants.ipp
