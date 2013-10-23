@@ -69,12 +69,16 @@ ARGOUT_TYPEMAP_STD_VECTOR_OF_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, chi2, NPY_
   $1 = &vec_temp;
 }
 %typemap(argout) std::vector<Quaternions::Quaternion>& R_frame {
-  npy_intp result_size = $1->size();
-  npy_intp result_size2 = 4;
-  npy_intp dims[2] = { result_size, result_size2 };
-  PyArrayObject* npy_arr = (PyArrayObject*)PyArray_SimpleNew(2, dims, NPY_DOUBLE);
-  double* dat = static_cast<double*>(PyArray_DATA(npy_arr));
-  for (size_t i = 0; i < result_size; ++i) { for (size_t j = 0; j < result_size2; ++j) { dat[i*result_size2+j] = (*$1)[i][j]; } }
+  npy_intp size = $1->size();
+  PyArrayObject *npy_arr = reinterpret_cast<PyArrayObject*>(PyArray_SimpleNew(1, &size, NPY_OBJECT));
+  PyObject** data = static_cast<PyObject**>(PyArray_DATA(npy_arr));
+  for(npy_intp i=0; i<size; ++i) {
+    PyObject* qobj = SWIG_NewPointerObj((new Quaternions::Quaternion((*$1)[i])),
+					SWIGTYPE_p_Quaternions__Quaternion, SWIG_POINTER_OWN);
+    if(!qobj) {SWIG_fail;}
+    Py_INCREF(qobj);
+    data[i] = qobj;
+  }
   %append_output(PyArray_Return(npy_arr));
 }
 ARGOUT_TYPEMAP_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, Phi, NPY_DOUBLE)
