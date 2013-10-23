@@ -59,6 +59,10 @@ void cross(const double a[3], const double b[3], double c[3]) {
   return;
 }
 
+double dot(const std::vector<double>& a, const std::vector<double>& b) {
+  return a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+}
+
 
 ///////////////////////////////////
 //// Defining the approximants ////
@@ -128,6 +132,9 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   // Transform the input into the forms we will actually use
   const std::vector<double> ellHat_i = (R_frame_i*zHat*R_frame_i.conjugate()).vec();
   const std::vector<double> nHat_i = (R_frame_i*xHat*R_frame_i.conjugate()).vec();
+  const Quaternion Rax =
+    sqrtOfRotor(-normalized(Quaternion(0., ellHat_i[0], ellHat_i[1], ellHat_i[2]))*zHat);
+  const double gamma_i = -acos(dot(nHat_i, (Rax*xHat*Rax.conjugate()).vec()));
 
   // These are the basic variables to be evolved
   std::vector<double> y(12);
@@ -141,8 +148,15 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   y[7] = ellHat_i[0];
   y[8] = ellHat_i[1];
   y[9] = ellHat_i[2];
-  y[10] = 0.0;
-  y[11] = 0.0;
+  y[10] = 0.0; // Phi
+  y[11] = gamma_i;
+
+  // {
+  //   const Quaternion R = Rax * exp(((gamma_i)/2.)*zHat);
+  //   std::cout << "nHat_i: " << R_frame_i*xHat*R_frame_i.conjugate() << " " << R*xHat*R.conjugate() << std::endl;
+  //   std::cout << "lambdaHat_i: " << R_frame_i*yHat*R_frame_i.conjugate() << " " << R*yHat*R.conjugate() << std::endl;
+  //   std::cout << "ellHat_i: " << R_frame_i*zHat*R_frame_i.conjugate() << " " << R*zHat*R.conjugate() << std::endl;
+  // }
 
   // Tn encapsulates all the actual PN calculations -- especially the
   // right-hand sides of the evolution system
