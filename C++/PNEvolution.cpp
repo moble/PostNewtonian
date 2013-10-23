@@ -212,7 +212,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
 			    nHat_i[0], nHat_i[1], nHat_i[2]);
     break;
   default:
-    std::cerr << __FILE__ << ":" << __LINE__ << ": Don't know " << PNOrder << " PN." << std::endl;
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": PN order " << PNOrder << " is not yet implemented." << std::endl;
     throw(-1);
   }
 
@@ -247,7 +247,6 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   gsl_odeiv2_system sysT4 = {funcT4, NULL, y.size(), (void *) Tn};
   gsl_odeiv2_system sysT5 = {funcT5, NULL, y.size(), (void *) Tn};
   gsl_odeiv2_system* sys;
-  std::cerr << __FILE__ << ":" << __LINE__ << ": Add more options for PN orders here; possibly use static member function." << std::endl;
   if(Approximant.compare("TaylorT1")==0) {
     sys = &sysT1;
   } else if(Approximant.compare("TaylorT4")==0) {
