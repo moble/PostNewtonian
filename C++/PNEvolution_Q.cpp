@@ -65,16 +65,16 @@ int funcT5 (double t, const double y[], double dydt[], void* params) {
   return Tn->TaylorT5_3p5PN(t, y, dydt);
 }
 
-void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrder,
-			     const double v0, const double v_i,
-			     const double m1,
-			     const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
-			     const Quaternions::Quaternion& R_frame_i,
-			     std::vector<double>& t, std::vector<double>& v,
-			     std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
-			     std::vector<Quaternions::Quaternion>& R_frame,
-			     std::vector<double>& Phi
-			     )
+void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOrder,
+			       const double v0, const double v_i,
+			       const double m1,
+			       const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
+			       const Quaternions::Quaternion& R_frame_i,
+			       std::vector<double>& t, std::vector<double>& v,
+			       std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
+			       std::vector<Quaternions::Quaternion>& R_frame,
+			       std::vector<double>& Phi
+			       )
 {
   std::cerr << __FILE__ << ":" << __LINE__ << ": Add nice method for running both ways." << std::endl;
 
@@ -255,24 +255,24 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   return;
 }
 
-std::vector<std::vector<double> > ellHat(const std::vector<Quaternions::Quaternion>& R_frame) {
-  std::vector<std::vector<double> > ellhat(R_frame.size());
-  for(unsigned int i=0; i<ellhat.size(); ++i) {
-    ellhat[i] = (R_frame[i]*zHat*R_frame[i].conjugate()).vec();
-  }
-  return ellhat;
-}
-std::vector<std::vector<double> > nHat(const std::vector<Quaternions::Quaternion>& R_frame) {
-  std::vector<std::vector<double> > nhat(R_frame.size());
-  for(unsigned int i=0; i<nhat.size(); ++i) {
-    nhat[i] = (R_frame[i]*xHat*R_frame[i].conjugate()).vec();
-  }
-  return nhat;
-}
-std::vector<std::vector<double> > lambdaHat(const std::vector<Quaternions::Quaternion>& R_frame) {
-  std::vector<std::vector<double> > lambdahat(R_frame.size());
-  for(unsigned int i=0; i<lambdahat.size(); ++i) {
-    lambdahat[i] = (R_frame[i]*yHat*R_frame[i].conjugate()).vec();
-  }
-  return lambdahat;
-}
+// std::vector<std::vector<double> > PostNewtonian::ellHat(const std::vector<Quaternions::Quaternion>& R_frame) {
+//   std::vector<std::vector<double> > ellhat(R_frame.size());
+//   for(unsigned int i=0; i<ellhat.size(); ++i) {
+//     ellhat[i] = (R_frame[i]*zHat*R_frame[i].conjugate()).vec();
+//   }
+//   return ellhat;
+// }
+// std::vector<std::vector<double> > PostNewtonian::nHat(const std::vector<Quaternions::Quaternion>& R_frame) {
+//   std::vector<std::vector<double> > nhat(R_frame.size());
+//   for(unsigned int i=0; i<nhat.size(); ++i) {
+//     nhat[i] = (R_frame[i]*xHat*R_frame[i].conjugate()).vec();
+//   }
+//   return nhat;
+// }
+// std::vector<std::vector<double> > PostNewtonian::lambdaHat(const std::vector<Quaternions::Quaternion>& R_frame) {
+//   std::vector<std::vector<double> > lambdahat(R_frame.size());
+//   for(unsigned int i=0; i<lambdahat.size(); ++i) {
+//     lambdahat[i] = (R_frame[i]*yHat*R_frame[i].conjugate()).vec();
+//   }
+//   return lambdahat;
+// }
