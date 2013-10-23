@@ -31,16 +31,16 @@ int main(int argc, char *argv[]) {
   chi2_i[1] = 5.104595303989780536e-02;
   chi2_i[2] = -2.268760863004861961e-01;
 
-  PostNewtonian::EvolvePN(Approximant, PNOrder,
-			  v0, v_i,
-			  m1,
-			  chi1_i, chi2_i,
-			  R_frame_i,
-			  t, v,
-			  chi1, chi2,
-			  R_frame,
-			  Phi
-			  );
+  PostNewtonian::EvolvePN_Q(Approximant, PNOrder,
+			    v0, v_i,
+			    m1,
+			    chi1_i, chi2_i,
+			    R_frame_i,
+			    t, v,
+			    chi1, chi2,
+			    R_frame,
+			    Phi
+			    );
 
   std::stringstream FileName("");
   FileName << "EvolvePN_" << Approximant << "_"<< int(PNOrder) <<"p"<< (PNOrder-int(PNOrder))*10 << "PN_Q.dat";

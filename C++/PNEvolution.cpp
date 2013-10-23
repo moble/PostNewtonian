@@ -123,7 +123,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
 			     std::vector<double>& Phi
 			     )
 {
-  std::cerr << __FILE__ << ":" << __LINE__ << ": Add nice method for running both ways." << std::endl;
+  std::cerr << __FILE__ << ":" << __LINE__ << ": Add easier interface for running both ways." << std::endl;
 
   // Transform the input into the forms we will actually use
   const std::vector<double> ellHat_i = (R_frame_i*zHat*R_frame_i.conjugate()).vec();

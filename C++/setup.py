@@ -64,7 +64,7 @@ if isdir('/opt/local/lib'):
 
 # Add directories for GSL, if needed
 SourceFiles = ['PNEvolution.cpp',
-               # 'PNEvolution_Q.cpp',
+               'PNEvolution_Q.cpp',
                'Quaternions/Quaternions.cpp',
                'PNEvolution.i']
 Dependencies = ['PNEvolution.hpp',

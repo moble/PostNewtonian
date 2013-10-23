@@ -1,5 +1,7 @@
-INCFLAGS = -IQuaternions -I/opt/local/include -I/usr/local/include
-LIBFLAGS = -L/opt/local/lib -L/usr/local/lib -lgsl
+INCFLAGS = -IQuaternions -I/usr/local/include
+LIBFLAGS = -L/usr/local/lib -lgsl
+test -d /opt/local/include && INCFLAGS = -IQuaternions -I/opt/local/include -I/usr/local/include
+test -d /opt/local/lib && LIBFLAGS = -L/opt/local/lib -L/usr/local/lib -lgsl
 ifdef GSL_HOME
 	INCFLAGS = -I${GSL_HOME}/include ${INCFLAGS}
 	LIBFLAGS = -L${GSL_HOME}/lib ${LIBFLAGS}
@@ -15,9 +17,12 @@ OPT = -O3 -fopenmp -Wall -Wno-deprecated
 #############################################################################
 
 # Tell 'make' not to look for files with the following names
-.PHONY : all
+.PHONY : all clean python
 
 all : PNEvolution.o EvolvePN PNEvolution_Q.o EvolvePN_Q
+
+python:
+	python setup.py install --user
 
 # This is how to build those object files
 PNEvolution.o : PNEvolution.cpp PNEvolution.hpp PNApproximants.ipp
@@ -31,8 +36,12 @@ PNEvolution_Q.o : PNEvolution_Q.cpp PNEvolution.hpp PNApproximants_Q.ipp
 %.o : %.cpp %.hpp
 	$(C++) $(OPT) -c $(INCFLAGS) $< -o $@
 
-EvolvePN : EvolvePN.cpp PNEvolution.cpp PNEvolution.hpp PNApproximants.ipp
-	$(C++) $(OPT) $(INCFLAGS) $(LIBFLAGS) PNEvolution.o Quaternions/Quaternions.o Quaternions/IntegrateAngularVelocity.o EvolvePN.cpp -o EvolvePN
+EvolvePN : EvolvePN.cpp PNEvolution.o PNEvolution_Q.o PNEvolution.hpp PNApproximants.ipp
+	$(C++) $(OPT) $(INCFLAGS) $(LIBFLAGS) PNEvolution.o PNEvolution_Q.o Quaternions/Quaternions.o Quaternions/IntegrateAngularVelocity.o EvolvePN.cpp -o EvolvePN
 
-EvolvePN_Q : EvolvePN_Q.cpp PNEvolution_Q.cpp PNEvolution.hpp PNApproximants_Q.ipp
-	$(C++) $(OPT) $(INCFLAGS) $(LIBFLAGS) PNEvolution_Q.o Quaternions/Quaternions.o Quaternions/IntegrateAngularVelocity.o EvolvePN_Q.cpp -o EvolvePN_Q
+EvolvePN_Q : EvolvePN_Q.cpp PNEvolution.o PNEvolution_Q.o PNEvolution.hpp PNApproximants_Q.ipp
+	$(C++) $(OPT) $(INCFLAGS) $(LIBFLAGS) PNEvolution.o PNEvolution_Q.o Quaternions/Quaternions.o Quaternions/IntegrateAngularVelocity.o EvolvePN_Q.cpp -o EvolvePN_Q
+
+clean:
+	/bin/rm -f *.o EvolvePN EvolvePN_Q
+	/bin/rm -rf build _PNEvolution.so PNEvolution.py PNEvolution/__init__.py

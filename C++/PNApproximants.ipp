@@ -1,4 +1,4 @@
-// File produced automatically by OrbitalEvolution.ipynb
+// File produced automatically by CodeOutput.ipynb
 
 class TaylorTn_2p0PN : public TaylorTn {
 private:
@@ -15,9 +15,10 @@ private:
   double Phi, gamma;
 
 public:
-  TaylorTn_2p0PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double chi1_z_i,
-           const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i, const double
-           ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const double nHat_z_i) :
+  TaylorTn_2p0PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double
+                 chi1_z_i, const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i,
+                 const double ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const
+                 double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3),
@@ -43,7 +44,6 @@ public:
     0.25*pow(chi2_la, 2)*delta - 0.5*pow(chi2_la, 2)*nu + 0.25*pow(chi2_la, 2) - 0.25*pow(chi2_n, 2)*delta -
     0.5*pow(chi2_n, 2)*nu + 0.25*pow(chi2_n, 2)), E_SO_3(4.66666666666667*S_l + 2.0*Sigma_l*delta), Phi(0.0), gamma(0.0)
   {
-    std::cerr << __FILE__ << ":" << __LINE__ << ":" << std::endl;
     ellHat[0] = ellHat_x;
     ellHat[1] = ellHat_y;
     ellHat[2] = ellHat_z;
@@ -201,9 +201,10 @@ private:
   double Phi, gamma;
 
 public:
-  TaylorTn_2p5PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double chi1_z_i,
-           const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i, const double
-           ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const double nHat_z_i) :
+  TaylorTn_2p5PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double
+                 chi1_z_i, const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i,
+                 const double ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const
+                 double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3),
@@ -232,7 +233,6 @@ public:
     E_SO_5(S_l*(-6.77777777777778*nu + 11.0) + Sigma_l*delta*(-3.33333333333333*nu + 3.0)),
     MDot_Alvi_5(-0.25*chi1_l*pow(m1, 3)*(3.0*chi1chi1 + 1.0) - 0.25*chi2_l*pow(m2, 3)*(3.0*chi2chi2 + 1.0)), Phi(0.0), gamma(0.0)
   {
-    std::cerr << __FILE__ << ":" << __LINE__ << ":" << std::endl;
     ellHat[0] = ellHat_x;
     ellHat[1] = ellHat_y;
     ellHat[2] = ellHat_z;
@@ -400,9 +400,10 @@ private:
   double Phi, gamma;
 
 public:
-  TaylorTn_3p0PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double chi1_z_i,
-           const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i, const double
-           ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const double nHat_z_i) :
+  TaylorTn_3p0PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double
+                 chi1_z_i, const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i,
+                 const double ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const
+                 double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3),
@@ -435,7 +436,6 @@ public:
     Sigma_l*delta*(-3.33333333333333*nu + 3.0)), MDot_Alvi_5(-0.25*chi1_l*pow(m1, 3)*(3.0*chi1chi1 + 1.0) -
     0.25*chi2_l*pow(m2, 3)*(3.0*chi2chi2 + 1.0)), Phi(0.0), gamma(0.0)
   {
-    std::cerr << __FILE__ << ":" << __LINE__ << ":" << std::endl;
     ellHat[0] = ellHat_x;
     ellHat[1] = ellHat_y;
     ellHat[2] = ellHat_z;
@@ -613,9 +613,10 @@ private:
   double Phi, gamma;
 
 public:
-  TaylorTn_3p5PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double chi1_z_i,
-           const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i, const double
-           ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const double nHat_z_i) :
+  TaylorTn_3p5PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double
+                 chi1_z_i, const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i,
+                 const double ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const
+                 double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3),
@@ -651,7 +652,6 @@ public:
     E_SO_7(S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75) + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75)),
     MDot_Alvi_5(-0.25*chi1_l*pow(m1, 3)*(3.0*chi1chi1 + 1.0) - 0.25*chi2_l*pow(m2, 3)*(3.0*chi2chi2 + 1.0)), Phi(0.0), gamma(0.0)
   {
-    std::cerr << __FILE__ << ":" << __LINE__ << ":" << std::endl;
     ellHat[0] = ellHat_x;
     ellHat[1] = ellHat_y;
     ellHat[2] = ellHat_z;
@@ -844,9 +844,10 @@ private:
   double Phi, gamma;
 
 public:
-  TaylorTn_4p0PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double chi1_z_i,
-           const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i, const double
-           ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const double nHat_z_i) :
+  TaylorTn_4p0PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double
+                 chi1_z_i, const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i,
+                 const double ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const
+                 double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3),
@@ -887,7 +888,6 @@ public:
     0.25*chi2_l*pow(m2, 3)*(3.0*chi2chi2 + 1.0)), MDot_Alvi_8(0.5*pow(m1, 4)*(3.0*chi1chi1 + 1.0)*(sqrt(-chi1chi1 + 1.0)
     + 1.0) + 0.5*pow(m2, 4)*(3.0*chi2chi2 + 1.0)*(sqrt(-chi2chi2 + 1.0) + 1.0)), Phi(0.0), gamma(0.0)
   {
-    std::cerr << __FILE__ << ":" << __LINE__ << ":" << std::endl;
     ellHat[0] = ellHat_x;
     ellHat[1] = ellHat_y;
     ellHat[2] = ellHat_z;
@@ -1101,9 +1101,10 @@ private:
   double Phi, gamma;
 
 public:
-  TaylorTn_4p5PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double chi1_z_i,
-           const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i, const double
-           ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const double nHat_z_i) :
+  TaylorTn_4p5PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double
+                 chi1_z_i, const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i,
+                 const double ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const
+                 double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3),
@@ -1145,7 +1146,6 @@ public:
     0.25*chi2_l*pow(m2, 3)*(3.0*chi2chi2 + 1.0)), MDot_Alvi_8(0.5*pow(m1, 4)*(3.0*chi1chi1 + 1.0)*(sqrt(-chi1chi1 + 1.0)
     + 1.0) + 0.5*pow(m2, 4)*(3.0*chi2chi2 + 1.0)*(sqrt(-chi2chi2 + 1.0) + 1.0)), Phi(0.0), gamma(0.0)
   {
-    std::cerr << __FILE__ << ":" << __LINE__ << ":" << std::endl;
     ellHat[0] = ellHat_x;
     ellHat[1] = ellHat_y;
     ellHat[2] = ellHat_z;
@@ -1381,9 +1381,10 @@ private:
   double Phi, gamma;
 
 public:
-  TaylorTn_5p0PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double chi1_z_i,
-           const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i, const double
-           ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const double nHat_z_i) :
+  TaylorTn_5p0PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double
+                 chi1_z_i, const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i,
+                 const double ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const
+                 double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3),
@@ -1426,7 +1427,6 @@ public:
     MDot_Alvi_8(0.5*pow(m1, 4)*(3.0*chi1chi1 + 1.0)*(sqrt(-chi1chi1 + 1.0) + 1.0) + 0.5*pow(m2, 4)*(3.0*chi2chi2 +
     1.0)*(sqrt(-chi2chi2 + 1.0) + 1.0)), Phi(0.0), gamma(0.0)
   {
-    std::cerr << __FILE__ << ":" << __LINE__ << ":" << std::endl;
     ellHat[0] = ellHat_x;
     ellHat[1] = ellHat_y;
     ellHat[2] = ellHat_z;
@@ -1703,9 +1703,10 @@ private:
   double Phi, gamma;
 
 public:
-  TaylorTn_5p5PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double chi1_z_i,
-           const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i, const double
-           ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const double nHat_z_i) :
+  TaylorTn_5p5PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double
+                 chi1_z_i, const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i,
+                 const double ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const
+                 double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3),
@@ -1749,7 +1750,6 @@ public:
     MDot_Alvi_8(0.5*pow(m1, 4)*(3.0*chi1chi1 + 1.0)*(sqrt(-chi1chi1 + 1.0) + 1.0) + 0.5*pow(m2, 4)*(3.0*chi2chi2 +
     1.0)*(sqrt(-chi2chi2 + 1.0) + 1.0)), Phi(0.0), gamma(0.0)
   {
-    std::cerr << __FILE__ << ":" << __LINE__ << ":" << std::endl;
     ellHat[0] = ellHat_x;
     ellHat[1] = ellHat_y;
     ellHat[2] = ellHat_z;
@@ -2084,9 +2084,10 @@ private:
   double Phi, gamma;
 
 public:
-  TaylorTn_6p0PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double chi1_z_i,
-           const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i, const double
-           ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const double nHat_z_i) :
+  TaylorTn_6p0PN(const double m1_i, const double v_i, const double chi1_x_i, const double chi1_y_i, const double
+                 chi1_z_i, const double chi2_x_i, const double chi2_y_i, const double chi2_z_i, const double ellHat_x_i,
+                 const double ellHat_y_i, const double ellHat_z_i, const double nHat_x_i, const double nHat_y_i, const
+                 double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3),
@@ -2131,7 +2132,6 @@ public:
     0.25*chi2_l*pow(m2, 3)*(3.0*chi2chi2 + 1.0)), MDot_Alvi_8(0.5*pow(m1, 4)*(3.0*chi1chi1 + 1.0)*(sqrt(-chi1chi1 + 1.0)
     + 1.0) + 0.5*pow(m2, 4)*(3.0*chi2chi2 + 1.0)*(sqrt(-chi2chi2 + 1.0) + 1.0)), Phi(0.0), gamma(0.0)
   {
-    std::cerr << __FILE__ << ":" << __LINE__ << ":" << std::endl;
     ellHat[0] = ellHat_x;
     ellHat[1] = ellHat_y;
     ellHat[2] = ellHat_z;
