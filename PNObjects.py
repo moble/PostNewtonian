@@ -6,9 +6,10 @@ def collect_recursively(expr, syms, func=None, evaluate=True, exact=False, distr
     Use `sympy.collect` function recursively.
 
     This function behaves just like the standard sympy `collect`
-    function, except that each of the collected terms is then
-    collected again with the next tuple of symbols in the `syms`
-    list.
+    function, except that `syms` is now a list of tuples.  This
+    function steps through that list, performing `collect` with each
+    tuple, and then performing `collect` with successive tuples on
+    each of the collected terms.
 
     The optional arguments are the same as the usual function,
     except that func is only applied at the innermost level.

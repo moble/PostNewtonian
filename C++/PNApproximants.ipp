@@ -5,7 +5,7 @@ private:
   const double m1;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
-  std::vector<double> ellHat, nHat;
+  std::vector<double> ellHat, nHat, chiVec1, chiVec2;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
   const double Fcal_0, E_0;
@@ -18,9 +18,9 @@ public:
                  double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
-    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3),
-    chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
+    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
+    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
     chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
     chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
     chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
@@ -64,6 +64,12 @@ public:
     nHat[0] = nHat_x;
     nHat[1] = nHat_y;
     nHat[2] = nHat_z;
+    chiVec1[0] = chi1_x;
+    chiVec1[1] = chi1_y;
+    chiVec1[2] = chi1_z;
+    chiVec2[0] = chi2_x;
+    chiVec2[1] = chi2_y;
+    chiVec2[2] = chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -80,14 +86,12 @@ public:
   }
 
   std::vector<double> OmegaVec_chiVec_1() {
-    double OmegaVec1_coeff = pow(v, 5);
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    return OmegaVec1_0*OmegaVec1_coeff*ellHat;
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*ellHat*(-0.75*delta + 0.5*nu + 0.75);
   }
   std::vector<double> OmegaVec_chiVec_2() {
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    return OmegaVec2_0*OmegaVec2_coeff*ellHat;
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*ellHat*(0.75*delta + 0.5*nu + 0.75);
   }
   std::vector<double> OmegaVec_ellHat() {
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
@@ -145,7 +149,7 @@ private:
   const double m1;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
-  std::vector<double> ellHat, nHat, chi1, chi2;
+  std::vector<double> ellHat, nHat, chiVec1, chiVec2;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
   const double Fcal_0, E_0;
@@ -158,9 +162,9 @@ public:
                  double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
-    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chi1(3), chi2(3),
-    chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
+    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
+    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
     chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
     chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
     chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
@@ -204,12 +208,12 @@ public:
     nHat[0] = nHat_x;
     nHat[1] = nHat_y;
     nHat[2] = nHat_z;
-    chi1[0] = chi1_x;
-    chi1[1] = chi1_y;
-    chi1[2] = chi1_z;
-    chi2[0] = chi2_x;
-    chi2[1] = chi2_y;
-    chi2[2] = chi2_z;
+    chiVec1[0] = chi1_x;
+    chiVec1[1] = chi1_y;
+    chiVec1[2] = chi1_z;
+    chiVec2[0] = chi2_x;
+    chiVec2[1] = chi2_y;
+    chiVec2[2] = chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -226,16 +230,14 @@ public:
   }
 
   std::vector<double> OmegaVec_chiVec_1() {
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_coeff = pow(v, 5);
-    double OmegaVec1_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m2, 2);
-    return OmegaVec1_0*OmegaVec1_coeff*ellHat + 0.5*pow(v, 6)*(OmegaVec1_nHat_1*nHat + chi2*pow(m2, 2));
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m1, 2);
-    return OmegaVec2_0*OmegaVec2_coeff*ellHat + 0.5*pow(v, 6)*(OmegaVec2_nHat_1*nHat + chi1*pow(m1, 2));
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m1, 2)));
   }
   std::vector<double> OmegaVec_ellHat() {
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
@@ -293,7 +295,7 @@ private:
   const double m1;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
-  std::vector<double> ellHat, nHat, chi1, chi2;
+  std::vector<double> ellHat, nHat, chiVec1, chiVec2;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
   const double Fcal_0, Fcal_2, E_0, E_2;
@@ -306,9 +308,9 @@ public:
                  double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
-    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chi1(3), chi2(3),
-    chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
+    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
+    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
     chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
     chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
     chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
@@ -353,12 +355,12 @@ public:
     nHat[0] = nHat_x;
     nHat[1] = nHat_y;
     nHat[2] = nHat_z;
-    chi1[0] = chi1_x;
-    chi1[1] = chi1_y;
-    chi1[2] = chi1_z;
-    chi2[0] = chi2_x;
-    chi2[1] = chi2_y;
-    chi2[2] = chi2_z;
+    chiVec1[0] = chi1_x;
+    chiVec1[1] = chi1_y;
+    chiVec1[2] = chi1_z;
+    chiVec2[0] = chi2_x;
+    chiVec2[1] = chi2_y;
+    chiVec2[2] = chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -375,20 +377,14 @@ public:
   }
 
   std::vector<double> OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_coeff = pow(v, 5);
-    double OmegaVec1_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m2, 2);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + OmegaVec1_2*pow(v, 2)) + 0.5*pow(v, 6)*(OmegaVec1_nHat_1*nHat +
-      chi2*pow(m2, 2));
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu + 3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m1, 2);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + OmegaVec2_2*pow(v, 2)) + 0.5*pow(v, 6)*(OmegaVec2_nHat_1*nHat +
-      chi1*pow(m1, 2));
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu + 3.0*chi2_n*pow(m1, 2)));
   }
   std::vector<double> OmegaVec_ellHat() {
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
@@ -448,7 +444,7 @@ private:
   const double m1;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
-  std::vector<double> ellHat, nHat, chi1, chi2;
+  std::vector<double> ellHat, nHat, chiVec1, chiVec2;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3;
@@ -464,9 +460,9 @@ public:
                  double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
-    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chi1(3), chi2(3),
-    chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
+    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
+    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
     chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
     chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
     chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
@@ -512,12 +508,12 @@ public:
     nHat[0] = nHat_x;
     nHat[1] = nHat_y;
     nHat[2] = nHat_z;
-    chi1[0] = chi1_x;
-    chi1[1] = chi1_y;
-    chi1[2] = chi1_z;
-    chi2[0] = chi2_x;
-    chi2[1] = chi2_y;
-    chi2[2] = chi2_z;
+    chiVec1[0] = chi1_x;
+    chiVec1[1] = chi1_y;
+    chiVec1[2] = chi1_z;
+    chiVec2[0] = chi2_x;
+    chiVec2[1] = chi2_y;
+    chiVec2[2] = chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -536,20 +532,14 @@ public:
   }
 
   std::vector<double> OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_coeff = pow(v, 5);
-    double OmegaVec1_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m2, 2);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + OmegaVec1_2*pow(v, 2)) + 0.5*pow(v, 6)*(OmegaVec1_nHat_1*nHat +
-      chi2*pow(m2, 2));
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu + 3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m1, 2);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + OmegaVec2_2*pow(v, 2)) + 0.5*pow(v, 6)*(OmegaVec2_nHat_1*nHat +
-      chi1*pow(m1, 2));
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu + 3.0*chi2_n*pow(m1, 2)));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -612,7 +602,7 @@ private:
   const double m1;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
-  std::vector<double> ellHat, nHat, chi1, chi2;
+  std::vector<double> ellHat, nHat, chiVec1, chiVec2;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4;
@@ -628,9 +618,9 @@ public:
                  double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
-    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chi1(3), chi2(3),
-    chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
+    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
+    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
     chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
     chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
     chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
@@ -687,12 +677,12 @@ public:
     nHat[0] = nHat_x;
     nHat[1] = nHat_y;
     nHat[2] = nHat_z;
-    chi1[0] = chi1_x;
-    chi1[1] = chi1_y;
-    chi1[2] = chi1_z;
-    chi2[0] = chi2_x;
-    chi2[1] = chi2_y;
-    chi2[2] = chi2_z;
+    chiVec1[0] = chi1_x;
+    chiVec1[1] = chi1_y;
+    chiVec1[2] = chi1_z;
+    chiVec2[0] = chi2_x;
+    chiVec2[1] = chi2_y;
+    chiVec2[2] = chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -722,24 +712,18 @@ public:
   }
 
   std::vector<double> OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    double OmegaVec1_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m2, 2);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + pow(v, 2)*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec1_nHat_1*nHat + chi2*pow(m2, 2));
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m1, 2);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + pow(v, 2)*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec2_nHat_1*nHat + chi1*pow(m1, 2));
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m1, 2)));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -808,7 +792,7 @@ private:
   const double m1;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
-  std::vector<double> ellHat, nHat, chi1, chi2;
+  std::vector<double> ellHat, nHat, chiVec1, chiVec2;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5;
@@ -824,9 +808,9 @@ public:
                  double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
-    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chi1(3), chi2(3),
-    chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
+    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
+    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
     chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
     chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
     chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
@@ -886,12 +870,12 @@ public:
     nHat[0] = nHat_x;
     nHat[1] = nHat_y;
     nHat[2] = nHat_z;
-    chi1[0] = chi1_x;
-    chi1[1] = chi1_y;
-    chi1[2] = chi1_z;
-    chi2[0] = chi2_x;
-    chi2[1] = chi2_y;
-    chi2[2] = chi2_z;
+    chiVec1[0] = chi1_x;
+    chiVec1[1] = chi1_y;
+    chiVec1[2] = chi1_z;
+    chiVec2[0] = chi2_x;
+    chiVec2[1] = chi2_y;
+    chiVec2[2] = chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -924,24 +908,18 @@ public:
   }
 
   std::vector<double> OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    double OmegaVec1_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m2, 2);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + pow(v, 2)*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec1_nHat_1*nHat + chi2*pow(m2, 2));
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m1, 2);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + pow(v, 2)*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec2_nHat_1*nHat + chi1*pow(m1, 2));
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m1, 2)));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -1017,7 +995,7 @@ private:
   const double m1;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
-  std::vector<double> ellHat, nHat, chi1, chi2;
+  std::vector<double> ellHat, nHat, chiVec1, chiVec2;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5, Fcal_6, Fcal_lnv_6;
@@ -1033,9 +1011,9 @@ public:
                  double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
-    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chi1(3), chi2(3),
-    chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
+    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
+    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
     chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
     chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
     chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
@@ -1099,12 +1077,12 @@ public:
     nHat[0] = nHat_x;
     nHat[1] = nHat_y;
     nHat[2] = nHat_z;
-    chi1[0] = chi1_x;
-    chi1[1] = chi1_y;
-    chi1[2] = chi1_z;
-    chi2[0] = chi2_x;
-    chi2[1] = chi2_y;
-    chi2[2] = chi2_z;
+    chiVec1[0] = chi1_x;
+    chiVec1[1] = chi1_y;
+    chiVec1[2] = chi1_z;
+    chiVec2[0] = chi2_x;
+    chiVec2[1] = chi2_y;
+    chiVec2[2] = chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -1139,24 +1117,18 @@ public:
   }
 
   std::vector<double> OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    double OmegaVec1_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m2, 2);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + pow(v, 2)*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec1_nHat_1*nHat + chi2*pow(m2, 2));
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m1, 2);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + pow(v, 2)*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec2_nHat_1*nHat + chi1*pow(m1, 2));
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m1, 2)));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -1240,7 +1212,7 @@ private:
   const double m1;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
-  std::vector<double> ellHat, nHat, chi1, chi2;
+  std::vector<double> ellHat, nHat, chiVec1, chiVec2;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5, Fcal_6, Fcal_lnv_6, Fcal_7;
@@ -1256,9 +1228,9 @@ public:
                  double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
-    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chi1(3), chi2(3),
-    chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
+    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
+    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
     chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
     chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
     chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
@@ -1325,12 +1297,12 @@ public:
     nHat[0] = nHat_x;
     nHat[1] = nHat_y;
     nHat[2] = nHat_z;
-    chi1[0] = chi1_x;
-    chi1[1] = chi1_y;
-    chi1[2] = chi1_z;
-    chi2[0] = chi2_x;
-    chi2[1] = chi2_y;
-    chi2[2] = chi2_z;
+    chiVec1[0] = chi1_x;
+    chiVec1[1] = chi1_y;
+    chiVec1[2] = chi1_z;
+    chiVec2[0] = chi2_x;
+    chiVec2[1] = chi2_y;
+    chiVec2[2] = chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -1368,24 +1340,18 @@ public:
   }
 
   std::vector<double> OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    double OmegaVec1_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m2, 2);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + pow(v, 2)*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec1_nHat_1*nHat + chi2*pow(m2, 2));
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m1, 2);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + pow(v, 2)*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec2_nHat_1*nHat + chi1*pow(m1, 2));
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m1, 2)));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -1480,7 +1446,7 @@ private:
   const double m1;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
-  std::vector<double> ellHat, nHat, chi1, chi2;
+  std::vector<double> ellHat, nHat, chiVec1, chiVec2;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5, Fcal_6, Fcal_lnv_6, Fcal_7, Fcal_8, Fcal_lnv_8;
@@ -1497,9 +1463,9 @@ public:
                  double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
-    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chi1(3), chi2(3),
-    chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
+    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
+    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
     chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
     chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
     chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
@@ -1571,12 +1537,12 @@ public:
     nHat[0] = nHat_x;
     nHat[1] = nHat_y;
     nHat[2] = nHat_z;
-    chi1[0] = chi1_x;
-    chi1[1] = chi1_y;
-    chi1[2] = chi1_z;
-    chi2[0] = chi2_x;
-    chi2[1] = chi2_y;
-    chi2[2] = chi2_z;
+    chiVec1[0] = chi1_x;
+    chiVec1[1] = chi1_y;
+    chiVec1[2] = chi1_z;
+    chiVec2[0] = chi2_x;
+    chiVec2[1] = chi2_y;
+    chiVec2[2] = chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -1616,24 +1582,18 @@ public:
   }
 
   std::vector<double> OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    double OmegaVec1_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m2, 2);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + pow(v, 2)*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec1_nHat_1*nHat + chi2*pow(m2, 2));
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m1, 2);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + pow(v, 2)*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec2_nHat_1*nHat + chi1*pow(m1, 2));
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m1, 2)));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -1746,7 +1706,7 @@ private:
   const double m1;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
-  std::vector<double> ellHat, nHat, chi1, chi2;
+  std::vector<double> ellHat, nHat, chiVec1, chiVec2;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5, Fcal_6, Fcal_lnv_6, Fcal_7, Fcal_8, Fcal_lnv_8, Fcal_9,
@@ -1764,9 +1724,9 @@ public:
                  double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
-    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chi1(3), chi2(3),
-    chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
+    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
+    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
     chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
     chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
     chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
@@ -1839,12 +1799,12 @@ public:
     nHat[0] = nHat_x;
     nHat[1] = nHat_y;
     nHat[2] = nHat_z;
-    chi1[0] = chi1_x;
-    chi1[1] = chi1_y;
-    chi1[2] = chi1_z;
-    chi2[0] = chi2_x;
-    chi2[1] = chi2_y;
-    chi2[2] = chi2_z;
+    chiVec1[0] = chi1_x;
+    chiVec1[1] = chi1_y;
+    chiVec1[2] = chi1_z;
+    chiVec2[0] = chi2_x;
+    chiVec2[1] = chi2_y;
+    chiVec2[2] = chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -1884,24 +1844,18 @@ public:
   }
 
   std::vector<double> OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    double OmegaVec1_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m2, 2);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + pow(v, 2)*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec1_nHat_1*nHat + chi2*pow(m2, 2));
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m1, 2);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + pow(v, 2)*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec2_nHat_1*nHat + chi1*pow(m1, 2));
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m1, 2)));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -2036,7 +1990,7 @@ private:
   const double m1;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
-  std::vector<double> ellHat, nHat, chi1, chi2;
+  std::vector<double> ellHat, nHat, chiVec1, chiVec2;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5, Fcal_6, Fcal_lnv_6, Fcal_7, Fcal_8, Fcal_lnv_8, Fcal_9,
@@ -2054,9 +2008,9 @@ public:
                  double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
-    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chi1(3), chi2(3),
-    chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
+    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
+    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
     chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
     chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
     chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
@@ -2130,12 +2084,12 @@ public:
     nHat[0] = nHat_x;
     nHat[1] = nHat_y;
     nHat[2] = nHat_z;
-    chi1[0] = chi1_x;
-    chi1[1] = chi1_y;
-    chi1[2] = chi1_z;
-    chi2[0] = chi2_x;
-    chi2[1] = chi2_y;
-    chi2[2] = chi2_z;
+    chiVec1[0] = chi1_x;
+    chiVec1[1] = chi1_y;
+    chiVec1[2] = chi1_z;
+    chiVec2[0] = chi2_x;
+    chiVec2[1] = chi2_y;
+    chiVec2[2] = chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -2175,24 +2129,18 @@ public:
   }
 
   std::vector<double> OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    double OmegaVec1_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m2, 2);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + pow(v, 2)*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec1_nHat_1*nHat + chi2*pow(m2, 2));
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m1, 2);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + pow(v, 2)*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec2_nHat_1*nHat + chi1*pow(m1, 2));
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m1, 2)));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -2368,7 +2316,7 @@ private:
   const double m1;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
-  std::vector<double> ellHat, nHat, chi1, chi2;
+  std::vector<double> ellHat, nHat, chiVec1, chiVec2;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5, Fcal_6, Fcal_lnv_6, Fcal_7, Fcal_8, Fcal_lnv_8, Fcal_9,
@@ -2386,9 +2334,9 @@ public:
                  double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
-    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chi1(3), chi2(3),
-    chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
+    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
+    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
     chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
     chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
     chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
@@ -2463,12 +2411,12 @@ public:
     nHat[0] = nHat_x;
     nHat[1] = nHat_y;
     nHat[2] = nHat_z;
-    chi1[0] = chi1_x;
-    chi1[1] = chi1_y;
-    chi1[2] = chi1_z;
-    chi2[0] = chi2_x;
-    chi2[1] = chi2_y;
-    chi2[2] = chi2_z;
+    chiVec1[0] = chi1_x;
+    chiVec1[1] = chi1_y;
+    chiVec1[2] = chi1_z;
+    chiVec2[0] = chi2_x;
+    chiVec2[1] = chi2_y;
+    chiVec2[2] = chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -2508,24 +2456,18 @@ public:
   }
 
   std::vector<double> OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    double OmegaVec1_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m2, 2);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + pow(v, 2)*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec1_nHat_1*nHat + chi2*pow(m2, 2));
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m1, 2);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + pow(v, 2)*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec2_nHat_1*nHat + chi1*pow(m1, 2));
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m1, 2)));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -2759,7 +2701,7 @@ private:
   const double m1;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
-  std::vector<double> ellHat, nHat, chi1, chi2;
+  std::vector<double> ellHat, nHat, chiVec1, chiVec2;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5, Fcal_6, Fcal_lnv_6, Fcal_7, Fcal_8, Fcal_lnv_8, Fcal_9,
@@ -2777,9 +2719,9 @@ public:
                  double nHat_z_i) :
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
-    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chi1(3), chi2(3),
-    chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
+    nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
+    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
     chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
     chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
     chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
@@ -2855,12 +2797,12 @@ public:
     nHat[0] = nHat_x;
     nHat[1] = nHat_y;
     nHat[2] = nHat_z;
-    chi1[0] = chi1_x;
-    chi1[1] = chi1_y;
-    chi1[2] = chi1_z;
-    chi2[0] = chi2_x;
-    chi2[1] = chi2_y;
-    chi2[2] = chi2_z;
+    chiVec1[0] = chi1_x;
+    chiVec1[1] = chi1_y;
+    chiVec1[2] = chi1_z;
+    chiVec2[0] = chi2_x;
+    chiVec2[1] = chi2_y;
+    chiVec2[2] = chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -2900,24 +2842,18 @@ public:
   }
 
   std::vector<double> OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    double OmegaVec1_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m2, 2);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + pow(v, 2)*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec1_nHat_1*nHat + chi2*pow(m2, 2));
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_nHat_1 = -1.5*chi1_n*m1*m2 - 1.5*chi2_n*pow(m1, 2);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + pow(v, 2)*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2))) + 0.5*pow(v,
-      6)*(OmegaVec2_nHat_1*nHat + chi1*pow(m1, 2));
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m1, 2)));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;

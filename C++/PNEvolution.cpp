@@ -28,6 +28,14 @@ inline Quaternion Unflipped(const Quaternion& R0, const Quaternion& R1) {
   }
 }
 
+std::vector<double> operator-(const std::vector<double>& b) {
+  std::vector<double> c(b.size());
+  for(unsigned int i=0; i<b.size(); ++i) {
+    c[i] = -b[i];
+  }
+  return c;
+}
+
 std::vector<double> operator*(const double a, const std::vector<double>& b) {
   std::vector<double> c(b.size());
   for(unsigned int i=0; i<b.size(); ++i) {
@@ -44,10 +52,26 @@ std::vector<double> operator*(const std::vector<double>& b, const double a) {
   return c;
 }
 
+std::vector<double> operator/(const std::vector<double>& b, const double a) {
+  std::vector<double> c(b.size());
+  for(unsigned int i=0; i<b.size(); ++i) {
+    c[i] = b[i]/a;
+  }
+  return c;
+}
+
 std::vector<double> operator+(const std::vector<double>& a, const std::vector<double>& b) {
   std::vector<double> c(b.size());
   for(unsigned int i=0; i<b.size(); ++i) {
     c[i] = a[i]+b[i];
+  }
+  return c;
+}
+
+std::vector<double> operator-(const std::vector<double>& a, const std::vector<double>& b) {
+  std::vector<double> c(b.size());
+  for(unsigned int i=0; i<b.size(); ++i) {
+    c[i] = a[i]-b[i];
   }
   return c;
 }
