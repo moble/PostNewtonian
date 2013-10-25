@@ -7,6 +7,7 @@
 
 using Quaternions::Quaternion;
 using Quaternions::exp;
+using Quaternions::log;
 using Quaternions::conjugate;
 using Quaternions::xHat;
 using Quaternions::yHat;
@@ -158,7 +159,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   const std::vector<double> nHat_i = (R_frame_i*xHat*R_frame_i.conjugate()).vec();
   const Quaternion Rax =
     sqrtOfRotor(-normalized(Quaternion(0., ellHat_i[0], ellHat_i[1], ellHat_i[2]))*zHat);
-  const double gamma_i = -acos(dot(nHat_i, (Rax*xHat*Rax.conjugate()).vec()));
+  const double gamma_i = (log(Rax.conjugate() * R_frame_i)).dot(zHat) * 2.0;
 
   // These are the basic variables to be evolved
   std::vector<double> y(12);
@@ -175,12 +176,12 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   y[10] = 0.0; // Phi
   y[11] = gamma_i;
 
-  // {
-  //   const Quaternion R = Rax * exp(((gamma_i)/2.)*zHat);
-  //   std::cout << "nHat_i: " << R_frame_i*xHat*R_frame_i.conjugate() << " " << R*xHat*R.conjugate() << std::endl;
-  //   std::cout << "lambdaHat_i: " << R_frame_i*yHat*R_frame_i.conjugate() << " " << R*yHat*R.conjugate() << std::endl;
-  //   std::cout << "ellHat_i: " << R_frame_i*zHat*R_frame_i.conjugate() << " " << R*zHat*R.conjugate() << std::endl;
-  // }
+  {
+    const Quaternion R = Rax * exp(((gamma_i)/2.)*zHat);
+    std::cout << "d nHat_i: \t" << R_frame_i*xHat*R_frame_i.conjugate() - R*xHat*R.conjugate() << std::endl;
+    std::cout << "d lambdaHat_i: \t" << R_frame_i*yHat*R_frame_i.conjugate() - R*yHat*R.conjugate() << std::endl;
+    std::cout << "d ellHat_i: \t" << R_frame_i*zHat*R_frame_i.conjugate() - R*zHat*R.conjugate() << std::endl << std::endl;
+  }
 
   // Tn encapsulates all the actual PN calculations -- especially the
   // right-hand sides of the evolution system
@@ -343,6 +344,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
     chi2.push_back(chi2_i);
     R_frame.push_back(R_frame_i);
     Phi.push_back(y[10]);
+    std::cout << time << " " << y[11] << std::endl;
   }
 
   // Run the integration
@@ -383,6 +385,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
       chi2.push_back(chi2_i);
       R_frame.push_back(R_frame_i);
       Phi.push_back(y[10]);
+      std::cout << time << " " << y[11] << std::endl;
     }
 
     // Check if we should stop because this has gone on suspiciously long

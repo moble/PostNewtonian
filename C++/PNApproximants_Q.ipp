@@ -1,6 +1,6 @@
 // File produced automatically by CodeOutput_Q.ipynb
 
-class TaylorTn_0PN : public TaylorTn {
+class TaylorTn_0PN_Q : public TaylorTn_Q {
 private:
   const Quaternion xHat, yHat, zHat;
   const double m1;
@@ -10,7 +10,7 @@ private:
   const double m2, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
-  Quaternion R_S1, R_S2, chi1, chi2;
+  Quaternion R_S1, R_S2, chiVec1, chiVec2;
   double chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
@@ -18,7 +18,7 @@ private:
   double Phi;
 
 public:
-  TaylorTn_0PN(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
+  TaylorTn_0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
            v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const double
            rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i, const
            double rfrak_ell_y_i, const double rfrak_ell_z_i) :
@@ -29,16 +29,16 @@ public:
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chi1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chi2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chi1[1]), chi1_y(chi1[2]), chi1_z(chi1[3]), chi2_x(chi2[1]),
-    chi2_y(chi2[2]), chi2_z(chi2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x,
-    2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z),
-    chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y +
-    chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x +
-    chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z),
-    S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 +
-    chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    E_0(1.00000000000000), Phi(0.0)
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
+    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
+    2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y +
+    chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x +
+    chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
+    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y +
+    chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
+    Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
+    Fcal_0(1.00000000000000), E_0(1.00000000000000), Phi(0.0)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -67,14 +67,14 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chi1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chi2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
-    chi1_x = chi1[1];
-    chi1_y = chi1[2];
-    chi1_z = chi1[3];
-    chi2_x = chi2[1];
-    chi2_y = chi2[2];
-    chi2_z = chi2[3];
+    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
+    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chi1_x = chiVec1[1];
+    chi1_y = chiVec1[2];
+    chi1_z = chiVec1[3];
+    chi2_x = chiVec2[1];
+    chi2_y = chiVec2[2];
+    chi2_z = chiVec2[3];
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z;
@@ -89,14 +89,12 @@ public:
   }
 
   Quaternion OmegaVec_chiVec_1() {
-    double OmegaVec1_coeff = pow(v, 5);
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    return OmegaVec1_0*OmegaVec1_coeff*ellHat;
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*ellHat*(-0.75*delta + 0.5*nu + 0.75);
   }
   Quaternion OmegaVec_chiVec_2() {
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    return OmegaVec2_0*OmegaVec2_coeff*ellHat;
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*ellHat*(0.75*delta + 0.5*nu + 0.75);
   }
   Quaternion OmegaVec() {
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
@@ -148,10 +146,10 @@ public:
 
     return GSL_SUCCESS; // GSL expects this if everything went well
   }
-}; // class TaylorTn_0PN : public TaylorTn
+}; // class TaylorTn_0PN_Q : public TaylorTn_Q
 
 
-class TaylorTn_0p50PN : public TaylorTn {
+class TaylorTn_0p50PN_Q : public TaylorTn_Q {
 private:
   const Quaternion xHat, yHat, zHat;
   const double m1;
@@ -161,7 +159,7 @@ private:
   const double m2, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
-  Quaternion R_S1, R_S2, chi1, chi2;
+  Quaternion R_S1, R_S2, chiVec1, chiVec2;
   double chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
@@ -169,7 +167,7 @@ private:
   double Phi;
 
 public:
-  TaylorTn_0p50PN(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
+  TaylorTn_0p50PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
            v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const double
            rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i, const
            double rfrak_ell_y_i, const double rfrak_ell_z_i) :
@@ -180,16 +178,16 @@ public:
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chi1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chi2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chi1[1]), chi1_y(chi1[2]), chi1_z(chi1[3]), chi2_x(chi2[1]),
-    chi2_y(chi2[2]), chi2_z(chi2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x,
-    2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z),
-    chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y +
-    chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x +
-    chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z),
-    S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 +
-    chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    E_0(1.00000000000000), Phi(0.0)
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
+    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
+    2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y +
+    chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x +
+    chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
+    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y +
+    chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
+    Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
+    Fcal_0(1.00000000000000), E_0(1.00000000000000), Phi(0.0)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -218,14 +216,14 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chi1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chi2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
-    chi1_x = chi1[1];
-    chi1_y = chi1[2];
-    chi1_z = chi1[3];
-    chi2_x = chi2[1];
-    chi2_y = chi2[2];
-    chi2_z = chi2[3];
+    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
+    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chi1_x = chiVec1[1];
+    chi1_y = chiVec1[2];
+    chi1_z = chiVec1[3];
+    chi2_x = chiVec2[1];
+    chi2_y = chiVec2[2];
+    chi2_z = chiVec2[3];
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z;
@@ -240,16 +238,12 @@ public:
   }
 
   Quaternion OmegaVec_chiVec_1() {
-    double OmegaVec1_1 = -1.5*chi1_l*m1*m2 - 1.5*chi2_l*pow(m2, 2);
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_coeff = pow(v, 5);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + OmegaVec1_1*v) + 0.5*chi2*pow(m2, 2)*pow(v, 6);
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + 0.75));
   }
   Quaternion OmegaVec_chiVec_2() {
-    double OmegaVec2_1 = -1.5*chi1_l*pow(m1, 2) - 1.5*chi2_l*m1*m2;
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + OmegaVec2_1*v) + 0.5*chi1*pow(m1, 2)*pow(v, 6);
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + 0.75));
   }
   Quaternion OmegaVec() {
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
@@ -301,10 +295,10 @@ public:
 
     return GSL_SUCCESS; // GSL expects this if everything went well
   }
-}; // class TaylorTn_0p50PN : public TaylorTn
+}; // class TaylorTn_0p50PN_Q : public TaylorTn_Q
 
 
-class TaylorTn_1p0PN : public TaylorTn {
+class TaylorTn_1p0PN_Q : public TaylorTn_Q {
 private:
   const Quaternion xHat, yHat, zHat;
   const double m1;
@@ -314,7 +308,7 @@ private:
   const double m2, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
-  Quaternion R_S1, R_S2, chi1, chi2;
+  Quaternion R_S1, R_S2, chiVec1, chiVec2;
   double chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
@@ -322,7 +316,7 @@ private:
   double Phi;
 
 public:
-  TaylorTn_1p0PN(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
+  TaylorTn_1p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
            v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const double
            rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i, const
            double rfrak_ell_y_i, const double rfrak_ell_z_i) :
@@ -333,16 +327,17 @@ public:
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chi1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chi2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chi1[1]), chi1_y(chi1[2]), chi1_z(chi1[3]), chi2_x(chi2[1]),
-    chi2_y(chi2[2]), chi2_z(chi2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x,
-    2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z),
-    chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y +
-    chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x +
-    chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z),
-    S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 +
-    chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    Fcal_2(-2.91666666666667*nu - 3.71130952380952), E_0(1.00000000000000), E_2(-0.0833333333333333*nu - 0.75), Phi(0.0)
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
+    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
+    2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y +
+    chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x +
+    chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
+    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y +
+    chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
+    Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
+    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), E_0(1.00000000000000),
+    E_2(-0.0833333333333333*nu - 0.75), Phi(0.0)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -371,14 +366,14 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chi1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chi2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
-    chi1_x = chi1[1];
-    chi1_y = chi1[2];
-    chi1_z = chi1[3];
-    chi2_x = chi2[1];
-    chi2_y = chi2[2];
-    chi2_z = chi2[3];
+    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
+    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chi1_x = chiVec1[1];
+    chi1_y = chiVec1[2];
+    chi1_z = chiVec1[3];
+    chi2_x = chiVec2[1];
+    chi2_y = chiVec2[2];
+    chi2_z = chiVec2[3];
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z;
@@ -393,18 +388,14 @@ public:
   }
 
   Quaternion OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_1 = -1.5*chi1_l*m1*m2 - 1.5*chi2_l*pow(m2, 2);
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_coeff = pow(v, 5);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + v*(OmegaVec1_1 + OmegaVec1_2*v)) + 0.5*chi2*pow(m2, 2)*pow(v, 6);
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec_chiVec_2() {
-    double OmegaVec2_1 = -1.5*chi1_l*pow(m1, 2) - 1.5*chi2_l*m1*m2;
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + v*(OmegaVec2_1 + OmegaVec2_2*v)) + 0.5*chi1*pow(m1, 2)*pow(v, 6);
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec() {
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
@@ -458,10 +449,10 @@ public:
 
     return GSL_SUCCESS; // GSL expects this if everything went well
   }
-}; // class TaylorTn_1p0PN : public TaylorTn
+}; // class TaylorTn_1p0PN_Q : public TaylorTn_Q
 
 
-class TaylorTn_1p5PN : public TaylorTn {
+class TaylorTn_1p5PN_Q : public TaylorTn_Q {
 private:
   const Quaternion xHat, yHat, zHat;
   const double m1;
@@ -471,7 +462,7 @@ private:
   const double m2, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
-  Quaternion R_S1, R_S2, chi1, chi2;
+  Quaternion R_S1, R_S2, chiVec1, chiVec2;
   double chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
@@ -482,7 +473,7 @@ private:
   double Phi;
 
 public:
-  TaylorTn_1p5PN(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
+  TaylorTn_1p5PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
            v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const double
            rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i, const
            double rfrak_ell_y_i, const double rfrak_ell_z_i) :
@@ -493,17 +484,18 @@ public:
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chi1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chi2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chi1[1]), chi1_y(chi1[2]), chi1_z(chi1[3]), chi2_x(chi2[1]),
-    chi2_y(chi2[2]), chi2_z(chi2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x,
-    2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z),
-    chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y +
-    chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x +
-    chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z),
-    S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 +
-    chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
-    E_0(1.00000000000000), E_2(-0.0833333333333333*nu - 0.75), E_SO_3(4.66666666666667*S_l + 2.0*Sigma_l*delta), Phi(0.0)
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
+    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
+    2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y +
+    chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x +
+    chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
+    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y +
+    chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
+    Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
+    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta), E_0(1.00000000000000), E_2(-0.0833333333333333*nu - 0.75),
+    E_SO_3(4.66666666666667*S_l + 2.0*Sigma_l*delta), Phi(0.0)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -532,14 +524,14 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chi1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chi2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
-    chi1_x = chi1[1];
-    chi1_y = chi1[2];
-    chi1_z = chi1[3];
-    chi2_x = chi2[1];
-    chi2_y = chi2[2];
-    chi2_z = chi2[3];
+    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
+    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chi1_x = chiVec1[1];
+    chi1_y = chiVec1[2];
+    chi1_z = chiVec1[3];
+    chi2_x = chiVec2[1];
+    chi2_y = chiVec2[2];
+    chi2_z = chiVec2[3];
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z;
@@ -556,18 +548,14 @@ public:
   }
 
   Quaternion OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_1 = -1.5*chi1_l*m1*m2 - 1.5*chi2_l*pow(m2, 2);
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_coeff = pow(v, 5);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + v*(OmegaVec1_1 + OmegaVec1_2*v)) + 0.5*chi2*pow(m2, 2)*pow(v, 6);
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec_chiVec_2() {
-    double OmegaVec2_1 = -1.5*chi1_l*pow(m1, 2) - 1.5*chi2_l*m1*m2;
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + v*(OmegaVec2_1 + OmegaVec2_2*v)) + 0.5*chi1*pow(m1, 2)*pow(v, 6);
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -625,10 +613,10 @@ public:
 
     return GSL_SUCCESS; // GSL expects this if everything went well
   }
-}; // class TaylorTn_1p5PN : public TaylorTn
+}; // class TaylorTn_1p5PN_Q : public TaylorTn_Q
 
 
-class TaylorTn_2p0PN : public TaylorTn {
+class TaylorTn_2p0PN_Q : public TaylorTn_Q {
 private:
   const Quaternion xHat, yHat, zHat;
   const double m1;
@@ -638,7 +626,7 @@ private:
   const double m2, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
-  Quaternion R_S1, R_S2, chi1, chi2;
+  Quaternion R_S1, R_S2, chiVec1, chiVec2;
   double chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
@@ -649,7 +637,7 @@ private:
   double Phi;
 
 public:
-  TaylorTn_2p0PN(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
+  TaylorTn_2p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
            v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const double
            rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i, const
            double rfrak_ell_y_i, const double rfrak_ell_z_i) :
@@ -660,18 +648,19 @@ public:
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chi1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chi2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chi1[1]), chi1_y(chi1[2]), chi1_z(chi1[3]), chi2_x(chi2[1]),
-    chi2_y(chi2[2]), chi2_z(chi2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x,
-    2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z),
-    chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y +
-    chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x +
-    chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z),
-    S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 +
-    chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_4(3.61111111111111*pow(nu, 2) +
-    18.3948412698413*nu - 4.92846119929453), Fcal_SQ_4(chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) +
-    3.875*chi2_l*nu) + chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
+    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
+    2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y +
+    chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x +
+    chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
+    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y +
+    chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
+    Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
+    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453),
+    Fcal_SQ_4(chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
+    chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
     2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667)
     - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) + pow(chi2_la,
     2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n, 2)*(0.463541666666667*delta +
@@ -710,14 +699,14 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chi1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chi2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
-    chi1_x = chi1[1];
-    chi1_y = chi1[2];
-    chi1_z = chi1[3];
-    chi2_x = chi2[1];
-    chi2_y = chi2[2];
-    chi2_z = chi2[3];
+    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
+    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chi1_x = chiVec1[1];
+    chi1_y = chiVec1[2];
+    chi1_z = chiVec1[3];
+    chi2_x = chiVec2[1];
+    chi2_y = chiVec2[2];
+    chi2_z = chiVec2[3];
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z;
@@ -745,24 +734,16 @@ public:
   }
 
   Quaternion OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_1 = -1.5*chi1_l*m1*m2 - 1.5*chi2_l*pow(m2, 2);
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + v*(OmegaVec1_1 + v*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2)))) +
-      0.5*chi2*pow(m2, 2)*pow(v, 6);
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec_chiVec_2() {
-    double OmegaVec2_1 = -1.5*chi1_l*pow(m1, 2) - 1.5*chi2_l*m1*m2;
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + v*(OmegaVec2_1 + v*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2)))) +
-      0.5*chi1*pow(m1, 2)*pow(v, 6);
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -825,10 +806,10 @@ public:
 
     return GSL_SUCCESS; // GSL expects this if everything went well
   }
-}; // class TaylorTn_2p0PN : public TaylorTn
+}; // class TaylorTn_2p0PN_Q : public TaylorTn_Q
 
 
-class TaylorTn_2p5PN : public TaylorTn {
+class TaylorTn_2p5PN_Q : public TaylorTn_Q {
 private:
   const Quaternion xHat, yHat, zHat;
   const double m1;
@@ -838,7 +819,7 @@ private:
   const double m2, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
-  Quaternion R_S1, R_S2, chi1, chi2;
+  Quaternion R_S1, R_S2, chiVec1, chiVec2;
   double chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
@@ -849,7 +830,7 @@ private:
   double Phi;
 
 public:
-  TaylorTn_2p5PN(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
+  TaylorTn_2p5PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
            v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const double
            rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i, const
            double rfrak_ell_y_i, const double rfrak_ell_z_i) :
@@ -860,18 +841,18 @@ public:
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chi1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chi2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chi1[1]), chi1_y(chi1[2]), chi1_z(chi1[3]), chi2_x(chi2[1]),
-    chi2_y(chi2[2]), chi2_z(chi2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x,
-    2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z),
-    chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y +
-    chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x +
-    chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z),
-    S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 +
-    chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_4(3.61111111111111*pow(nu, 2) +
-    18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu - 38.2928354546934),
-    Fcal_SQ_4(chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
+    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
+    2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y +
+    chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x +
+    chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
+    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y +
+    chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
+    Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
+    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu -
+    38.2928354546934), Fcal_SQ_4(chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
     chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
     2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667)
     - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) + pow(chi2_la,
@@ -914,14 +895,14 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chi1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chi2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
-    chi1_x = chi1[1];
-    chi1_y = chi1[2];
-    chi1_z = chi1[3];
-    chi2_x = chi2[1];
-    chi2_y = chi2[2];
-    chi2_z = chi2[3];
+    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
+    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chi1_x = chiVec1[1];
+    chi1_y = chiVec1[2];
+    chi1_z = chiVec1[3];
+    chi2_x = chiVec2[1];
+    chi2_y = chiVec2[2];
+    chi2_z = chiVec2[3];
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z;
@@ -952,24 +933,16 @@ public:
   }
 
   Quaternion OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_1 = -1.5*chi1_l*m1*m2 - 1.5*chi2_l*pow(m2, 2);
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + v*(OmegaVec1_1 + v*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2)))) +
-      0.5*chi2*pow(m2, 2)*pow(v, 6);
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec_chiVec_2() {
-    double OmegaVec2_1 = -1.5*chi1_l*pow(m1, 2) - 1.5*chi2_l*m1*m2;
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + v*(OmegaVec2_1 + v*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2)))) +
-      0.5*chi1*pow(m1, 2)*pow(v, 6);
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -1039,10 +1012,10 @@ public:
 
     return GSL_SUCCESS; // GSL expects this if everything went well
   }
-}; // class TaylorTn_2p5PN : public TaylorTn
+}; // class TaylorTn_2p5PN_Q : public TaylorTn_Q
 
 
-class TaylorTn_3p0PN : public TaylorTn {
+class TaylorTn_3p0PN_Q : public TaylorTn_Q {
 private:
   const Quaternion xHat, yHat, zHat;
   const double m1;
@@ -1052,7 +1025,7 @@ private:
   const double m2, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
-  Quaternion R_S1, R_S2, chi1, chi2;
+  Quaternion R_S1, R_S2, chiVec1, chiVec2;
   double chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
@@ -1063,7 +1036,7 @@ private:
   double Phi;
 
 public:
-  TaylorTn_3p0PN(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
+  TaylorTn_3p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
            v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const double
            rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i, const
            double rfrak_ell_y_i, const double rfrak_ell_z_i) :
@@ -1074,16 +1047,16 @@ public:
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chi1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chi2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chi1[1]), chi1_y(chi1[2]), chi1_z(chi1[3]), chi2_x(chi2[1]),
-    chi2_y(chi2[2]), chi2_z(chi2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x,
-    2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z),
-    chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y +
-    chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x +
-    chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z),
-    S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 +
-    chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
-    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
+    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
+    2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y +
+    chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x +
+    chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
+    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y +
+    chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
+    Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v,
+    10)), Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
     Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu -
     38.2928354546934), Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu +
     115.731716675611), Fcal_lnv_6(-16.3047619047619), Fcal_SQ_4(chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) +
@@ -1131,14 +1104,14 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chi1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chi2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
-    chi1_x = chi1[1];
-    chi1_y = chi1[2];
-    chi1_z = chi1[3];
-    chi2_x = chi2[1];
-    chi2_y = chi2[2];
-    chi2_z = chi2[3];
+    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
+    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chi1_x = chiVec1[1];
+    chi1_y = chiVec1[2];
+    chi1_z = chiVec1[3];
+    chi2_x = chiVec2[1];
+    chi2_y = chiVec2[2];
+    chi2_z = chiVec2[3];
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z;
@@ -1171,24 +1144,16 @@ public:
   }
 
   Quaternion OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_1 = -1.5*chi1_l*m1*m2 - 1.5*chi2_l*pow(m2, 2);
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + v*(OmegaVec1_1 + v*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2)))) +
-      0.5*chi2*pow(m2, 2)*pow(v, 6);
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec_chiVec_2() {
-    double OmegaVec2_1 = -1.5*chi1_l*pow(m1, 2) - 1.5*chi2_l*m1*m2;
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + v*(OmegaVec2_1 + v*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2)))) +
-      0.5*chi1*pow(m1, 2)*pow(v, 6);
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -1266,10 +1231,10 @@ public:
 
     return GSL_SUCCESS; // GSL expects this if everything went well
   }
-}; // class TaylorTn_3p0PN : public TaylorTn
+}; // class TaylorTn_3p0PN_Q : public TaylorTn_Q
 
 
-class TaylorTn_3p5PN : public TaylorTn {
+class TaylorTn_3p5PN_Q : public TaylorTn_Q {
 private:
   const Quaternion xHat, yHat, zHat;
   const double m1;
@@ -1279,7 +1244,7 @@ private:
   const double m2, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
-  Quaternion R_S1, R_S2, chi1, chi2;
+  Quaternion R_S1, R_S2, chiVec1, chiVec2;
   double chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
@@ -1290,7 +1255,7 @@ private:
   double Phi;
 
 public:
-  TaylorTn_3p5PN(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
+  TaylorTn_3p5PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
            v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const double
            rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i, const
            double rfrak_ell_y_i, const double rfrak_ell_z_i) :
@@ -1301,16 +1266,16 @@ public:
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chi1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chi2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chi1[1]), chi1_y(chi1[2]), chi1_z(chi1[3]), chi2_x(chi2[1]),
-    chi2_y(chi2[2]), chi2_z(chi2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x,
-    2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z),
-    chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y +
-    chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x +
-    chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z),
-    S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 +
-    chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
-    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
+    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
+    2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y +
+    chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x +
+    chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
+    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y +
+    chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
+    Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v,
+    10)), Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
     Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu -
     38.2928354546934), Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu +
     115.731716675611), Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu -
@@ -1361,14 +1326,14 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chi1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chi2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
-    chi1_x = chi1[1];
-    chi1_y = chi1[2];
-    chi1_z = chi1[3];
-    chi2_x = chi2[1];
-    chi2_y = chi2[2];
-    chi2_z = chi2[3];
+    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
+    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chi1_x = chiVec1[1];
+    chi1_y = chiVec1[2];
+    chi1_z = chiVec1[3];
+    chi2_x = chiVec2[1];
+    chi2_y = chiVec2[2];
+    chi2_z = chiVec2[3];
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z;
@@ -1404,24 +1369,16 @@ public:
   }
 
   Quaternion OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_1 = -1.5*chi1_l*m1*m2 - 1.5*chi2_l*pow(m2, 2);
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + v*(OmegaVec1_1 + v*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2)))) +
-      0.5*chi2*pow(m2, 2)*pow(v, 6);
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec_chiVec_2() {
-    double OmegaVec2_1 = -1.5*chi1_l*pow(m1, 2) - 1.5*chi2_l*m1*m2;
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + v*(OmegaVec2_1 + v*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2)))) +
-      0.5*chi1*pow(m1, 2)*pow(v, 6);
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -1510,10 +1467,10 @@ public:
 
     return GSL_SUCCESS; // GSL expects this if everything went well
   }
-}; // class TaylorTn_3p5PN : public TaylorTn
+}; // class TaylorTn_3p5PN_Q : public TaylorTn_Q
 
 
-class TaylorTn_4p0PN : public TaylorTn {
+class TaylorTn_4p0PN_Q : public TaylorTn_Q {
 private:
   const Quaternion xHat, yHat, zHat;
   const double m1;
@@ -1523,7 +1480,7 @@ private:
   const double m2, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
-  Quaternion R_S1, R_S2, chi1, chi2;
+  Quaternion R_S1, R_S2, chiVec1, chiVec2;
   double chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
@@ -1535,7 +1492,7 @@ private:
   double Phi;
 
 public:
-  TaylorTn_4p0PN(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
+  TaylorTn_4p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
            v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const double
            rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i, const
            double rfrak_ell_y_i, const double rfrak_ell_z_i) :
@@ -1546,16 +1503,16 @@ public:
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chi1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chi2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chi1[1]), chi1_y(chi1[2]), chi1_z(chi1[3]), chi2_x(chi2[1]),
-    chi2_y(chi2[2]), chi2_z(chi2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x,
-    2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z),
-    chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y +
-    chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x +
-    chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z),
-    S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 +
-    chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
-    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
+    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
+    2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y +
+    chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x +
+    chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
+    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y +
+    chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
+    Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v,
+    10)), Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
     Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu -
     38.2928354546934), Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu +
     115.731716675611), Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu -
@@ -1611,14 +1568,14 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chi1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chi2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
-    chi1_x = chi1[1];
-    chi1_y = chi1[2];
-    chi1_z = chi1[3];
-    chi2_x = chi2[1];
-    chi2_y = chi2[2];
-    chi2_z = chi2[3];
+    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
+    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chi1_x = chiVec1[1];
+    chi1_y = chiVec1[2];
+    chi1_z = chiVec1[3];
+    chi2_x = chiVec2[1];
+    chi2_y = chiVec2[2];
+    chi2_z = chiVec2[3];
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z;
@@ -1656,24 +1613,16 @@ public:
   }
 
   Quaternion OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_1 = -1.5*chi1_l*m1*m2 - 1.5*chi2_l*pow(m2, 2);
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + v*(OmegaVec1_1 + v*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2)))) +
-      0.5*chi2*pow(m2, 2)*pow(v, 6);
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec_chiVec_2() {
-    double OmegaVec2_1 = -1.5*chi1_l*pow(m1, 2) - 1.5*chi2_l*m1*m2;
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + v*(OmegaVec2_1 + v*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2)))) +
-      0.5*chi1*pow(m1, 2)*pow(v, 6);
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -1780,10 +1729,10 @@ public:
 
     return GSL_SUCCESS; // GSL expects this if everything went well
   }
-}; // class TaylorTn_4p0PN : public TaylorTn
+}; // class TaylorTn_4p0PN_Q : public TaylorTn_Q
 
 
-class TaylorTn_4p5PN : public TaylorTn {
+class TaylorTn_4p5PN_Q : public TaylorTn_Q {
 private:
   const Quaternion xHat, yHat, zHat;
   const double m1;
@@ -1793,7 +1742,7 @@ private:
   const double m2, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
-  Quaternion R_S1, R_S2, chi1, chi2;
+  Quaternion R_S1, R_S2, chiVec1, chiVec2;
   double chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
@@ -1806,7 +1755,7 @@ private:
   double Phi;
 
 public:
-  TaylorTn_4p5PN(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
+  TaylorTn_4p5PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
            v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const double
            rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i, const
            double rfrak_ell_y_i, const double rfrak_ell_z_i) :
@@ -1817,16 +1766,16 @@ public:
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chi1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chi2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chi1[1]), chi1_y(chi1[2]), chi1_z(chi1[3]), chi2_x(chi2[1]),
-    chi2_y(chi2[2]), chi2_z(chi2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x,
-    2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z),
-    chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y +
-    chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x +
-    chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z),
-    S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 +
-    chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
-    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
+    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
+    2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y +
+    chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x +
+    chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
+    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y +
+    chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
+    Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v,
+    10)), Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
     Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu -
     38.2928354546934), Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu +
     115.731716675611), Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu -
@@ -1883,14 +1832,14 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chi1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chi2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
-    chi1_x = chi1[1];
-    chi1_y = chi1[2];
-    chi1_z = chi1[3];
-    chi2_x = chi2[1];
-    chi2_y = chi2[2];
-    chi2_z = chi2[3];
+    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
+    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chi1_x = chiVec1[1];
+    chi1_y = chiVec1[2];
+    chi1_z = chiVec1[3];
+    chi2_x = chiVec2[1];
+    chi2_y = chiVec2[2];
+    chi2_z = chiVec2[3];
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z;
@@ -1928,24 +1877,16 @@ public:
   }
 
   Quaternion OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_1 = -1.5*chi1_l*m1*m2 - 1.5*chi2_l*pow(m2, 2);
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + v*(OmegaVec1_1 + v*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2)))) +
-      0.5*chi2*pow(m2, 2)*pow(v, 6);
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec_chiVec_2() {
-    double OmegaVec2_1 = -1.5*chi1_l*pow(m1, 2) - 1.5*chi2_l*m1*m2;
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + v*(OmegaVec2_1 + v*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2)))) +
-      0.5*chi1*pow(m1, 2)*pow(v, 6);
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -2074,10 +2015,10 @@ public:
 
     return GSL_SUCCESS; // GSL expects this if everything went well
   }
-}; // class TaylorTn_4p5PN : public TaylorTn
+}; // class TaylorTn_4p5PN_Q : public TaylorTn_Q
 
 
-class TaylorTn_5p0PN : public TaylorTn {
+class TaylorTn_5p0PN_Q : public TaylorTn_Q {
 private:
   const Quaternion xHat, yHat, zHat;
   const double m1;
@@ -2087,7 +2028,7 @@ private:
   const double m2, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
-  Quaternion R_S1, R_S2, chi1, chi2;
+  Quaternion R_S1, R_S2, chiVec1, chiVec2;
   double chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
@@ -2100,7 +2041,7 @@ private:
   double Phi;
 
 public:
-  TaylorTn_5p0PN(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
+  TaylorTn_5p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
            v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const double
            rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i, const
            double rfrak_ell_y_i, const double rfrak_ell_z_i) :
@@ -2111,16 +2052,16 @@ public:
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chi1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chi2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chi1[1]), chi1_y(chi1[2]), chi1_z(chi1[3]), chi2_x(chi2[1]),
-    chi2_y(chi2[2]), chi2_z(chi2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x,
-    2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z),
-    chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y +
-    chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x +
-    chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z),
-    S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 +
-    chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
-    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
+    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
+    2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y +
+    chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x +
+    chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
+    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y +
+    chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
+    Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v,
+    10)), Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
     Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu -
     38.2928354546934), Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu +
     115.731716675611), Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu -
@@ -2179,14 +2120,14 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chi1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chi2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
-    chi1_x = chi1[1];
-    chi1_y = chi1[2];
-    chi1_z = chi1[3];
-    chi2_x = chi2[1];
-    chi2_y = chi2[2];
-    chi2_z = chi2[3];
+    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
+    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chi1_x = chiVec1[1];
+    chi1_y = chiVec1[2];
+    chi1_z = chiVec1[3];
+    chi2_x = chiVec2[1];
+    chi2_y = chiVec2[2];
+    chi2_z = chiVec2[3];
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z;
@@ -2224,24 +2165,16 @@ public:
   }
 
   Quaternion OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_1 = -1.5*chi1_l*m1*m2 - 1.5*chi2_l*pow(m2, 2);
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + v*(OmegaVec1_1 + v*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2)))) +
-      0.5*chi2*pow(m2, 2)*pow(v, 6);
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec_chiVec_2() {
-    double OmegaVec2_1 = -1.5*chi1_l*pow(m1, 2) - 1.5*chi2_l*m1*m2;
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + v*(OmegaVec2_1 + v*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2)))) +
-      0.5*chi1*pow(m1, 2)*pow(v, 6);
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -2411,10 +2344,10 @@ public:
 
     return GSL_SUCCESS; // GSL expects this if everything went well
   }
-}; // class TaylorTn_5p0PN : public TaylorTn
+}; // class TaylorTn_5p0PN_Q : public TaylorTn_Q
 
 
-class TaylorTn_5p5PN : public TaylorTn {
+class TaylorTn_5p5PN_Q : public TaylorTn_Q {
 private:
   const Quaternion xHat, yHat, zHat;
   const double m1;
@@ -2424,7 +2357,7 @@ private:
   const double m2, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
-  Quaternion R_S1, R_S2, chi1, chi2;
+  Quaternion R_S1, R_S2, chiVec1, chiVec2;
   double chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
@@ -2437,7 +2370,7 @@ private:
   double Phi;
 
 public:
-  TaylorTn_5p5PN(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
+  TaylorTn_5p5PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
            v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const double
            rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i, const
            double rfrak_ell_y_i, const double rfrak_ell_z_i) :
@@ -2448,16 +2381,16 @@ public:
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chi1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chi2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chi1[1]), chi1_y(chi1[2]), chi1_z(chi1[3]), chi2_x(chi2[1]),
-    chi2_y(chi2[2]), chi2_z(chi2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x,
-    2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z),
-    chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y +
-    chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x +
-    chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z),
-    S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 +
-    chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
-    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
+    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
+    2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y +
+    chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x +
+    chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
+    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y +
+    chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
+    Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v,
+    10)), Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
     Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu -
     38.2928354546934), Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu +
     115.731716675611), Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu -
@@ -2516,14 +2449,14 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chi1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chi2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
-    chi1_x = chi1[1];
-    chi1_y = chi1[2];
-    chi1_z = chi1[3];
-    chi2_x = chi2[1];
-    chi2_y = chi2[2];
-    chi2_z = chi2[3];
+    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
+    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chi1_x = chiVec1[1];
+    chi1_y = chiVec1[2];
+    chi1_z = chiVec1[3];
+    chi2_x = chiVec2[1];
+    chi2_y = chiVec2[2];
+    chi2_z = chiVec2[3];
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z;
@@ -2561,24 +2494,16 @@ public:
   }
 
   Quaternion OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_1 = -1.5*chi1_l*m1*m2 - 1.5*chi2_l*pow(m2, 2);
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + v*(OmegaVec1_1 + v*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2)))) +
-      0.5*chi2*pow(m2, 2)*pow(v, 6);
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec_chiVec_2() {
-    double OmegaVec2_1 = -1.5*chi1_l*pow(m1, 2) - 1.5*chi2_l*m1*m2;
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + v*(OmegaVec2_1 + v*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2)))) +
-      0.5*chi1*pow(m1, 2)*pow(v, 6);
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -2806,10 +2731,10 @@ public:
 
     return GSL_SUCCESS; // GSL expects this if everything went well
   }
-}; // class TaylorTn_5p5PN : public TaylorTn
+}; // class TaylorTn_5p5PN_Q : public TaylorTn_Q
 
 
-class TaylorTn_6p0PN : public TaylorTn {
+class TaylorTn_6p0PN_Q : public TaylorTn_Q {
 private:
   const Quaternion xHat, yHat, zHat;
   const double m1;
@@ -2819,7 +2744,7 @@ private:
   const double m2, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
-  Quaternion R_S1, R_S2, chi1, chi2;
+  Quaternion R_S1, R_S2, chiVec1, chiVec2;
   double chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z;
   const double chi1chi1, chi2chi2;
   double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
@@ -2832,7 +2757,7 @@ private:
   double Phi;
 
 public:
-  TaylorTn_6p0PN(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
+  TaylorTn_6p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
            v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const double
            rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i, const
            double rfrak_ell_y_i, const double rfrak_ell_z_i) :
@@ -2843,16 +2768,16 @@ public:
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chi1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chi2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chi1[1]), chi1_y(chi1[2]), chi1_z(chi1[3]), chi2_x(chi2[1]),
-    chi2_y(chi2[2]), chi2_z(chi2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x,
-    2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z),
-    chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y +
-    chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x +
-    chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z),
-    S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 +
-    chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
-    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
+    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
+    2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y +
+    chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x +
+    chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
+    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y +
+    chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
+    Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v,
+    10)), Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
     Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu -
     38.2928354546934), Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu +
     115.731716675611), Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu -
@@ -2912,14 +2837,14 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chi1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chi2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
-    chi1_x = chi1[1];
-    chi1_y = chi1[2];
-    chi1_z = chi1[3];
-    chi2_x = chi2[1];
-    chi2_y = chi2[2];
-    chi2_z = chi2[3];
+    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
+    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chi1_x = chiVec1[1];
+    chi1_y = chiVec1[2];
+    chi1_z = chiVec1[3];
+    chi2_x = chiVec2[1];
+    chi2_y = chiVec2[2];
+    chi2_z = chiVec2[3];
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z;
@@ -2957,24 +2882,16 @@ public:
   }
 
   Quaternion OmegaVec_chiVec_1() {
-    double OmegaVec1_2 = delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec1_1 = -1.5*chi1_l*m1*m2 - 1.5*chi2_l*pow(m2, 2);
-    double OmegaVec1_0 = -0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec1_4 = delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    double OmegaVec1_coeff = pow(v, 5);
-    return OmegaVec1_coeff*ellHat*(OmegaVec1_0 + v*(OmegaVec1_1 + v*(OmegaVec1_2 + OmegaVec1_4*pow(v, 2)))) +
-      0.5*chi2*pow(m2, 2)*pow(v, 6);
+    double Omega1_coeff = pow(v, 5);
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec_chiVec_2() {
-    double OmegaVec2_1 = -1.5*chi1_l*pow(m1, 2) - 1.5*chi2_l*m1*m2;
-    double OmegaVec2_0 = 0.75*delta + 0.5*nu + 0.75;
-    double OmegaVec2_coeff = pow(v, 5);
-    double OmegaVec2_2 = -delta*(0.625*nu - 0.5625) - 0.0416666666666667*pow(nu, 2) + 1.25*nu + 0.5625;
-    double OmegaVec2_4 = -delta*(-0.15625*pow(nu, 2) + 4.875*nu - 0.84375) - 0.0208333333333333*pow(nu, 3) -
-      3.28125*pow(nu, 2) + 0.1875*nu + 0.84375;
-    return OmegaVec2_coeff*ellHat*(OmegaVec2_0 + v*(OmegaVec2_1 + v*(OmegaVec2_2 + OmegaVec2_4*pow(v, 2)))) +
-      0.5*chi1*pow(m1, 2)*pow(v, 6);
+    double Omega2_coeff = pow(v, 5);
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   Quaternion OmegaVec() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -3292,4 +3209,4 @@ public:
 
     return GSL_SUCCESS; // GSL expects this if everything went well
   }
-}; // class TaylorTn_6p0PN : public TaylorTn
+}; // class TaylorTn_6p0PN_Q : public TaylorTn_Q

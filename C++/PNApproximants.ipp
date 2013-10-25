@@ -128,10 +128,13 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
+    const std::vector<double> Omega1 = OmegaVec_chiVec_1();
+    const std::vector<double> Omega2 = OmegaVec_chiVec_2();
+    const std::vector<double> Omega  = OmegaVec_ellHat();
     dydt[0] = dvdt;
-    cross(&OmegaVec_chiVec_1()[0], &y[1], &dydt[1]);
-    cross(&OmegaVec_chiVec_2()[0], &y[4], &dydt[4]);
-    cross(&OmegaVec_ellHat()[0], &y[7], &dydt[7]);
+    cross(&Omega1[0], &y[1], &dydt[1]);
+    cross(&Omega2[0], &y[4], &dydt[4]);
+    cross(&Omega[0],  &y[7], &dydt[7]);
     dydt[10] = v*v*v;
     const Quaternion adot(0., dydt[7], dydt[8], dydt[9]);
     const Quaternion Rax =
@@ -231,13 +234,11 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m2, 2)));
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + 0.75));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m1, 2)));
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + 0.75));
   }
   std::vector<double> OmegaVec_ellHat() {
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
@@ -274,10 +275,13 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
+    const std::vector<double> Omega1 = OmegaVec_chiVec_1();
+    const std::vector<double> Omega2 = OmegaVec_chiVec_2();
+    const std::vector<double> Omega  = OmegaVec_ellHat();
     dydt[0] = dvdt;
-    cross(&OmegaVec_chiVec_1()[0], &y[1], &dydt[1]);
-    cross(&OmegaVec_chiVec_2()[0], &y[4], &dydt[4]);
-    cross(&OmegaVec_ellHat()[0], &y[7], &dydt[7]);
+    cross(&Omega1[0], &y[1], &dydt[1]);
+    cross(&Omega2[0], &y[4], &dydt[4]);
+    cross(&Omega[0],  &y[7], &dydt[7]);
     dydt[10] = v*v*v;
     const Quaternion adot(0., dydt[7], dydt[8], dydt[9]);
     const Quaternion Rax =
@@ -378,13 +382,13 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu + 3.0*chi2_n*pow(m2, 2)));
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu + 3.0*chi2_n*pow(m1, 2)));
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_ellHat() {
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
@@ -423,10 +427,13 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
+    const std::vector<double> Omega1 = OmegaVec_chiVec_1();
+    const std::vector<double> Omega2 = OmegaVec_chiVec_2();
+    const std::vector<double> Omega  = OmegaVec_ellHat();
     dydt[0] = dvdt;
-    cross(&OmegaVec_chiVec_1()[0], &y[1], &dydt[1]);
-    cross(&OmegaVec_chiVec_2()[0], &y[4], &dydt[4]);
-    cross(&OmegaVec_ellHat()[0], &y[7], &dydt[7]);
+    cross(&Omega1[0], &y[1], &dydt[1]);
+    cross(&Omega2[0], &y[4], &dydt[4]);
+    cross(&Omega[0],  &y[7], &dydt[7]);
     dydt[10] = v*v*v;
     const Quaternion adot(0., dydt[7], dydt[8], dydt[9]);
     const Quaternion Rax =
@@ -533,13 +540,13 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu + 3.0*chi2_n*pow(m2, 2)));
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu + 3.0*chi2_n*pow(m1, 2)));
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -581,10 +588,13 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
+    const std::vector<double> Omega1 = OmegaVec_chiVec_1();
+    const std::vector<double> Omega2 = OmegaVec_chiVec_2();
+    const std::vector<double> Omega  = OmegaVec_ellHat();
     dydt[0] = dvdt;
-    cross(&OmegaVec_chiVec_1()[0], &y[1], &dydt[1]);
-    cross(&OmegaVec_chiVec_2()[0], &y[4], &dydt[4]);
-    cross(&OmegaVec_ellHat()[0], &y[7], &dydt[7]);
+    cross(&Omega1[0], &y[1], &dydt[1]);
+    cross(&Omega2[0], &y[4], &dydt[4]);
+    cross(&Omega[0],  &y[7], &dydt[7]);
     dydt[10] = v*v*v;
     const Quaternion adot(0., dydt[7], dydt[8], dydt[9]);
     const Quaternion Rax =
@@ -713,17 +723,15 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m2, 2)));
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m1, 2)));
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -771,10 +779,13 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
+    const std::vector<double> Omega1 = OmegaVec_chiVec_1();
+    const std::vector<double> Omega2 = OmegaVec_chiVec_2();
+    const std::vector<double> Omega  = OmegaVec_ellHat();
     dydt[0] = dvdt;
-    cross(&OmegaVec_chiVec_1()[0], &y[1], &dydt[1]);
-    cross(&OmegaVec_chiVec_2()[0], &y[4], &dydt[4]);
-    cross(&OmegaVec_ellHat()[0], &y[7], &dydt[7]);
+    cross(&Omega1[0], &y[1], &dydt[1]);
+    cross(&Omega2[0], &y[4], &dydt[4]);
+    cross(&Omega[0],  &y[7], &dydt[7]);
     dydt[10] = v*v*v;
     const Quaternion adot(0., dydt[7], dydt[8], dydt[9]);
     const Quaternion Rax =
@@ -909,17 +920,15 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m2, 2)));
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m1, 2)));
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -974,10 +983,13 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
+    const std::vector<double> Omega1 = OmegaVec_chiVec_1();
+    const std::vector<double> Omega2 = OmegaVec_chiVec_2();
+    const std::vector<double> Omega  = OmegaVec_ellHat();
     dydt[0] = dvdt;
-    cross(&OmegaVec_chiVec_1()[0], &y[1], &dydt[1]);
-    cross(&OmegaVec_chiVec_2()[0], &y[4], &dydt[4]);
-    cross(&OmegaVec_ellHat()[0], &y[7], &dydt[7]);
+    cross(&Omega1[0], &y[1], &dydt[1]);
+    cross(&Omega2[0], &y[4], &dydt[4]);
+    cross(&Omega[0],  &y[7], &dydt[7]);
     dydt[10] = v*v*v;
     const Quaternion adot(0., dydt[7], dydt[8], dydt[9]);
     const Quaternion Rax =
@@ -1118,17 +1130,15 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m2, 2)));
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m1, 2)));
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -1191,10 +1201,13 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
+    const std::vector<double> Omega1 = OmegaVec_chiVec_1();
+    const std::vector<double> Omega2 = OmegaVec_chiVec_2();
+    const std::vector<double> Omega  = OmegaVec_ellHat();
     dydt[0] = dvdt;
-    cross(&OmegaVec_chiVec_1()[0], &y[1], &dydt[1]);
-    cross(&OmegaVec_chiVec_2()[0], &y[4], &dydt[4]);
-    cross(&OmegaVec_ellHat()[0], &y[7], &dydt[7]);
+    cross(&Omega1[0], &y[1], &dydt[1]);
+    cross(&Omega2[0], &y[4], &dydt[4]);
+    cross(&Omega[0],  &y[7], &dydt[7]);
     dydt[10] = v*v*v;
     const Quaternion adot(0., dydt[7], dydt[8], dydt[9]);
     const Quaternion Rax =
@@ -1341,17 +1354,15 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m2, 2)));
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m1, 2)));
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -1425,10 +1436,13 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
+    const std::vector<double> Omega1 = OmegaVec_chiVec_1();
+    const std::vector<double> Omega2 = OmegaVec_chiVec_2();
+    const std::vector<double> Omega  = OmegaVec_ellHat();
     dydt[0] = dvdt;
-    cross(&OmegaVec_chiVec_1()[0], &y[1], &dydt[1]);
-    cross(&OmegaVec_chiVec_2()[0], &y[4], &dydt[4]);
-    cross(&OmegaVec_ellHat()[0], &y[7], &dydt[7]);
+    cross(&Omega1[0], &y[1], &dydt[1]);
+    cross(&Omega2[0], &y[4], &dydt[4]);
+    cross(&Omega[0],  &y[7], &dydt[7]);
     dydt[10] = v*v*v;
     const Quaternion adot(0., dydt[7], dydt[8], dydt[9]);
     const Quaternion Rax =
@@ -1583,17 +1597,15 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m2, 2)));
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m1, 2)));
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -1685,10 +1697,13 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
+    const std::vector<double> Omega1 = OmegaVec_chiVec_1();
+    const std::vector<double> Omega2 = OmegaVec_chiVec_2();
+    const std::vector<double> Omega  = OmegaVec_ellHat();
     dydt[0] = dvdt;
-    cross(&OmegaVec_chiVec_1()[0], &y[1], &dydt[1]);
-    cross(&OmegaVec_chiVec_2()[0], &y[4], &dydt[4]);
-    cross(&OmegaVec_ellHat()[0], &y[7], &dydt[7]);
+    cross(&Omega1[0], &y[1], &dydt[1]);
+    cross(&Omega2[0], &y[4], &dydt[4]);
+    cross(&Omega[0],  &y[7], &dydt[7]);
     dydt[10] = v*v*v;
     const Quaternion adot(0., dydt[7], dydt[8], dydt[9]);
     const Quaternion Rax =
@@ -1845,17 +1860,15 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m2, 2)));
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m1, 2)));
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -1969,10 +1982,13 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
+    const std::vector<double> Omega1 = OmegaVec_chiVec_1();
+    const std::vector<double> Omega2 = OmegaVec_chiVec_2();
+    const std::vector<double> Omega  = OmegaVec_ellHat();
     dydt[0] = dvdt;
-    cross(&OmegaVec_chiVec_1()[0], &y[1], &dydt[1]);
-    cross(&OmegaVec_chiVec_2()[0], &y[4], &dydt[4]);
-    cross(&OmegaVec_ellHat()[0], &y[7], &dydt[7]);
+    cross(&Omega1[0], &y[1], &dydt[1]);
+    cross(&Omega2[0], &y[4], &dydt[4]);
+    cross(&Omega[0],  &y[7], &dydt[7]);
     dydt[10] = v*v*v;
     const Quaternion adot(0., dydt[7], dydt[8], dydt[9]);
     const Quaternion Rax =
@@ -2130,17 +2146,15 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m2, 2)));
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m1, 2)));
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -2295,10 +2309,13 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
+    const std::vector<double> Omega1 = OmegaVec_chiVec_1();
+    const std::vector<double> Omega2 = OmegaVec_chiVec_2();
+    const std::vector<double> Omega  = OmegaVec_ellHat();
     dydt[0] = dvdt;
-    cross(&OmegaVec_chiVec_1()[0], &y[1], &dydt[1]);
-    cross(&OmegaVec_chiVec_2()[0], &y[4], &dydt[4]);
-    cross(&OmegaVec_ellHat()[0], &y[7], &dydt[7]);
+    cross(&Omega1[0], &y[1], &dydt[1]);
+    cross(&Omega2[0], &y[4], &dydt[4]);
+    cross(&Omega[0],  &y[7], &dydt[7]);
     dydt[10] = v*v*v;
     const Quaternion adot(0., dydt[7], dydt[8], dydt[9]);
     const Quaternion Rax =
@@ -2457,17 +2474,15 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m2, 2)));
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m1, 2)));
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -2680,10 +2695,13 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
+    const std::vector<double> Omega1 = OmegaVec_chiVec_1();
+    const std::vector<double> Omega2 = OmegaVec_chiVec_2();
+    const std::vector<double> Omega  = OmegaVec_ellHat();
     dydt[0] = dvdt;
-    cross(&OmegaVec_chiVec_1()[0], &y[1], &dydt[1]);
-    cross(&OmegaVec_chiVec_2()[0], &y[4], &dydt[4]);
-    cross(&OmegaVec_ellHat()[0], &y[7], &dydt[7]);
+    cross(&Omega1[0], &y[1], &dydt[1]);
+    cross(&Omega2[0], &y[4], &dydt[4]);
+    cross(&Omega[0],  &y[7], &dydt[7]);
     dydt[10] = v*v*v;
     const Quaternion adot(0., dydt[7], dydt[8], dydt[9]);
     const Quaternion Rax =
@@ -2843,17 +2861,15 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m2, 2)));
+    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
-      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
-      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
-      3.0*chi2_n*pow(m1, 2)));
+    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
+      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
+      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -3156,10 +3172,13 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
+    const std::vector<double> Omega1 = OmegaVec_chiVec_1();
+    const std::vector<double> Omega2 = OmegaVec_chiVec_2();
+    const std::vector<double> Omega  = OmegaVec_ellHat();
     dydt[0] = dvdt;
-    cross(&OmegaVec_chiVec_1()[0], &y[1], &dydt[1]);
-    cross(&OmegaVec_chiVec_2()[0], &y[4], &dydt[4]);
-    cross(&OmegaVec_ellHat()[0], &y[7], &dydt[7]);
+    cross(&Omega1[0], &y[1], &dydt[1]);
+    cross(&Omega2[0], &y[4], &dydt[4]);
+    cross(&Omega[0],  &y[7], &dydt[7]);
     dydt[10] = v*v*v;
     const Quaternion adot(0., dydt[7], dydt[8], dydt[9]);
     const Quaternion Rax =

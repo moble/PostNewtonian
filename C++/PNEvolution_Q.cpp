@@ -27,7 +27,7 @@ inline Quaternion Unflipped(const Quaternion& R0, const Quaternion& R1) {
 ///////////////////////////////////
 //// Defining the approximants ////
 ///////////////////////////////////
-class TaylorTn {
+class TaylorTn_Q {
 public:
   virtual int TaylorT1(double t, const double* y, double* dydt) { return GSL_FAILURE; }
   virtual int TaylorT4(double t, const double* y, double* dydt) { return GSL_FAILURE; }
@@ -60,18 +60,18 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant,
 }
 
 // These will be the right-hand sides for the ODE integration; params
-// will point to a TaylorTn object.
+// will point to a TaylorTn_Q object.
 namespace {
   int funcT1 (double t, const double y[], double dydt[], void* params) {
-    TaylorTn* Tn = (TaylorTn*) params;
+    TaylorTn_Q* Tn = (TaylorTn_Q*) params;
     return Tn->TaylorT1(t, y, dydt);
   }
   int funcT4 (double t, const double y[], double dydt[], void* params) {
-    TaylorTn* Tn = (TaylorTn*) params;
+    TaylorTn_Q* Tn = (TaylorTn_Q*) params;
     return Tn->TaylorT4(t, y, dydt);
   }
   int funcT5 (double t, const double y[], double dydt[], void* params) {
-    TaylorTn* Tn = (TaylorTn*) params;
+    TaylorTn_Q* Tn = (TaylorTn_Q*) params;
     return Tn->TaylorT5(t, y, dydt);
   }
 };
@@ -110,64 +110,92 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
 
   // Tn encapsulates all the actual PN calculations -- especially the
   // right-hand sides of the evolution system
-  TaylorTn* Tn;
+  TaylorTn_Q* Tn = 0;
   switch(int(2*PNOrder)) {
+  case 0:
+    Tn = new TaylorTn_0PN_Q(xHat, yHat, zHat, m1, v_i,
+			    chi1Mag_i, chi2Mag_i,
+			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+    break;
+  case 1:
+    Tn = new TaylorTn_0p50PN_Q(xHat, yHat, zHat, m1, v_i,
+			       chi1Mag_i, chi2Mag_i,
+			       rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+			       rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+    break;
+  case 2:
+    Tn = new TaylorTn_1p0PN_Q(xHat, yHat, zHat, m1, v_i,
+			    chi1Mag_i, chi2Mag_i,
+			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+    break;
+  case 3:
+    Tn = new TaylorTn_1p5PN_Q(xHat, yHat, zHat, m1, v_i,
+			    chi1Mag_i, chi2Mag_i,
+			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+    break;
   case 4:
-    Tn = new TaylorTn_2p0PN(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_2p0PN_Q(xHat, yHat, zHat, m1, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 5:
-    Tn = new TaylorTn_2p5PN(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_2p5PN_Q(xHat, yHat, zHat, m1, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 6:
-    Tn = new TaylorTn_3p0PN(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_3p0PN_Q(xHat, yHat, zHat, m1, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 7:
-    Tn = new TaylorTn_3p5PN(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_3p5PN_Q(xHat, yHat, zHat, m1, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 8:
-    Tn = new TaylorTn_4p0PN(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_4p0PN_Q(xHat, yHat, zHat, m1, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 9:
-    Tn = new TaylorTn_4p5PN(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_4p5PN_Q(xHat, yHat, zHat, m1, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 10:
-    Tn = new TaylorTn_5p0PN(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_5p0PN_Q(xHat, yHat, zHat, m1, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 11:
-    Tn = new TaylorTn_5p5PN(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_5p5PN_Q(xHat, yHat, zHat, m1, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 12:
-    Tn = new TaylorTn_6p0PN(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_6p0PN_Q(xHat, yHat, zHat, m1, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   default:
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": PN order " << PNOrder << " is not yet implemented." << std::endl;
+    throw(-1);
+  }
+  if(Tn==0) {
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Tn did not get assigned with PNOrder=" << PNOrder << "." << std::endl;
     throw(-1);
   }
 
@@ -202,7 +230,6 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   gsl_odeiv2_system sysT4 = {::funcT4, NULL, y.size(), (void *) Tn};
   gsl_odeiv2_system sysT5 = {::funcT5, NULL, y.size(), (void *) Tn};
   gsl_odeiv2_system* sys;
-  std::cerr << __FILE__ << ":" << __LINE__ << ": Add more options for PN orders here; possibly use static member function." << std::endl;
   if(Approximant.compare("TaylorT1")==0) {
     sys = &sysT1;
   } else if(Approximant.compare("TaylorT4")==0) {
@@ -318,6 +345,8 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   for(unsigned int i=0; i<t.size(); ++i) {
     t[i] -= tback;
   }
+
+  delete Tn;
 
   return;
 }
