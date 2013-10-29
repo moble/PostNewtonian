@@ -6,8 +6,10 @@ private:
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
   std::vector<double> ellHat, nHat, chiVec1, chiVec2;
-  const double chi1chi1, chi2chi2;
-  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
+  const double chi1chi1;
+  double chi1chi2;
+  const double chi2chi2;
+  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, Fcal_coeff;
   const double Fcal_0, E_0;
   double Phi, gamma;
 
@@ -19,14 +21,16 @@ public:
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
-    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
-    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
-    chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
-    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
-    chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) +
-    chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1
-    + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000), E_0(1.00000000000000), Phi(0.0), gamma(0.0)
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y +
+    chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y
+    + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z -
+    ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
+    chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) +
+    chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), chi_s_l(0.5*chi1_l +
+    0.5*chi2_l), chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
+    E_0(1.00000000000000), Phi(0.0), gamma(0.0)
   {
     ellHat[0] = ellHat_x;
     ellHat[1] = ellHat_y;
@@ -70,6 +74,7 @@ public:
     chiVec2[0] = chi2_x;
     chiVec2[1] = chi2_y;
     chiVec2[2] = chi2_z;
+    chi1chi2 = chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -82,6 +87,8 @@ public:
     S_n = chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2);
     Sigma_l = -chi1_l*m1 + chi2_l*m2;
     Sigma_n = -chi1_n*m1 + chi2_n*m2;
+    chi_s_l = 0.5*chi1_l + 0.5*chi2_l;
+    chi_a_l = 0.5*chi1_l - 0.5*chi2_l;
     Fcal_coeff = 6.4*pow(nu, 2)*pow(v, 10);
   }
 
@@ -153,8 +160,10 @@ private:
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
   std::vector<double> ellHat, nHat, chiVec1, chiVec2;
-  const double chi1chi1, chi2chi2;
-  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
+  const double chi1chi1;
+  double chi1chi2;
+  const double chi2chi2;
+  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, Fcal_coeff;
   const double Fcal_0, E_0;
   double Phi, gamma;
 
@@ -166,14 +175,16 @@ public:
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
-    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
-    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
-    chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
-    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
-    chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) +
-    chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1
-    + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000), E_0(1.00000000000000), Phi(0.0), gamma(0.0)
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y +
+    chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y
+    + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z -
+    ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
+    chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) +
+    chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), chi_s_l(0.5*chi1_l +
+    0.5*chi2_l), chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
+    E_0(1.00000000000000), Phi(0.0), gamma(0.0)
   {
     ellHat[0] = ellHat_x;
     ellHat[1] = ellHat_y;
@@ -217,6 +228,7 @@ public:
     chiVec2[0] = chi2_x;
     chiVec2[1] = chi2_y;
     chiVec2[2] = chi2_z;
+    chi1chi2 = chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -229,16 +241,20 @@ public:
     S_n = chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2);
     Sigma_l = -chi1_l*m1 + chi2_l*m2;
     Sigma_n = -chi1_n*m1 + chi2_n*m2;
+    chi_s_l = 0.5*chi1_l + 0.5*chi2_l;
+    chi_a_l = 0.5*chi1_l - 0.5*chi2_l;
     Fcal_coeff = 6.4*pow(nu, 2)*pow(v, 10);
   }
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + 0.75));
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + 0.75));
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + 0.75) + nHat*v*(3.0*chi1_n*pow(m1, 2) +
+      3.0*chi2_n*nu));
   }
   std::vector<double> OmegaVec_ellHat() {
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
@@ -300,8 +316,10 @@ private:
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
   std::vector<double> ellHat, nHat, chiVec1, chiVec2;
-  const double chi1chi1, chi2chi2;
-  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
+  const double chi1chi1;
+  double chi1chi2;
+  const double chi2chi2;
+  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, Fcal_coeff;
   const double Fcal_0, Fcal_2, E_0, E_2;
   double Phi, gamma;
 
@@ -313,15 +331,16 @@ public:
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
-    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
-    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
-    chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
-    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
-    chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) +
-    chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1
-    + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu -
-    3.71130952380952), E_0(1.00000000000000), E_2(-0.0833333333333333*nu - 0.75), Phi(0.0), gamma(0.0)
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y +
+    chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y
+    + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z -
+    ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
+    chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) +
+    chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), chi_s_l(0.5*chi1_l +
+    0.5*chi2_l), chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
+    Fcal_2(-2.91666666666667*nu - 3.71130952380952), E_0(1.00000000000000), E_2(-0.0833333333333333*nu - 0.75), Phi(0.0), gamma(0.0)
   {
     ellHat[0] = ellHat_x;
     ellHat[1] = ellHat_y;
@@ -365,6 +384,7 @@ public:
     chiVec2[0] = chi2_x;
     chiVec2[1] = chi2_y;
     chiVec2[2] = chi2_z;
+    chi1chi2 = chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -377,18 +397,20 @@ public:
     S_n = chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2);
     Sigma_l = -chi1_l*m1 + chi2_l*m2;
     Sigma_n = -chi1_n*m1 + chi2_n*m2;
+    chi_s_l = 0.5*chi1_l + 0.5*chi2_l;
+    chi_a_l = 0.5*chi1_l - 0.5*chi2_l;
     Fcal_coeff = 6.4*pow(nu, 2)*pow(v, 10);
   }
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75));
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu + 3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75));
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*pow(m1, 2) + 3.0*chi2_n*nu));
   }
   std::vector<double> OmegaVec_ellHat() {
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
@@ -452,8 +474,10 @@ private:
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
   std::vector<double> ellHat, nHat, chiVec1, chiVec2;
-  const double chi1chi1, chi2chi2;
-  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
+  const double chi1chi1;
+  double chi1chi2;
+  const double chi2chi2;
+  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3;
   double Fcal_SO_3;
   const double E_0, E_2;
@@ -468,16 +492,17 @@ public:
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
-    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
-    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
-    chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
-    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
-    chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) +
-    chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1
-    + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu -
-    3.71130952380952), Fcal_3(12.5663706143592), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta), E_0(1.00000000000000),
-    E_2(-0.0833333333333333*nu - 0.75), E_SO_3(4.66666666666667*S_l + 2.0*Sigma_l*delta), Phi(0.0), gamma(0.0)
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y +
+    chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y
+    + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z -
+    ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
+    chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) +
+    chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), chi_s_l(0.5*chi1_l +
+    0.5*chi2_l), chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
+    Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
+    E_0(1.00000000000000), E_2(-0.0833333333333333*nu - 0.75), E_SO_3(4.66666666666667*S_l + 2.0*Sigma_l*delta), Phi(0.0), gamma(0.0)
   {
     ellHat[0] = ellHat_x;
     ellHat[1] = ellHat_y;
@@ -521,6 +546,7 @@ public:
     chiVec2[0] = chi2_x;
     chiVec2[1] = chi2_y;
     chiVec2[2] = chi2_z;
+    chi1chi2 = chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -533,6 +559,8 @@ public:
     S_n = chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2);
     Sigma_l = -chi1_l*m1 + chi2_l*m2;
     Sigma_n = -chi1_n*m1 + chi2_n*m2;
+    chi_s_l = 0.5*chi1_l + 0.5*chi2_l;
+    chi_a_l = 0.5*chi1_l - 0.5*chi2_l;
     Fcal_coeff = 6.4*pow(nu, 2)*pow(v, 10);
     Fcal_SO_3 = -4.0*S_l - 1.25*Sigma_l*delta;
     E_SO_3 = 4.66666666666667*S_l + 2.0*Sigma_l*delta;
@@ -540,13 +568,13 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75));
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu + 3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75));
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*pow(m1, 2) + 3.0*chi2_n*nu));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -613,8 +641,10 @@ private:
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
   std::vector<double> ellHat, nHat, chiVec1, chiVec2;
-  const double chi1chi1, chi2chi2;
-  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
+  const double chi1chi1;
+  double chi1chi2;
+  const double chi2chi2;
+  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4;
   double Fcal_SQ_4, Fcal_SO_3;
   const double E_0, E_2, E_4;
@@ -629,21 +659,20 @@ public:
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
-    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
-    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
-    chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
-    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
-    chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) +
-    chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1
-    + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu -
-    3.71130952380952), Fcal_3(12.5663706143592), Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu -
-    4.92846119929453), Fcal_SQ_4(chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
-    chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
-    2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667)
-    - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) + pow(chi2_la,
-    2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n, 2)*(0.463541666666667*delta +
-    0.927083333333333*nu - 0.463541666666667)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta), E_0(1.00000000000000),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y +
+    chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y
+    + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z -
+    ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
+    chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) +
+    chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), chi_s_l(0.5*chi1_l +
+    0.5*chi2_l), chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
+    Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_4(3.61111111111111*pow(nu, 2) +
+    18.3948412698413*nu - 4.92846119929453), Fcal_SQ_4(chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu -
+    0.463541666666667) - 2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu -
+    0.463541666666667) + chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+    2)*(0.0416666666666667*nu + 2.98958333333333)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta), E_0(1.00000000000000),
     E_2(-0.0833333333333333*nu - 0.75), E_4(-0.0416666666666667*pow(nu, 2) + 2.375*nu - 3.375), E_SQ_4(-0.5*pow(chi1_l,
     2)*delta + pow(chi1_l, 2)*nu - 0.5*pow(chi1_l, 2) - 2.0*chi1_l*chi2_l*nu + 0.25*pow(chi1_la, 2)*delta -
     0.5*pow(chi1_la, 2)*nu + 0.25*pow(chi1_la, 2) + chi1_la*chi2_la*nu + 0.25*pow(chi1_n, 2)*delta - 0.5*pow(chi1_n,
@@ -693,6 +722,7 @@ public:
     chiVec2[0] = chi2_x;
     chiVec2[1] = chi2_y;
     chiVec2[2] = chi2_z;
+    chi1chi2 = chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -705,13 +735,13 @@ public:
     S_n = chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2);
     Sigma_l = -chi1_l*m1 + chi2_l*m2;
     Sigma_n = -chi1_n*m1 + chi2_n*m2;
+    chi_s_l = 0.5*chi1_l + 0.5*chi2_l;
+    chi_a_l = 0.5*chi1_l - 0.5*chi2_l;
     Fcal_coeff = 6.4*pow(nu, 2)*pow(v, 10);
-    Fcal_SQ_4 = chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
-      chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
-      2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu -
-      0.463541666666667) - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) +
-      pow(chi2_la, 2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n,
-      2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667);
+    Fcal_SQ_4 = chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
+      2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) +
+      chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+      2)*(0.0416666666666667*nu + 2.98958333333333);
     Fcal_SO_3 = -4.0*S_l - 1.25*Sigma_l*delta;
     E_SQ_4 = -0.5*pow(chi1_l, 2)*delta + pow(chi1_l, 2)*nu - 0.5*pow(chi1_l, 2) - 2.0*chi1_l*chi2_l*nu +
       0.25*pow(chi1_la, 2)*delta - 0.5*pow(chi1_la, 2)*nu + 0.25*pow(chi1_la, 2) + chi1_la*chi2_la*nu + 0.25*pow(chi1_n,
@@ -723,15 +753,17 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*pow(m1, 2) +
+      3.0*chi2_n*nu));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
@@ -804,8 +836,10 @@ private:
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
   std::vector<double> ellHat, nHat, chiVec1, chiVec2;
-  const double chi1chi1, chi2chi2;
-  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, Fcal_coeff;
+  const double chi1chi1;
+  double chi1chi2;
+  const double chi2chi2;
+  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5;
   double Fcal_SQ_4, Fcal_SO_3, Fcal_SO_5;
   const double E_0, E_2, E_4;
@@ -820,21 +854,21 @@ public:
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
-    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
-    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
-    chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
-    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
-    chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) +
-    chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1
-    + chi2_n*m2), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu -
-    3.71130952380952), Fcal_3(12.5663706143592), Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu -
-    4.92846119929453), Fcal_5(-76.3145215434521*nu - 38.2928354546934), Fcal_SQ_4(chi1_l*(chi1_l*(1.03125*delta -
-    2.0625*nu + 1.03125) + 3.875*chi2_l*nu) + chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu -
-    0.463541666666667) - 2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu
-    - 0.463541666666667) - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) +
-    pow(chi2_la, 2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n,
-    2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y +
+    chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y
+    + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z -
+    ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
+    chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) +
+    chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), chi_s_l(0.5*chi1_l +
+    0.5*chi2_l), chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
+    Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_4(3.61111111111111*pow(nu, 2) +
+    18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu - 38.2928354546934),
+    Fcal_SQ_4(chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
+    2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) +
+    chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+    2)*(0.0416666666666667*nu + 2.98958333333333)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
     Fcal_SO_5(S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125)), E_0(1.00000000000000),
     E_2(-0.0833333333333333*nu - 0.75), E_4(-0.0416666666666667*pow(nu, 2) + 2.375*nu - 3.375), E_SQ_4(-0.5*pow(chi1_l,
     2)*delta + pow(chi1_l, 2)*nu - 0.5*pow(chi1_l, 2) - 2.0*chi1_l*chi2_l*nu + 0.25*pow(chi1_la, 2)*delta -
@@ -887,6 +921,7 @@ public:
     chiVec2[0] = chi2_x;
     chiVec2[1] = chi2_y;
     chiVec2[2] = chi2_z;
+    chi1chi2 = chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -899,13 +934,13 @@ public:
     S_n = chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2);
     Sigma_l = -chi1_l*m1 + chi2_l*m2;
     Sigma_n = -chi1_n*m1 + chi2_n*m2;
+    chi_s_l = 0.5*chi1_l + 0.5*chi2_l;
+    chi_a_l = 0.5*chi1_l - 0.5*chi2_l;
     Fcal_coeff = 6.4*pow(nu, 2)*pow(v, 10);
-    Fcal_SQ_4 = chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
-      chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
-      2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu -
-      0.463541666666667) - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) +
-      pow(chi2_la, 2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n,
-      2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667);
+    Fcal_SQ_4 = chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
+      2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) +
+      chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+      2)*(0.0416666666666667*nu + 2.98958333333333);
     Fcal_SO_3 = -4.0*S_l - 1.25*Sigma_l*delta;
     Fcal_SO_5 = S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125);
     E_SQ_4 = -0.5*pow(chi1_l, 2)*delta + pow(chi1_l, 2)*nu - 0.5*pow(chi1_l, 2) - 2.0*chi1_l*chi2_l*nu +
@@ -920,26 +955,28 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*pow(m1, 2) +
+      3.0*chi2_n*nu));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
+    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
+      9.125*nu + 1.5);
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
     double gamma_PN_3 = 1.66666666666667*S_l + Sigma_l*delta;
     double gamma_PN_5 = S_l*(0.888888888888889*nu + 3.33333333333333) + 2.0*Sigma_l*delta;
     double gamma_PN_0 = 1.00000000000000;
     double a_ell_2 = S_n*(-9.66666666666667*nu - 10.0) + Sigma_n*delta*(-4.5*nu - 6.0);
     double gamma_PN_4 = -5.41666666666667*nu + 1.0;
-    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
-      9.125*nu + 1.5);
     return nHat*pow(v, 6)*(a_ell_0 + pow(v, 2)*(a_ell_2 + a_ell_4*pow(v, 2)))*(gamma_PN_0 + pow(v, 2)*(gamma_PN_2 +
       v*(gamma_PN_3 + v*(gamma_PN_4 + gamma_PN_5*v))));
   }
@@ -1008,8 +1045,11 @@ private:
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
   std::vector<double> ellHat, nHat, chiVec1, chiVec2;
-  const double chi1chi1, chi2chi2;
-  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
+  const double chi1chi1;
+  double chi1chi2;
+  const double chi2chi2;
+  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, logv,
+         Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5, Fcal_6, Fcal_lnv_6;
   double Fcal_SQ_4, Fcal_SO_3, Fcal_SO_5, Fcal_SO_6;
   const double E_0, E_2, E_4, E_6;
@@ -1024,26 +1064,25 @@ public:
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
-    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
-    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
-    chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
-    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
-    chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) +
-    chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1
-    + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_4(3.61111111111111*pow(nu, 2) +
-    18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu - 38.2928354546934),
-    Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu + 115.731716675611),
-    Fcal_lnv_6(-16.3047619047619), Fcal_SQ_4(chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
-    chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
-    2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667)
-    - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) + pow(chi2_la,
-    2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n, 2)*(0.463541666666667*delta +
-    0.927083333333333*nu - 0.463541666666667)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
-    Fcal_SO_5(S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125)), Fcal_SO_6(-50.2654824574367*S_l -
-    16.2315620435473*Sigma_l*delta), E_0(1.00000000000000), E_2(-0.0833333333333333*nu - 0.75),
-    E_4(-0.0416666666666667*pow(nu, 2) + 2.375*nu - 3.375), E_6(-0.00675154320987654*pow(nu, 3) -
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y +
+    chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y
+    + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z -
+    ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
+    chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) +
+    chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), chi_s_l(0.5*chi1_l +
+    0.5*chi2_l), chi_a_l(0.5*chi1_l - 0.5*chi2_l), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
+    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu -
+    38.2928354546934), Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu +
+    115.731716675611), Fcal_lnv_6(-16.3047619047619), Fcal_SQ_4(chi1chi1*(-0.463541666666667*delta +
+    0.927083333333333*nu - 0.463541666666667) - 2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta +
+    0.927083333333333*nu - 0.463541666666667) + chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) +
+    5.97916666666667*chi_s_l*delta) + pow(chi_s_l, 2)*(0.0416666666666667*nu + 2.98958333333333)), Fcal_SO_3(-4.0*S_l -
+    1.25*Sigma_l*delta), Fcal_SO_5(S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125)),
+    Fcal_SO_6(-50.2654824574367*S_l - 16.2315620435473*Sigma_l*delta), E_0(1.00000000000000), E_2(-0.0833333333333333*nu
+    - 0.75), E_4(-0.0416666666666667*pow(nu, 2) + 2.375*nu - 3.375), E_6(-0.00675154320987654*pow(nu, 3) -
     1.61458333333333*pow(nu, 2) + 38.7246294907293*nu - 10.546875), E_SQ_4(-0.5*pow(chi1_l, 2)*delta + pow(chi1_l, 2)*nu
     - 0.5*pow(chi1_l, 2) - 2.0*chi1_l*chi2_l*nu + 0.25*pow(chi1_la, 2)*delta - 0.5*pow(chi1_la, 2)*nu +
     0.25*pow(chi1_la, 2) + chi1_la*chi2_la*nu + 0.25*pow(chi1_n, 2)*delta - 0.5*pow(chi1_n, 2)*nu + 0.25*pow(chi1_n, 2)
@@ -1095,6 +1134,7 @@ public:
     chiVec2[0] = chi2_x;
     chiVec2[1] = chi2_y;
     chiVec2[2] = chi2_z;
+    chi1chi2 = chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -1107,14 +1147,14 @@ public:
     S_n = chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2);
     Sigma_l = -chi1_l*m1 + chi2_l*m2;
     Sigma_n = -chi1_n*m1 + chi2_n*m2;
+    chi_s_l = 0.5*chi1_l + 0.5*chi2_l;
+    chi_a_l = 0.5*chi1_l - 0.5*chi2_l;
     logv = log(v);
     Fcal_coeff = 6.4*pow(nu, 2)*pow(v, 10);
-    Fcal_SQ_4 = chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
-      chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
-      2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu -
-      0.463541666666667) - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) +
-      pow(chi2_la, 2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n,
-      2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667);
+    Fcal_SQ_4 = chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
+      2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) +
+      chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+      2)*(0.0416666666666667*nu + 2.98958333333333);
     Fcal_SO_3 = -4.0*S_l - 1.25*Sigma_l*delta;
     Fcal_SO_5 = S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125);
     Fcal_SO_6 = -50.2654824574367*S_l - 16.2315620435473*Sigma_l*delta;
@@ -1130,18 +1170,22 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*pow(m1, 2) +
+      3.0*chi2_n*nu));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
+    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
+      9.125*nu + 1.5);
     double gamma_PN_6 = 0.0123456790123457*pow(nu, 3) + 6.36111111111111*pow(nu, 2) - 2.98177812235564*nu + 1.0;
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
     double gamma_PN_3 = 1.66666666666667*S_l + Sigma_l*delta;
@@ -1149,8 +1193,6 @@ public:
     double gamma_PN_0 = 1.00000000000000;
     double a_ell_2 = S_n*(-9.66666666666667*nu - 10.0) + Sigma_n*delta*(-4.5*nu - 6.0);
     double gamma_PN_4 = -5.41666666666667*nu + 1.0;
-    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
-      9.125*nu + 1.5);
     return nHat*pow(v, 6)*(a_ell_0 + pow(v, 2)*(a_ell_2 + a_ell_4*pow(v, 2)))*(gamma_PN_0 + pow(v, 2)*(gamma_PN_2 +
       v*(gamma_PN_3 + v*(gamma_PN_4 + v*(gamma_PN_5 + gamma_PN_6*v)))));
   }
@@ -1226,8 +1268,11 @@ private:
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
   std::vector<double> ellHat, nHat, chiVec1, chiVec2;
-  const double chi1chi1, chi2chi2;
-  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
+  const double chi1chi1;
+  double chi1chi2;
+  const double chi2chi2;
+  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, logv,
+         Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5, Fcal_6, Fcal_lnv_6, Fcal_7;
   double Fcal_SQ_4, Fcal_SO_3, Fcal_SO_5, Fcal_SO_6, Fcal_SO_7;
   const double E_0, E_2, E_4, E_6;
@@ -1242,24 +1287,23 @@ public:
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
-    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
-    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
-    chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
-    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
-    chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) +
-    chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1
-    + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_4(3.61111111111111*pow(nu, 2) +
-    18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu - 38.2928354546934),
-    Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu + 115.731716675611),
-    Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu - 101.509595959742),
-    Fcal_SQ_4(chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
-    chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
-    2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667)
-    - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) + pow(chi2_la,
-    2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n, 2)*(0.463541666666667*delta +
-    0.927083333333333*nu - 0.463541666666667)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y +
+    chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y
+    + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z -
+    ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
+    chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) +
+    chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), chi_s_l(0.5*chi1_l +
+    0.5*chi2_l), chi_a_l(0.5*chi1_l - 0.5*chi2_l), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
+    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu -
+    38.2928354546934), Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu +
+    115.731716675611), Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu -
+    101.509595959742), Fcal_SQ_4(chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
+    2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) +
+    chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+    2)*(0.0416666666666667*nu + 2.98958333333333)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
     Fcal_SO_5(S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125)), Fcal_SO_6(-50.2654824574367*S_l -
     16.2315620435473*Sigma_l*delta), Fcal_SO_7(S_l*(-104.074074074074*pow(nu, 2) + 32.6560846560847*nu +
     70.053644914756) + Sigma_l*delta*(-41.6944444444444*pow(nu, 2) + 14.6746031746032*nu + 28.3779761904762)),
@@ -1316,6 +1360,7 @@ public:
     chiVec2[0] = chi2_x;
     chiVec2[1] = chi2_y;
     chiVec2[2] = chi2_z;
+    chi1chi2 = chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -1328,14 +1373,14 @@ public:
     S_n = chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2);
     Sigma_l = -chi1_l*m1 + chi2_l*m2;
     Sigma_n = -chi1_n*m1 + chi2_n*m2;
+    chi_s_l = 0.5*chi1_l + 0.5*chi2_l;
+    chi_a_l = 0.5*chi1_l - 0.5*chi2_l;
     logv = log(v);
     Fcal_coeff = 6.4*pow(nu, 2)*pow(v, 10);
-    Fcal_SQ_4 = chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
-      chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
-      2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu -
-      0.463541666666667) - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) +
-      pow(chi2_la, 2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n,
-      2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667);
+    Fcal_SQ_4 = chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
+      2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) +
+      chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+      2)*(0.0416666666666667*nu + 2.98958333333333);
     Fcal_SO_3 = -4.0*S_l - 1.25*Sigma_l*delta;
     Fcal_SO_5 = S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125);
     Fcal_SO_6 = -50.2654824574367*S_l - 16.2315620435473*Sigma_l*delta;
@@ -1354,18 +1399,22 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*pow(m1, 2) +
+      3.0*chi2_n*nu));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
+    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
+      9.125*nu + 1.5);
     double gamma_PN_6 = 0.0123456790123457*pow(nu, 3) + 6.36111111111111*pow(nu, 2) - 2.98177812235564*nu + 1.0;
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
     double gamma_PN_3 = 1.66666666666667*S_l + Sigma_l*delta;
@@ -1375,8 +1424,6 @@ public:
     double gamma_PN_0 = 1.00000000000000;
     double a_ell_2 = S_n*(-9.66666666666667*nu - 10.0) + Sigma_n*delta*(-4.5*nu - 6.0);
     double gamma_PN_4 = -5.41666666666667*nu + 1.0;
-    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
-      9.125*nu + 1.5);
     return nHat*pow(v, 6)*(a_ell_0 + pow(v, 2)*(a_ell_2 + a_ell_4*pow(v, 2)))*(gamma_PN_0 + pow(v, 2)*(gamma_PN_2 +
       v*(gamma_PN_3 + v*(gamma_PN_4 + v*(gamma_PN_5 + v*(gamma_PN_6 + gamma_PN_7*v))))));
   }
@@ -1461,8 +1508,11 @@ private:
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
   std::vector<double> ellHat, nHat, chiVec1, chiVec2;
-  const double chi1chi1, chi2chi2;
-  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
+  const double chi1chi1;
+  double chi1chi2;
+  const double chi2chi2;
+  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, logv,
+         Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5, Fcal_6, Fcal_lnv_6, Fcal_7, Fcal_8, Fcal_lnv_8;
   double Fcal_SQ_4, Fcal_SO_3, Fcal_SO_5, Fcal_SO_6, Fcal_SO_7, Fcal_SO_8;
   const double E_0, E_2, E_4, E_6, E_8, E_lnv_8;
@@ -1478,24 +1528,24 @@ public:
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
-    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
-    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
-    chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
-    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
-    chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) +
-    chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1
-    + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_4(3.61111111111111*pow(nu, 2) +
-    18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu - 38.2928354546934),
-    Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu + 115.731716675611),
-    Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu - 101.509595959742),
-    Fcal_8(-117.504390722677), Fcal_lnv_8(52.7430839002268), Fcal_SQ_4(chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu +
-    1.03125) + 3.875*chi2_l*nu) + chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667)
-    - 2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu -
-    0.463541666666667) - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) +
-    pow(chi2_la, 2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n,
-    2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y +
+    chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y
+    + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z -
+    ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
+    chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) +
+    chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), chi_s_l(0.5*chi1_l +
+    0.5*chi2_l), chi_a_l(0.5*chi1_l - 0.5*chi2_l), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
+    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu -
+    38.2928354546934), Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu +
+    115.731716675611), Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu -
+    101.509595959742), Fcal_8(-117.504390722677), Fcal_lnv_8(52.7430839002268),
+    Fcal_SQ_4(chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
+    2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) +
+    chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+    2)*(0.0416666666666667*nu + 2.98958333333333)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
     Fcal_SO_5(S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125)), Fcal_SO_6(-50.2654824574367*S_l -
     16.2315620435473*Sigma_l*delta), Fcal_SO_7(S_l*(-104.074074074074*pow(nu, 2) + 32.6560846560847*nu +
     70.053644914756) + Sigma_l*delta*(-41.6944444444444*pow(nu, 2) + 14.6746031746032*nu + 28.3779761904762)),
@@ -1557,6 +1607,7 @@ public:
     chiVec2[0] = chi2_x;
     chiVec2[1] = chi2_y;
     chiVec2[2] = chi2_z;
+    chi1chi2 = chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -1569,14 +1620,14 @@ public:
     S_n = chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2);
     Sigma_l = -chi1_l*m1 + chi2_l*m2;
     Sigma_n = -chi1_n*m1 + chi2_n*m2;
+    chi_s_l = 0.5*chi1_l + 0.5*chi2_l;
+    chi_a_l = 0.5*chi1_l - 0.5*chi2_l;
     logv = log(v);
     Fcal_coeff = 6.4*pow(nu, 2)*pow(v, 10);
-    Fcal_SQ_4 = chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
-      chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
-      2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu -
-      0.463541666666667) - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) +
-      pow(chi2_la, 2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n,
-      2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667);
+    Fcal_SQ_4 = chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
+      2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) +
+      chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+      2)*(0.0416666666666667*nu + 2.98958333333333);
     Fcal_SO_3 = -4.0*S_l - 1.25*Sigma_l*delta;
     Fcal_SO_5 = S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125);
     Fcal_SO_6 = -50.2654824574367*S_l - 16.2315620435473*Sigma_l*delta;
@@ -1597,18 +1648,22 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*pow(m1, 2) +
+      3.0*chi2_n*nu));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
+    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
+      9.125*nu + 1.5);
     double gamma_PN_6 = 0.0123456790123457*pow(nu, 3) + 6.36111111111111*pow(nu, 2) - 2.98177812235564*nu + 1.0;
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
     double gamma_PN_3 = 1.66666666666667*S_l + Sigma_l*delta;
@@ -1618,8 +1673,6 @@ public:
     double gamma_PN_0 = 1.00000000000000;
     double a_ell_2 = S_n*(-9.66666666666667*nu - 10.0) + Sigma_n*delta*(-4.5*nu - 6.0);
     double gamma_PN_4 = -5.41666666666667*nu + 1.0;
-    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
-      9.125*nu + 1.5);
     return nHat*pow(v, 6)*(a_ell_0 + pow(v, 2)*(a_ell_2 + a_ell_4*pow(v, 2)))*(gamma_PN_0 + pow(v, 2)*(gamma_PN_2 +
       v*(gamma_PN_3 + v*(gamma_PN_4 + v*(gamma_PN_5 + v*(gamma_PN_6 + gamma_PN_7*v))))));
   }
@@ -1722,8 +1775,11 @@ private:
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
   std::vector<double> ellHat, nHat, chiVec1, chiVec2;
-  const double chi1chi1, chi2chi2;
-  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
+  const double chi1chi1;
+  double chi1chi2;
+  const double chi2chi2;
+  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, logv,
+         Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5, Fcal_6, Fcal_lnv_6, Fcal_7, Fcal_8, Fcal_lnv_8, Fcal_9,
                Fcal_lnv_9;
   double Fcal_SQ_4, Fcal_SO_3, Fcal_SO_5, Fcal_SO_6, Fcal_SO_7, Fcal_SO_8;
@@ -1740,25 +1796,24 @@ public:
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
-    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
-    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
-    chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
-    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
-    chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) +
-    chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1
-    + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_4(3.61111111111111*pow(nu, 2) +
-    18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu - 38.2928354546934),
-    Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu + 115.731716675611),
-    Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu - 101.509595959742),
-    Fcal_8(-117.504390722677), Fcal_lnv_8(52.7430839002268), Fcal_9(719.128342233430), Fcal_lnv_9(-204.891680874123),
-    Fcal_SQ_4(chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
-    chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
-    2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667)
-    - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) + pow(chi2_la,
-    2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n, 2)*(0.463541666666667*delta +
-    0.927083333333333*nu - 0.463541666666667)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y +
+    chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y
+    + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z -
+    ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
+    chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) +
+    chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), chi_s_l(0.5*chi1_l +
+    0.5*chi2_l), chi_a_l(0.5*chi1_l - 0.5*chi2_l), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
+    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu -
+    38.2928354546934), Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu +
+    115.731716675611), Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu -
+    101.509595959742), Fcal_8(-117.504390722677), Fcal_lnv_8(52.7430839002268), Fcal_9(719.128342233430),
+    Fcal_lnv_9(-204.891680874123), Fcal_SQ_4(chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu -
+    0.463541666666667) - 2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu -
+    0.463541666666667) + chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+    2)*(0.0416666666666667*nu + 2.98958333333333)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
     Fcal_SO_5(S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125)), Fcal_SO_6(-50.2654824574367*S_l -
     16.2315620435473*Sigma_l*delta), Fcal_SO_7(S_l*(-104.074074074074*pow(nu, 2) + 32.6560846560847*nu +
     70.053644914756) + Sigma_l*delta*(-41.6944444444444*pow(nu, 2) + 14.6746031746032*nu + 28.3779761904762)),
@@ -1820,6 +1875,7 @@ public:
     chiVec2[0] = chi2_x;
     chiVec2[1] = chi2_y;
     chiVec2[2] = chi2_z;
+    chi1chi2 = chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -1832,14 +1888,14 @@ public:
     S_n = chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2);
     Sigma_l = -chi1_l*m1 + chi2_l*m2;
     Sigma_n = -chi1_n*m1 + chi2_n*m2;
+    chi_s_l = 0.5*chi1_l + 0.5*chi2_l;
+    chi_a_l = 0.5*chi1_l - 0.5*chi2_l;
     logv = log(v);
     Fcal_coeff = 6.4*pow(nu, 2)*pow(v, 10);
-    Fcal_SQ_4 = chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
-      chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
-      2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu -
-      0.463541666666667) - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) +
-      pow(chi2_la, 2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n,
-      2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667);
+    Fcal_SQ_4 = chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
+      2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) +
+      chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+      2)*(0.0416666666666667*nu + 2.98958333333333);
     Fcal_SO_3 = -4.0*S_l - 1.25*Sigma_l*delta;
     Fcal_SO_5 = S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125);
     Fcal_SO_6 = -50.2654824574367*S_l - 16.2315620435473*Sigma_l*delta;
@@ -1860,18 +1916,22 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*pow(m1, 2) +
+      3.0*chi2_n*nu));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
+    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
+      9.125*nu + 1.5);
     double gamma_PN_6 = 0.0123456790123457*pow(nu, 3) + 6.36111111111111*pow(nu, 2) - 2.98177812235564*nu + 1.0;
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
     double gamma_PN_3 = 1.66666666666667*S_l + Sigma_l*delta;
@@ -1881,8 +1941,6 @@ public:
     double gamma_PN_0 = 1.00000000000000;
     double a_ell_2 = S_n*(-9.66666666666667*nu - 10.0) + Sigma_n*delta*(-4.5*nu - 6.0);
     double gamma_PN_4 = -5.41666666666667*nu + 1.0;
-    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
-      9.125*nu + 1.5);
     return nHat*pow(v, 6)*(a_ell_0 + pow(v, 2)*(a_ell_2 + a_ell_4*pow(v, 2)))*(gamma_PN_0 + pow(v, 2)*(gamma_PN_2 +
       v*(gamma_PN_3 + v*(gamma_PN_4 + v*(gamma_PN_5 + v*(gamma_PN_6 + gamma_PN_7*v))))));
   }
@@ -2007,8 +2065,11 @@ private:
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
   std::vector<double> ellHat, nHat, chiVec1, chiVec2;
-  const double chi1chi1, chi2chi2;
-  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
+  const double chi1chi1;
+  double chi1chi2;
+  const double chi2chi2;
+  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, logv,
+         Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5, Fcal_6, Fcal_lnv_6, Fcal_7, Fcal_8, Fcal_lnv_8, Fcal_9,
                Fcal_lnv_9, Fcal_10, Fcal_lnv_10;
   double Fcal_SQ_4, Fcal_SO_3, Fcal_SO_5, Fcal_SO_6, Fcal_SO_7, Fcal_SO_8;
@@ -2025,25 +2086,25 @@ public:
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
-    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
-    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
-    chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
-    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
-    chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) +
-    chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1
-    + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_4(3.61111111111111*pow(nu, 2) +
-    18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu - 38.2928354546934),
-    Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu + 115.731716675611),
-    Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu - 101.509595959742),
-    Fcal_8(-117.504390722677), Fcal_lnv_8(52.7430839002268), Fcal_9(719.128342233430), Fcal_lnv_9(-204.891680874123),
-    Fcal_10(-1216.90699131704), Fcal_lnv_10(116.639876594109), Fcal_SQ_4(chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu +
-    1.03125) + 3.875*chi2_l*nu) + chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667)
-    - 2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu -
-    0.463541666666667) - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) +
-    pow(chi2_la, 2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n,
-    2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y +
+    chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y
+    + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z -
+    ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
+    chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) +
+    chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), chi_s_l(0.5*chi1_l +
+    0.5*chi2_l), chi_a_l(0.5*chi1_l - 0.5*chi2_l), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
+    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu -
+    38.2928354546934), Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu +
+    115.731716675611), Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu -
+    101.509595959742), Fcal_8(-117.504390722677), Fcal_lnv_8(52.7430839002268), Fcal_9(719.128342233430),
+    Fcal_lnv_9(-204.891680874123), Fcal_10(-1216.90699131704), Fcal_lnv_10(116.639876594109),
+    Fcal_SQ_4(chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
+    2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) +
+    chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+    2)*(0.0416666666666667*nu + 2.98958333333333)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
     Fcal_SO_5(S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125)), Fcal_SO_6(-50.2654824574367*S_l -
     16.2315620435473*Sigma_l*delta), Fcal_SO_7(S_l*(-104.074074074074*pow(nu, 2) + 32.6560846560847*nu +
     70.053644914756) + Sigma_l*delta*(-41.6944444444444*pow(nu, 2) + 14.6746031746032*nu + 28.3779761904762)),
@@ -2106,6 +2167,7 @@ public:
     chiVec2[0] = chi2_x;
     chiVec2[1] = chi2_y;
     chiVec2[2] = chi2_z;
+    chi1chi2 = chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -2118,14 +2180,14 @@ public:
     S_n = chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2);
     Sigma_l = -chi1_l*m1 + chi2_l*m2;
     Sigma_n = -chi1_n*m1 + chi2_n*m2;
+    chi_s_l = 0.5*chi1_l + 0.5*chi2_l;
+    chi_a_l = 0.5*chi1_l - 0.5*chi2_l;
     logv = log(v);
     Fcal_coeff = 6.4*pow(nu, 2)*pow(v, 10);
-    Fcal_SQ_4 = chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
-      chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
-      2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu -
-      0.463541666666667) - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) +
-      pow(chi2_la, 2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n,
-      2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667);
+    Fcal_SQ_4 = chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
+      2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) +
+      chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+      2)*(0.0416666666666667*nu + 2.98958333333333);
     Fcal_SO_3 = -4.0*S_l - 1.25*Sigma_l*delta;
     Fcal_SO_5 = S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125);
     Fcal_SO_6 = -50.2654824574367*S_l - 16.2315620435473*Sigma_l*delta;
@@ -2146,18 +2208,22 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*pow(m1, 2) +
+      3.0*chi2_n*nu));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
+    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
+      9.125*nu + 1.5);
     double gamma_PN_6 = 0.0123456790123457*pow(nu, 3) + 6.36111111111111*pow(nu, 2) - 2.98177812235564*nu + 1.0;
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
     double gamma_PN_3 = 1.66666666666667*S_l + Sigma_l*delta;
@@ -2167,8 +2233,6 @@ public:
     double gamma_PN_0 = 1.00000000000000;
     double a_ell_2 = S_n*(-9.66666666666667*nu - 10.0) + Sigma_n*delta*(-4.5*nu - 6.0);
     double gamma_PN_4 = -5.41666666666667*nu + 1.0;
-    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
-      9.125*nu + 1.5);
     return nHat*pow(v, 6)*(a_ell_0 + pow(v, 2)*(a_ell_2 + a_ell_4*pow(v, 2)))*(gamma_PN_0 + pow(v, 2)*(gamma_PN_2 +
       v*(gamma_PN_3 + v*(gamma_PN_4 + v*(gamma_PN_5 + v*(gamma_PN_6 + gamma_PN_7*v))))));
   }
@@ -2334,8 +2398,11 @@ private:
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
   std::vector<double> ellHat, nHat, chiVec1, chiVec2;
-  const double chi1chi1, chi2chi2;
-  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
+  const double chi1chi1;
+  double chi1chi2;
+  const double chi2chi2;
+  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, logv,
+         Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5, Fcal_6, Fcal_lnv_6, Fcal_7, Fcal_8, Fcal_lnv_8, Fcal_9,
                Fcal_lnv_9, Fcal_10, Fcal_lnv_10, Fcal_11, Fcal_lnv_11;
   double Fcal_SQ_4, Fcal_SO_3, Fcal_SO_5, Fcal_SO_6, Fcal_SO_7, Fcal_SO_8;
@@ -2352,26 +2419,25 @@ public:
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
-    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
-    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
-    chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
-    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
-    chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) +
-    chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1
-    + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_4(3.61111111111111*pow(nu, 2) +
-    18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu - 38.2928354546934),
-    Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu + 115.731716675611),
-    Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu - 101.509595959742),
-    Fcal_8(-117.504390722677), Fcal_lnv_8(52.7430839002268), Fcal_9(719.128342233430), Fcal_lnv_9(-204.891680874123),
-    Fcal_10(-1216.90699131704), Fcal_lnv_10(116.639876594109), Fcal_11(958.934970119567), Fcal_lnv_11(473.624478174231),
-    Fcal_SQ_4(chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
-    chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
-    2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667)
-    - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) + pow(chi2_la,
-    2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n, 2)*(0.463541666666667*delta +
-    0.927083333333333*nu - 0.463541666666667)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y +
+    chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y
+    + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z -
+    ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
+    chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) +
+    chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), chi_s_l(0.5*chi1_l +
+    0.5*chi2_l), chi_a_l(0.5*chi1_l - 0.5*chi2_l), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
+    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu -
+    38.2928354546934), Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu +
+    115.731716675611), Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu -
+    101.509595959742), Fcal_8(-117.504390722677), Fcal_lnv_8(52.7430839002268), Fcal_9(719.128342233430),
+    Fcal_lnv_9(-204.891680874123), Fcal_10(-1216.90699131704), Fcal_lnv_10(116.639876594109), Fcal_11(958.934970119567),
+    Fcal_lnv_11(473.624478174231), Fcal_SQ_4(chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu -
+    0.463541666666667) - 2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu -
+    0.463541666666667) + chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+    2)*(0.0416666666666667*nu + 2.98958333333333)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
     Fcal_SO_5(S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125)), Fcal_SO_6(-50.2654824574367*S_l -
     16.2315620435473*Sigma_l*delta), Fcal_SO_7(S_l*(-104.074074074074*pow(nu, 2) + 32.6560846560847*nu +
     70.053644914756) + Sigma_l*delta*(-41.6944444444444*pow(nu, 2) + 14.6746031746032*nu + 28.3779761904762)),
@@ -2434,6 +2500,7 @@ public:
     chiVec2[0] = chi2_x;
     chiVec2[1] = chi2_y;
     chiVec2[2] = chi2_z;
+    chi1chi2 = chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -2446,14 +2513,14 @@ public:
     S_n = chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2);
     Sigma_l = -chi1_l*m1 + chi2_l*m2;
     Sigma_n = -chi1_n*m1 + chi2_n*m2;
+    chi_s_l = 0.5*chi1_l + 0.5*chi2_l;
+    chi_a_l = 0.5*chi1_l - 0.5*chi2_l;
     logv = log(v);
     Fcal_coeff = 6.4*pow(nu, 2)*pow(v, 10);
-    Fcal_SQ_4 = chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
-      chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
-      2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu -
-      0.463541666666667) - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) +
-      pow(chi2_la, 2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n,
-      2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667);
+    Fcal_SQ_4 = chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
+      2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) +
+      chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+      2)*(0.0416666666666667*nu + 2.98958333333333);
     Fcal_SO_3 = -4.0*S_l - 1.25*Sigma_l*delta;
     Fcal_SO_5 = S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125);
     Fcal_SO_6 = -50.2654824574367*S_l - 16.2315620435473*Sigma_l*delta;
@@ -2474,18 +2541,22 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*pow(m1, 2) +
+      3.0*chi2_n*nu));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
+    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
+      9.125*nu + 1.5);
     double gamma_PN_6 = 0.0123456790123457*pow(nu, 3) + 6.36111111111111*pow(nu, 2) - 2.98177812235564*nu + 1.0;
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
     double gamma_PN_3 = 1.66666666666667*S_l + Sigma_l*delta;
@@ -2495,8 +2566,6 @@ public:
     double gamma_PN_0 = 1.00000000000000;
     double a_ell_2 = S_n*(-9.66666666666667*nu - 10.0) + Sigma_n*delta*(-4.5*nu - 6.0);
     double gamma_PN_4 = -5.41666666666667*nu + 1.0;
-    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
-      9.125*nu + 1.5);
     return nHat*pow(v, 6)*(a_ell_0 + pow(v, 2)*(a_ell_2 + a_ell_4*pow(v, 2)))*(gamma_PN_0 + pow(v, 2)*(gamma_PN_2 +
       v*(gamma_PN_3 + v*(gamma_PN_4 + v*(gamma_PN_5 + v*(gamma_PN_6 + gamma_PN_7*v))))));
   }
@@ -2720,8 +2789,11 @@ private:
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
   const double m2, delta, nu;
   std::vector<double> ellHat, nHat, chiVec1, chiVec2;
-  const double chi1chi1, chi2chi2;
-  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, logv, Fcal_coeff;
+  const double chi1chi1;
+  double chi1chi2;
+  const double chi2chi2;
+  double chi1_l, chi1_n, chi1_la, chi2_l, chi2_n, chi2_la, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, logv,
+         Fcal_coeff;
   const double Fcal_0, Fcal_2, Fcal_3, Fcal_4, Fcal_5, Fcal_6, Fcal_lnv_6, Fcal_7, Fcal_8, Fcal_lnv_8, Fcal_9,
                Fcal_lnv_9, Fcal_10, Fcal_lnv_10, Fcal_11, Fcal_lnv_11, Fcal_12, Fcal_lnv_12, Fcal_lnv2_12;
   double Fcal_SQ_4, Fcal_SO_3, Fcal_SO_5, Fcal_SO_6, Fcal_SO_7, Fcal_SO_8;
@@ -2738,27 +2810,26 @@ public:
     m1(m1_i), v(v_i), chi1_x(chi1_x_i), chi1_y(chi1_y_i), chi1_z(chi1_z_i), chi2_x(chi2_x_i), chi2_y(chi2_y_i),
     chi2_z(chi2_z_i), ellHat_x(ellHat_x_i), ellHat_y(ellHat_y_i), ellHat_z(ellHat_z_i), nHat_x(nHat_x_i),
     nHat_y(nHat_y_i), nHat_z(nHat_z_i), m2(-m1 + 1.0), delta(m1 - m2), nu(m1*m2), ellHat(3), nHat(3), chiVec1(3),
-    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) +
-    pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
-    chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z),
-    chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z), chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) +
-    chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) +
-    chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1
-    + chi2_n*m2), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_4(3.61111111111111*pow(nu, 2) +
-    18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu - 38.2928354546934),
-    Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu + 115.731716675611),
-    Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu - 101.509595959742),
-    Fcal_8(-117.504390722677), Fcal_lnv_8(52.7430839002268), Fcal_9(719.128342233430), Fcal_lnv_9(-204.891680874123),
-    Fcal_10(-1216.90699131704), Fcal_lnv_10(116.639876594109), Fcal_11(958.934970119567), Fcal_lnv_11(473.624478174231),
-    Fcal_12(2034.78998213038), Fcal_lnv_12(-1900.72932518810), Fcal_lnv2_12(132.922630385488),
-    Fcal_SQ_4(chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
-    chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
-    2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667)
-    - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) + pow(chi2_la,
-    2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n, 2)*(0.463541666666667*delta +
-    0.927083333333333*nu - 0.463541666666667)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
+    chiVec2(3), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y +
+    chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y
+    + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*(ellHat_y*nHat_z -
+    ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) + chi1_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    chi2_la(chi2_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi2_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
+    chi2_z*(ellHat_x*nHat_y - ellHat_y*nHat_x)), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) +
+    chi2_n*pow(m2, 2)), Sigma_l(-chi1_l*m1 + chi2_l*m2), Sigma_n(-chi1_n*m1 + chi2_n*m2), chi_s_l(0.5*chi1_l +
+    0.5*chi2_l), chi_a_l(0.5*chi1_l - 0.5*chi2_l), logv(log(v)), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)),
+    Fcal_0(1.00000000000000), Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592),
+    Fcal_4(3.61111111111111*pow(nu, 2) + 18.3948412698413*nu - 4.92846119929453), Fcal_5(-76.3145215434521*nu -
+    38.2928354546934), Fcal_6(-2.39197530864198*pow(nu, 3) - 31.2179232804233*pow(nu, 2) - 8.87205344238227*nu +
+    115.731716675611), Fcal_lnv_6(-16.3047619047619), Fcal_7(200.905057974359*pow(nu, 2) + 390.417427312002*nu -
+    101.509595959742), Fcal_8(-117.504390722677), Fcal_lnv_8(52.7430839002268), Fcal_9(719.128342233430),
+    Fcal_lnv_9(-204.891680874123), Fcal_10(-1216.90699131704), Fcal_lnv_10(116.639876594109), Fcal_11(958.934970119567),
+    Fcal_lnv_11(473.624478174231), Fcal_12(2034.78998213038), Fcal_lnv_12(-1900.72932518810),
+    Fcal_lnv2_12(132.922630385488), Fcal_SQ_4(chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu -
+    0.463541666666667) - 2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu -
+    0.463541666666667) + chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+    2)*(0.0416666666666667*nu + 2.98958333333333)), Fcal_SO_3(-4.0*S_l - 1.25*Sigma_l*delta),
     Fcal_SO_5(S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125)), Fcal_SO_6(-50.2654824574367*S_l -
     16.2315620435473*Sigma_l*delta), Fcal_SO_7(S_l*(-104.074074074074*pow(nu, 2) + 32.6560846560847*nu +
     70.053644914756) + Sigma_l*delta*(-41.6944444444444*pow(nu, 2) + 14.6746031746032*nu + 28.3779761904762)),
@@ -2821,6 +2892,7 @@ public:
     chiVec2[0] = chi2_x;
     chiVec2[1] = chi2_y;
     chiVec2[2] = chi2_z;
+    chi1chi2 = chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z;
     chi1_l = chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z;
     chi1_n = chi1_x*nHat_x + chi1_y*nHat_y + chi1_z*nHat_z;
     chi1_la = chi1_x*(ellHat_y*nHat_z - ellHat_z*nHat_y) + chi1_y*(-ellHat_x*nHat_z + ellHat_z*nHat_x) +
@@ -2833,14 +2905,14 @@ public:
     S_n = chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2);
     Sigma_l = -chi1_l*m1 + chi2_l*m2;
     Sigma_n = -chi1_n*m1 + chi2_n*m2;
+    chi_s_l = 0.5*chi1_l + 0.5*chi2_l;
+    chi_a_l = 0.5*chi1_l - 0.5*chi2_l;
     logv = log(v);
     Fcal_coeff = 6.4*pow(nu, 2)*pow(v, 10);
-    Fcal_SQ_4 = chi1_l*(chi1_l*(1.03125*delta - 2.0625*nu + 1.03125) + 3.875*chi2_l*nu) +
-      chi1_la*(chi1_la*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
-      2.14583333333333*chi2_la*nu) + chi1_n*(chi1_n*(-0.463541666666667*delta + 0.927083333333333*nu -
-      0.463541666666667) - 2.14583333333333*chi2_n*nu) + pow(chi2_l, 2)*(-1.03125*delta - 2.0625*nu + 1.03125) +
-      pow(chi2_la, 2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) + pow(chi2_n,
-      2)*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667);
+    Fcal_SQ_4 = chi1chi1*(-0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) -
+      2.14583333333333*chi1chi2*nu + chi2chi2*(0.463541666666667*delta + 0.927083333333333*nu - 0.463541666666667) +
+      chi_a_l*(chi_a_l*(-12.0*nu + 2.98958333333333) + 5.97916666666667*chi_s_l*delta) + pow(chi_s_l,
+      2)*(0.0416666666666667*nu + 2.98958333333333);
     Fcal_SO_3 = -4.0*S_l - 1.25*Sigma_l*delta;
     Fcal_SO_5 = S_l*(30.2222222222222*nu - 4.5) + Sigma_l*delta*(10.75*nu - 0.8125);
     Fcal_SO_6 = -50.2654824574367*S_l - 16.2315620435473*Sigma_l*delta;
@@ -2861,18 +2933,22 @@ public:
 
   std::vector<double> OmegaVec_chiVec_1() {
     double Omega1_coeff = pow(v, 5);
-    return Omega1_coeff*(3.0*chi2_n*pow(m2, 2)*nHat*v - chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(0.625*nu - 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) -
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega1_coeff*(-chiVec2*pow(m2, 2)*v + ellHat*(-0.75*delta + 0.5*nu + pow(v, 2)*(delta*(0.625*nu - 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(-0.15625*nu + 4.875) - 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*nu +
+      3.0*chi2_n*pow(m2, 2)));
   }
   std::vector<double> OmegaVec_chiVec_2() {
     double Omega2_coeff = pow(v, 5);
-    return Omega2_coeff*(3.0*chi1_n*pow(m1, 2)*nHat*v - chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v,
-      2)*(delta*(-0.625*nu + 0.5625) + nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) +
-      0.84375) + nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75));
+    return Omega2_coeff*(-chiVec1*pow(m1, 2)*v + ellHat*(0.75*delta + 0.5*nu + pow(v, 2)*(delta*(-0.625*nu + 0.5625) +
+      nu*(-0.0416666666666667*nu + 1.25) + pow(v, 2)*(delta*(nu*(0.15625*nu - 4.875) + 0.84375) +
+      nu*(nu*(-0.0208333333333333*nu - 3.28125) + 0.1875) + 0.84375) + 0.5625) + 0.75) + nHat*v*(3.0*chi1_n*pow(m1, 2) +
+      3.0*chi2_n*nu));
   }
   std::vector<double> OmegaVec_ellHat() {
     double gamma_PN_2 = -0.333333333333333*nu + 1.0;
+    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
+      9.125*nu + 1.5);
     double gamma_PN_6 = 0.0123456790123457*pow(nu, 3) + 6.36111111111111*pow(nu, 2) - 2.98177812235564*nu + 1.0;
     double a_ell_0 = 7.0*S_n + 3.0*Sigma_n*delta;
     double gamma_PN_3 = 1.66666666666667*S_l + Sigma_l*delta;
@@ -2882,8 +2958,6 @@ public:
     double gamma_PN_0 = 1.00000000000000;
     double a_ell_2 = S_n*(-9.66666666666667*nu - 10.0) + Sigma_n*delta*(-4.5*nu - 6.0);
     double gamma_PN_4 = -5.41666666666667*nu + 1.0;
-    double a_ell_4 = S_n*(5.77777777777778*pow(nu, 2) + 14.75*nu + 1.5) + Sigma_n*delta*(2.83333333333333*pow(nu, 2) +
-      9.125*nu + 1.5);
     return nHat*pow(v, 6)*(a_ell_0 + pow(v, 2)*(a_ell_2 + a_ell_4*pow(v, 2)))*(gamma_PN_0 + pow(v, 2)*(gamma_PN_2 +
       v*(gamma_PN_3 + v*(gamma_PN_4 + v*(gamma_PN_5 + v*(gamma_PN_6 + gamma_PN_7*v))))));
   }
