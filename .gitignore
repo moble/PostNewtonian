@@ -35,7 +35,6 @@ nosetests.xml
 .pydevproject
 
 # Custom ignores
+Notes
 EMRIGWFlux_7PN_Simplified.tex
-Notes.ipynb
-Test.ipynb
-Serguei_TaylorTn.ipynb
+ipython_notebook_config.py
