@@ -56,9 +56,6 @@
 
 %include "Quaternions_typemaps.i"
 
-namespace std {
-  %template(vectord) vector<double>;
-};
 
 // Return the values by reference as python
 ARGOUT_TYPEMAP_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, t, NPY_DOUBLE)
