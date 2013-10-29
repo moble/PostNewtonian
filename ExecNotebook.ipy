@@ -1,4 +1,10 @@
 def execnotebook(nbfile):
+    """Execute all code cells from another notebook.
+
+    This function is stolen from
+    <http://nbviewer.ipython.org/5491090/analysis.ipynb>.
+
+    """
     from io import open
     from IPython.nbformat import current
     with open(nbfile) as f:
