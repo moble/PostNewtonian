@@ -55,7 +55,7 @@
 
 
 %include "Quaternions_typemaps.i"
-// %include "Quaternions.hpp"
+%include "Quaternions.hpp"
 // %include "IntegrateAngularVelocity.hpp"
 // #if defined(SWIGPYTHON_BUILTIN)
 // %feature("python:slot", "sq_length", functype="lenfunc") Quaternions::Quaternion::__len__;
