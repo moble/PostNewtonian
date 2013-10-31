@@ -38,7 +38,7 @@ public:
 
 
 void PostNewtonian::EvolvePN_Q(const std::string& Approximant,
-			       const double v_i, const double m1,
+			       const double v_i, const double m1, const double m2,
 			       const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
 			       std::vector<double>& t, std::vector<double>& v,
 			       std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
@@ -48,7 +48,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant,
 {
   EvolvePN(Approximant, 3.5,
 	   v_i, v_i,
-	   m1,
+	   m1, m2,
 	   chi1_i, chi2_i,
 	   Quaternion(1,0,0,0),
 	   t, v,
@@ -78,7 +78,7 @@ namespace {
 
 void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOrder,
 			       const double v0, const double v_i,
-			       const double m1,
+			       const double m1, const double m2,
 			       const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
 			       const Quaternions::Quaternion& R_frame_i,
 			       std::vector<double>& t, std::vector<double>& v,
@@ -113,79 +113,79 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   TaylorTn_Q* Tn = 0;
   switch(int(2*PNOrder)) {
   case 0:
-    Tn = new TaylorTn_0PN_Q(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 1:
-    Tn = new TaylorTn_0p50PN_Q(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_0p50PN_Q(xHat, yHat, zHat, m1, m2, v_i,
 			       chi1Mag_i, chi2Mag_i,
 			       rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			       rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 2:
-    Tn = new TaylorTn_1p0PN_Q(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_1p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 3:
-    Tn = new TaylorTn_1p5PN_Q(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_1p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 4:
-    Tn = new TaylorTn_2p0PN_Q(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_2p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 5:
-    Tn = new TaylorTn_2p5PN_Q(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_2p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 6:
-    Tn = new TaylorTn_3p0PN_Q(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_3p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 7:
-    Tn = new TaylorTn_3p5PN_Q(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_3p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 8:
-    Tn = new TaylorTn_4p0PN_Q(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_4p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 9:
-    Tn = new TaylorTn_4p5PN_Q(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_4p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 10:
-    Tn = new TaylorTn_5p0PN_Q(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_5p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 11:
-    Tn = new TaylorTn_5p5PN_Q(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_5p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 12:
-    Tn = new TaylorTn_6p0PN_Q(xHat, yHat, zHat, m1, v_i,
+    Tn = new TaylorTn_6p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
 			    chi1Mag_i, chi2Mag_i,
 			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
 			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
@@ -200,7 +200,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   }
 
   // Here are the parameters for the evolution
-  const double nu = m1*(1-m1);
+  const double nu = m1*m2/((m1+m2)*(m1+m2));
   double time = -5.0/(256.0*nu*std::pow(y[0],8)); // This is the lowest-order pN time-to-merger
   double endtime = -3*time; // Give ourselves a large margin of error in case inspiral runs longer than expected
   const unsigned int MinSteps = 100000; // This is only a very rough lower limit
@@ -350,25 +350,3 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
 
   return;
 }
-
-// std::vector<std::vector<double> > PostNewtonian::ellHat(const std::vector<Quaternions::Quaternion>& R_frame) {
-//   std::vector<std::vector<double> > ellhat(R_frame.size());
-//   for(unsigned int i=0; i<ellhat.size(); ++i) {
-//     ellhat[i] = (R_frame[i]*zHat*R_frame[i].conjugate()).vec();
-//   }
-//   return ellhat;
-// }
-// std::vector<std::vector<double> > PostNewtonian::nHat(const std::vector<Quaternions::Quaternion>& R_frame) {
-//   std::vector<std::vector<double> > nhat(R_frame.size());
-//   for(unsigned int i=0; i<nhat.size(); ++i) {
-//     nhat[i] = (R_frame[i]*xHat*R_frame[i].conjugate()).vec();
-//   }
-//   return nhat;
-// }
-// std::vector<std::vector<double> > PostNewtonian::lambdaHat(const std::vector<Quaternions::Quaternion>& R_frame) {
-//   std::vector<std::vector<double> > lambdahat(R_frame.size());
-//   for(unsigned int i=0; i<lambdahat.size(); ++i) {
-//     lambdahat[i] = (R_frame[i]*yHat*R_frame[i].conjugate()).vec();
-//   }
-//   return lambdahat;
-// }

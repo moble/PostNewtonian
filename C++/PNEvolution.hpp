@@ -14,7 +14,7 @@ namespace PostNewtonian {
   /// system's frame given the quaternion information on the frame.
 
   void EvolvePN(const std::string& Approximant,
-		const double v_i, const double m1,
+		const double v_i, const double m1, const double m2,
 		const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
 		std::vector<double>& t, std::vector<double>& v,
 		std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
@@ -24,7 +24,7 @@ namespace PostNewtonian {
 
   void EvolvePN(const std::string& Approximant, const double PNOrder,
 		const double v0, const double v_i,
-		const double m1,
+		const double m1, const double m2,
 		const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
 		const Quaternions::Quaternion& R_frame_i,
 		std::vector<double>& t, std::vector<double>& v,
@@ -34,7 +34,7 @@ namespace PostNewtonian {
 		);
 
   void EvolvePN_Q(const std::string& Approximant,
-		  const double v_i, const double m1,
+		  const double v_i, const double m1, const double m2,
 		  const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
 		  std::vector<double>& t, std::vector<double>& v,
 		  std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
@@ -44,7 +44,7 @@ namespace PostNewtonian {
 
   void EvolvePN_Q(const std::string& Approximant, const double PNOrder,
 		  const double v0, const double v_i,
-		  const double m1,
+		  const double m1, const double m2,
 		  const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
 		  const Quaternions::Quaternion& R_frame_i,
 		  std::vector<double>& t, std::vector<double>& v,

@@ -55,8 +55,48 @@
 
 
 %include "Quaternions_typemaps.i"
-
-%include "Quaternions.hpp"
+// %include "Quaternions.hpp"
+// %include "IntegrateAngularVelocity.hpp"
+// #if defined(SWIGPYTHON_BUILTIN)
+// %feature("python:slot", "sq_length", functype="lenfunc") Quaternions::Quaternion::__len__;
+// %feature("python:slot", "mp_subscript", functype="binaryfunc") Quaternions::Quaternion::__getitem__;
+// %feature("python:slot", "mp_ass_subscript", functype="objobjargproc") Quaternions::Quaternion::__setitem__;
+// %feature("python:slot", "tp_str",  functype="reprfunc") Quaternions::Quaternion::__str__;
+// %feature("python:slot", "tp_repr", functype="reprfunc") Quaternions::Quaternion::__repr__;
+// #endif // SWIGPYTHON_BUILTIN
+// %extend Quaternions::Quaternion {
+//   unsigned int __len__() const {
+//     return 4;
+//   }
+//   inline double __getitem__(const unsigned int i) const {
+//     return (*$self)[i];
+//   }
+//   inline void __setitem__(const unsigned int i, const double a) {
+//     (*$self)[i] = a;
+//   }
+//   const char* __str__() {
+//     std::stringstream S;
+//     S << std::setprecision(15) << "["
+//       << $self->operator[](0) << ", "
+//       << $self->operator[](1) << ", "
+//       << $self->operator[](2) << ", "
+//       << $self->operator[](3) << "]";
+//     const std::string& tmp = S.str();
+//     const char* cstr = tmp.c_str();
+//     return cstr;
+//   }
+//   const char* __repr__() {
+//     std::stringstream S;
+//     S << std::setprecision(15) << "Quaternion("
+//       << $self->operator[](0) << ", "
+//       << $self->operator[](1) << ", "
+//       << $self->operator[](2) << ", "
+//       << $self->operator[](3) << ")";
+//     const std::string& tmp = S.str();
+//     const char* cstr = tmp.c_str();
+//     return cstr;
+//   }
+//  };
 
 
 // Return the values by reference as python
@@ -69,10 +109,9 @@ ARGOUT_TYPEMAP_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, Phi, NPY_DOUBLE)
 OUT_TYPEMAP_STD_VECTOR_OF_STD_VECTOR_OF_PRIMITIVES(double, NPY_DOUBLE)
 
 
-/////////////////////////////////////
-//// Import the quaternion class ////
-/////////////////////////////////////
-// %ignore Quaternions::Quaternion::operator=;
+//////////////////////////////////////
+//// Import the PNEvolution class ////
+//////////////////////////////////////
 %include "PNEvolution.hpp"
 
 

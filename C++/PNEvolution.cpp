@@ -105,7 +105,7 @@ public:
 //// Evolution functions ////
 /////////////////////////////
 void PostNewtonian::EvolvePN(const std::string& Approximant,
-			     const double v_i, const double m1,
+			     const double v_i, const double m1, const double m2,
 			     const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
 			     std::vector<double>& t, std::vector<double>& v,
 			     std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
@@ -115,7 +115,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant,
 {
   EvolvePN(Approximant, 3.5,
 	   v_i, v_i,
-	   m1,
+	   m1, m2,
 	   chi1_i, chi2_i,
 	   Quaternion(1,0,0,0),
 	   t, v,
@@ -143,7 +143,7 @@ int funcT5 (double t, const double y[], double dydt[], void* params) {
 
 void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrder,
 			     const double v0, const double v_i,
-			     const double m1,
+			     const double m1, const double m2,
 			     const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
 			     const Quaternions::Quaternion& R_frame_i,
 			     std::vector<double>& t, std::vector<double>& v,
@@ -188,91 +188,91 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   TaylorTn* Tn;
   switch(int(2*PNOrder)) {
   case 0:
-    Tn = new TaylorTn_0PN(m1, v_i,
+    Tn = new TaylorTn_0PN(m1, m2, v_i,
 			  chi1_i[0], chi1_i[1], chi1_i[2],
 			  chi2_i[0], chi2_i[1], chi2_i[2],
 			  ellHat_i[0], ellHat_i[1], ellHat_i[2],
 			  nHat_i[0], nHat_i[1], nHat_i[2]);
     break;
   case 1:
-    Tn = new TaylorTn_0p50PN(m1, v_i,
+    Tn = new TaylorTn_0p50PN(m1, m2, v_i,
 			     chi1_i[0], chi1_i[1], chi1_i[2],
 			     chi2_i[0], chi2_i[1], chi2_i[2],
 			     ellHat_i[0], ellHat_i[1], ellHat_i[2],
 			     nHat_i[0], nHat_i[1], nHat_i[2]);
     break;
   case 2:
-    Tn = new TaylorTn_1p0PN(m1, v_i,
+    Tn = new TaylorTn_1p0PN(m1, m2, v_i,
 			    chi1_i[0], chi1_i[1], chi1_i[2],
 			    chi2_i[0], chi2_i[1], chi2_i[2],
 			    ellHat_i[0], ellHat_i[1], ellHat_i[2],
 			    nHat_i[0], nHat_i[1], nHat_i[2]);
     break;
   case 3:
-    Tn = new TaylorTn_1p5PN(m1, v_i,
+    Tn = new TaylorTn_1p5PN(m1, m2, v_i,
 			    chi1_i[0], chi1_i[1], chi1_i[2],
 			    chi2_i[0], chi2_i[1], chi2_i[2],
 			    ellHat_i[0], ellHat_i[1], ellHat_i[2],
 			    nHat_i[0], nHat_i[1], nHat_i[2]);
     break;
   case 4:
-    Tn = new TaylorTn_2p0PN(m1, v_i,
+    Tn = new TaylorTn_2p0PN(m1, m2, v_i,
 			    chi1_i[0], chi1_i[1], chi1_i[2],
 			    chi2_i[0], chi2_i[1], chi2_i[2],
 			    ellHat_i[0], ellHat_i[1], ellHat_i[2],
 			    nHat_i[0], nHat_i[1], nHat_i[2]);
     break;
   case 5:
-    Tn = new TaylorTn_2p5PN(m1, v_i,
+    Tn = new TaylorTn_2p5PN(m1, m2, v_i,
 			    chi1_i[0], chi1_i[1], chi1_i[2],
 			    chi2_i[0], chi2_i[1], chi2_i[2],
 			    ellHat_i[0], ellHat_i[1], ellHat_i[2],
 			    nHat_i[0], nHat_i[1], nHat_i[2]);
     break;
   case 6:
-    Tn = new TaylorTn_3p0PN(m1, v_i,
+    Tn = new TaylorTn_3p0PN(m1, m2, v_i,
 			    chi1_i[0], chi1_i[1], chi1_i[2],
 			    chi2_i[0], chi2_i[1], chi2_i[2],
 			    ellHat_i[0], ellHat_i[1], ellHat_i[2],
 			    nHat_i[0], nHat_i[1], nHat_i[2]);
     break;
   case 7:
-    Tn = new TaylorTn_3p5PN(m1, v_i,
+    Tn = new TaylorTn_3p5PN(m1, m2, v_i,
 			    chi1_i[0], chi1_i[1], chi1_i[2],
 			    chi2_i[0], chi2_i[1], chi2_i[2],
 			    ellHat_i[0], ellHat_i[1], ellHat_i[2],
 			    nHat_i[0], nHat_i[1], nHat_i[2]);
     break;
   case 8:
-    Tn = new TaylorTn_4p0PN(m1, v_i,
+    Tn = new TaylorTn_4p0PN(m1, m2, v_i,
 			    chi1_i[0], chi1_i[1], chi1_i[2],
 			    chi2_i[0], chi2_i[1], chi2_i[2],
 			    ellHat_i[0], ellHat_i[1], ellHat_i[2],
 			    nHat_i[0], nHat_i[1], nHat_i[2]);
     break;
   case 9:
-    Tn = new TaylorTn_4p5PN(m1, v_i,
+    Tn = new TaylorTn_4p5PN(m1, m2, v_i,
 			    chi1_i[0], chi1_i[1], chi1_i[2],
 			    chi2_i[0], chi2_i[1], chi2_i[2],
 			    ellHat_i[0], ellHat_i[1], ellHat_i[2],
 			    nHat_i[0], nHat_i[1], nHat_i[2]);
     break;
   case 10:
-    Tn = new TaylorTn_5p0PN(m1, v_i,
+    Tn = new TaylorTn_5p0PN(m1, m2, v_i,
 			    chi1_i[0], chi1_i[1], chi1_i[2],
 			    chi2_i[0], chi2_i[1], chi2_i[2],
 			    ellHat_i[0], ellHat_i[1], ellHat_i[2],
 			    nHat_i[0], nHat_i[1], nHat_i[2]);
     break;
   case 11:
-    Tn = new TaylorTn_5p5PN(m1, v_i,
+    Tn = new TaylorTn_5p5PN(m1, m2, v_i,
 			    chi1_i[0], chi1_i[1], chi1_i[2],
 			    chi2_i[0], chi2_i[1], chi2_i[2],
 			    ellHat_i[0], ellHat_i[1], ellHat_i[2],
 			    nHat_i[0], nHat_i[1], nHat_i[2]);
     break;
   case 12:
-    Tn = new TaylorTn_6p0PN(m1, v_i,
+    Tn = new TaylorTn_6p0PN(m1, m2, v_i,
 			    chi1_i[0], chi1_i[1], chi1_i[2],
 			    chi2_i[0], chi2_i[1], chi2_i[2],
 			    ellHat_i[0], ellHat_i[1], ellHat_i[2],
@@ -284,7 +284,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   }
 
   // Here are the parameters for the evolution
-  const double nu = m1*(1-m1);
+  const double nu = m1*m2/((m1+m2)*(m1+m2));
   double time = -5.0/(256.0*nu*std::pow(y[0],8)); // This is the lowest-order pN time-to-merger
   double endtime = -3*time; // Give ourselves a large margin of error in case inspiral runs longer than expected
   const unsigned int MinSteps = 100000; // This is only a very rough lower limit
