@@ -1,7 +1,7 @@
 def execnotebook(nbfile):
     """Execute all code cells from another notebook.
 
-    This function is stolen from
+    This function is mostly stolen from
     <http://nbviewer.ipython.org/5491090/analysis.ipynb>.  It executes
     the code cells of another notebook in the current namespace.  If
     you need to import a notebook in a different namespace (as a
@@ -9,15 +9,24 @@ def execnotebook(nbfile):
     you can import the notebook just like you would a module.
 
     """
+    import os, os.path
     from io import open
     from IPython.nbformat import current
-    with open(nbfile) as f:
-        nb = current.read(f, 'json')
-    ip = get_ipython()
-    for cell in nb.worksheets[0].cells:
-        if cell.cell_type != 'code':
-            continue
-        ip.run_cell(cell.input)
+    dir1 = os.getcwd()
+    dir2 = os.path.dirname(nbfile)
+    if(dir2) :
+        os.chdir(dir2)
+    try:
+        with open(nbfile) as f:
+            nb = current.read(f, 'json')
+        ip = get_ipython()
+        for cell in nb.worksheets[0].cells:
+            if cell.cell_type != 'code':
+                continue
+            ip.run_cell(cell.input)
+    finally:
+        if(dir2):
+            os.chdir(dir1)
 
 def find_notebook(fullname, path=None):
     """Find a notebook, given its fully qualified name and an optional path
