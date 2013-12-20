@@ -76,19 +76,33 @@ namespace {
   }
 };
 
+// This function combines the forward and backward vectors we need
+template <class T>
+void CombineForwardAndBackward(std::vector<T>& Forward, const std::vector<T>& Backward) {
+  std::vector<T> Combined(Forward.size()+Backward.size());
+  typename std::vector<T>::iterator Cit = Combined.begin();
+  for(typename std::vector<T>::const_reverse_iterator Bit = Backward.rbegin(); Bit != Backward.rend(); ++Bit,++Cit) {
+    *Cit=*Bit;
+  }
+  for(typename std::vector<T>::iterator Fit = Forward.begin(); Fit != Forward.end(); ++Fit,++Cit) {
+    *Cit=*Fit;
+  }
+  Forward.swap(Combined);
+  return;
+}
+
 void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOrder,
-			       const double v0, const double v_i,
+			       const double v_0, const double v_i,
 			       const double m1, const double m2,
 			       const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
 			       const Quaternions::Quaternion& R_frame_i,
 			       std::vector<double>& t, std::vector<double>& v,
 			       std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
 			       std::vector<Quaternions::Quaternion>& R_frame,
-			       std::vector<double>& Phi
+			       std::vector<double>& Phi,
+			       const bool ForwardInTime
 			       )
 {
-  std::cerr << __FILE__ << ":" << __LINE__ << ": Add easier interface for running both ways." << std::endl;
-
   // Transform the input into the forms we will actually use
   const double chi1Mag_i = std::sqrt(chi1_i[0]*chi1_i[0] + chi1_i[1]*chi1_i[1] + chi1_i[2]*chi1_i[2]);
   const double chi2Mag_i = std::sqrt(chi2_i[0]*chi2_i[0] + chi2_i[1]*chi2_i[1] + chi2_i[2]*chi2_i[2]);
@@ -202,14 +216,17 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   // Here are the parameters for the evolution
   const double nu = m1*m2/((m1+m2)*(m1+m2));
   double time = -5.0/(256.0*nu*std::pow(y[0],8)); // This is the lowest-order pN time-to-merger
-  double endtime = -3*time; // Give ourselves a large margin of error in case inspiral runs longer than expected
+  double endtime =
+    ForwardInTime
+    ? -3*time // Happily run far into positive times just for a comfy margin of error
+    : 2*(-5.0/(256.0*nu*std::pow(v_0,8))); // We expect this to be a pretty good estimate, considering that it should be very early...
   const unsigned int MinSteps = 100000; // This is only a very rough lower limit
   const unsigned int MaxSteps = 10000000; // This is a hard upper limit
-  double h = 1.0;
+  double h = ForwardInTime ? 1.0 : -1.0;
   const double eps_abs = 1.e-13;
   const double eps_rel = 1.e-13;
-  const double hmin = 1.0e-7;
-  const double hmax = (endtime-time) / (2.0*MinSteps);
+  const double hmin = ForwardInTime ? 1.0e-7 : -1.0e-7;
+  const double hmax = (endtime-time) / (2.0*MinSteps); // Time-direction is taken care of
 
   // We will be using `push_back`, so we first reserve the rough lower
   // limit we will need (after clearing out any content the input
@@ -259,7 +276,8 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   // Run the integration
   unsigned int NSteps = 0;
   unsigned int nSteps = 0;
-  while (time < endtime) {
+  while ((ForwardInTime && time < endtime) ||
+	 (!ForwardInTime && y[0]>v_0)) {
     // Take a step
     int status = gsl_odeiv2_evolve_apply(e, c, s, sys, &time, time+hmax, &h, &y[0]);
     ++NSteps;
@@ -292,7 +310,8 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     }
 
     // Check if we should stop because this has gone on suspiciously long
-    if(time>=endtime) {
+    if((ForwardInTime && time>=endtime)
+       || (!ForwardInTime && time<endtime)) {
       std::cerr << "Time has gone on four times as long as expected.  This seems strange, so we'll stop."
 		<< "\nNote that this is unusual.  You may have a short waveform that stops before merger." << std::endl;
       break;
@@ -309,7 +328,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     // but make sure we at least take 500 steps since the last
     // disruption.  [This is the condition that we expect to stop us
     // near merger.]
-    if(nSteps>500 && h<hmin) { break; }
+    if(nSteps>500 && std::abs(h)<std::abs(hmin)) { break; }
 
     // Reset values of quaternion logarithms to smaller sizes, if
     // necessary.  If this resets, we reset nSteps to zero, because
@@ -340,10 +359,40 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   gsl_odeiv2_control_free(c);
   gsl_odeiv2_step_free(s);
 
+  // Combine two segments if we need to also run backwards
+  if(v_0<v_i && ForwardInTime) {
+    // Run the reverse evolution
+    std::vector<double> tBackward, vBackward, PhiBackward;
+    std::vector<std::vector<double> > chi1Backward, chi2Backward;
+    std::vector<Quaternions::Quaternion> R_frameBackward;
+    EvolvePN_Q(Approximant, PNOrder, v_0, v_i, m1, m2, chi1_i, chi2_i, R_frame_i,
+	     tBackward, vBackward, chi1Backward, chi2Backward, R_frameBackward, PhiBackward,
+	     false);
+
+    // Remove the first element of each of the backward data vectors
+    // so that point is not duplicated
+    tBackward.erase(tBackward.begin());
+    vBackward.erase(vBackward.begin());
+    PhiBackward.erase(PhiBackward.begin());
+    chi1Backward.erase(chi1Backward.begin());
+    chi2Backward.erase(chi2Backward.begin());
+    R_frameBackward.erase(R_frameBackward.begin());
+
+    // Combine the data
+    CombineForwardAndBackward(t, tBackward);
+    CombineForwardAndBackward(v, vBackward);
+    CombineForwardAndBackward(Phi, PhiBackward);
+    CombineForwardAndBackward(chi1, chi1Backward);
+    CombineForwardAndBackward(chi2, chi2Backward);
+    CombineForwardAndBackward(R_frame, R_frameBackward);
+  }
+
   // Make the last time = 0.0
-  const double tback = t.back();
-  for(unsigned int i=0; i<t.size(); ++i) {
-    t[i] -= tback;
+  if(ForwardInTime) {
+    const double tback = t.back();
+    for(unsigned int i=0; i<t.size(); ++i) {
+      t[i] -= tback;
+    }
   }
 
   delete Tn;

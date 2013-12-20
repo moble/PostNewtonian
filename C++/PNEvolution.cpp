@@ -369,9 +369,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   while ((ForwardInTime && time < endtime) ||
 	 (!ForwardInTime && y[0]>v_0)) {
     // Take a step
-    // std::cerr << __FILE__ << ":" << __LINE__ << ": " << time << ", " << time+hmax << ", " << h << ", " << y[0] << std::endl;
     int status = gsl_odeiv2_evolve_apply(e, c, s, sys, &time, time+hmax, &h, &y[0]);
-    // std::cerr << "\t" << __FILE__ << ":" << __LINE__ << ": " << time << ", " << time+hmax << ", " << h << ", " << y[0] << ", " << v_i-y[0] << std::endl;
     ++NSteps;
 
     // Check if it worked and the system is still reasonable

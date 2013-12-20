@@ -51,7 +51,8 @@ namespace PostNewtonian {
 		  std::vector<double>& t, std::vector<double>& v,
 		  std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
 		  std::vector<Quaternions::Quaternion>& R_frame,
-		  std::vector<double>& Phi
+		  std::vector<double>& Phi,
+		  const bool ForwardInTime=true
 		  );
 
   std::vector<std::vector<double> > ellHat(const std::vector<Quaternions::Quaternion>& R);
