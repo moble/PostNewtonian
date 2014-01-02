@@ -50,7 +50,9 @@ To be more explicit, the tasks performed by code in this module will:
 One important feature of the `ipython notebook` is that it allows easy
 description of code, meaning that we can give very explicit citations
 and other explanations for where to find the collected terms in the
-literature.  The notebooks depend on each other, and build up more
+literature, including code comments, large sections of text, and even
+LaTeX equations displayed appropriately.  The main notebooks are found
+in the `PNTerms` subdirectory, and depend on each other to build up
 complicated expressions.  The rough order of this dependency is as
 follows.
 
@@ -62,13 +64,19 @@ follows.
   Collect the PN expressions for these various quantities, classified
   by their type and PN order.
 
-- `Precession.ipynb`: Define the precession system.
+- `OrbitalEvolution.ipynb`: Combine knowledge of the above quantities
+  to compute the orbital evolution, as well as precession.
 
-- `OrbitalFrequencyEvolution.ipynb`: Derive the TaylorTn expressions
-  from the three notebooks above, and generate C/C++ code to
-  evolve or evaluate them.
+- `C++/CodeOutput.ipynb`: Derive the TaylorTn expressions from the
+  notebooks above, and generate C/C++ code to evolve or evaluate them.
+  Note that `C++/InspectResults.ipynb` gives working examples for PN
+  evolutions.
 
-- [More to follow...]
+Some notebooks also come in two flavors: one for the standard
+evolution system, where vectors are evolved directly; another where
+quaternions are used for efficiency and robustness.  They typically
+result in identical results, though the quaternion formulation can
+handle certain special cases better than the other.
 
 
 Contributing
