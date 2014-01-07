@@ -24,7 +24,7 @@ python :
 
 all : cpp python
 
-cpp : PNEvolution.o EvolvePN PNEvolution_Q.o EvolvePN_Q
+cpp : PNEvolution.o EvolvePN PNEvolution_Q.o EvolvePN_Q PNWaveformModes.o
 
 # This is how to build those object files
 PNEvolution.o : PNEvolution.cpp PNEvolution.hpp PNApproximants.ipp

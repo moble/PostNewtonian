@@ -19,7 +19,7 @@ namespace PostNewtonian {
   /// up to the highest known mode -- currently (8,8).
 
   std::vector<std::vector<std::complex<double> > > WaveformModes
-    (const double m1, const double m2, const std::vector<double>& v,
+  (const double m1, const double m2, const std::vector<double>& v,
      const std::vector<std::vector<double> >& chi1, const std::vector<std::vector<double> >& chi2);
 
 };

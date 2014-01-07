@@ -1,9 +1,7 @@
 #include "PNWaveformModes.hpp"
 #include "PNWaveformModes.ipp"
 
-using PostNewtonian::WaveformModes;
-
-std::vector<std::vector<std::complex<double> > > WaveformModes
+std::vector<std::vector<std::complex<double> > > PostNewtonian::WaveformModes
 (const double m1, const double m2, const std::vector<double>& v,
  const std::vector<std::vector<double> >& chi1, const std::vector<std::vector<double> >& chi2) {
   WaveformModes_3p5PN WM(m1, m2, v[0],

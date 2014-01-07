@@ -65,11 +65,14 @@ if isdir('/opt/local/lib'):
 # Add directories for GSL, if needed
 SourceFiles = ['PNEvolution.cpp',
                'PNEvolution_Q.cpp',
+               'PNWaveformModes.cpp',
                'Quaternions/Quaternions.cpp',
                'PNEvolution.i']
 Dependencies = ['PNEvolution.hpp',
+                'PNWaveformModes.hpp',
                 'PNApproximants.ipp',
                 'PNApproximants_Q.ipp',
+                'PNWaveformModes.ipp',
                 'Quaternions/Quaternions.hpp']
 Libraries = ['gsl', 'gslcblas']
 

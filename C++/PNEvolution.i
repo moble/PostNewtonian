@@ -21,6 +21,7 @@
   #include "Quaternions.hpp"
   #include "IntegrateAngularVelocity.hpp"
   #include "PNEvolution.hpp"
+  #include "PNWaveformModes.hpp"
 %}
 
 ///////////////////////////////////
@@ -113,6 +114,7 @@ OUT_TYPEMAP_STD_VECTOR_OF_STD_VECTOR_OF_PRIMITIVES(double, NPY_DOUBLE)
 //// Import the PNEvolution class ////
 //////////////////////////////////////
 %include "PNEvolution.hpp"
+%include "PNWaveformModes.hpp"
 
 
 /// Add utility functions that are specific to python.  Note that
