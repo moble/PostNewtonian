@@ -8,6 +8,7 @@ std::vector<std::vector<std::complex<double> > > PostNewtonian::WaveformModes
 			 chi1[0][0], chi1[0][1], chi1[0][2],
 			 chi2[0][0], chi2[0][1], chi2[0][2],
 			 0.0, 0.0, 0.0);
+  std::cerr << v.size() << "\t" << chi1.size() << "," << chi1[0].size() << "\t" << chi2.size() << "," << chi2[0].size() << std::endl;
   std::vector<std::vector<std::complex<double> > > Modes(v.size(), std::vector<std::complex<double> >(ellMax*(ellMax+2) - 3));
   for(unsigned int i=0; i<v.size(); ++i) {
     Modes[i] = WM(v[i], chi1[i], chi2[i]);

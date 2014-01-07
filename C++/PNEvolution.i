@@ -109,6 +109,18 @@ ARGOUT_TYPEMAP_STD_VECTOR_OF_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, chi2, NPY_
 ARGOUT_TYPEMAP_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, Phi, NPY_DOUBLE)
 OUT_TYPEMAP_STD_VECTOR_OF_STD_VECTOR_OF_PRIMITIVES(double, NPY_DOUBLE)
 
+//// Make sure std::complex numbers are dealt with appropriately
+%include <std_complex.i>
+// namespace std {
+//   %template(complexd) complex<double>; // Don't use this line!!!
+// };
+//// Make sure std::vectors are dealt with appropriately
+%include <std_vector.i>
+namespace std {
+  %template(vectorc) vector<std::complex<double> >;
+  %template(vectorvectorc) vector<vector<std::complex<double> > >;
+};
+
 
 //////////////////////////////////////
 //// Import the PNEvolution class ////
