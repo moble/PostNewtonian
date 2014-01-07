@@ -67,7 +67,7 @@ follows.
 - `OrbitalEvolution.ipynb`: Combine knowledge of the above quantities
   to compute the orbital evolution, as well as precession.
 
-- `C++/CodeOutput.ipynb`: Derive the TaylorTn expressions from the
+- `C++/OrbitalEvolutionCodeGen.ipynb`: Derive the TaylorTn expressions from the
   notebooks above, and generate C/C++ code to evolve or evaluate them.
   Note that `C++/InspectResults.ipynb` gives working examples for PN
   evolutions.

@@ -1,4 +1,4 @@
-// File produced automatically by CodeOutput_Q.ipynb
+// File produced automatically by OrbitalEvolutionCodeGen_Q.ipynb
 
 class TaylorTn_0PN_Q : public TaylorTn_Q {
 private:
