@@ -190,8 +190,14 @@ class CodeConstructor:
         wrapper.initial_indent = ' '*Indent
         wrapper.subsequent_indent = wrapper.initial_indent + '  '
         def Evaluation(atom):
+            def Ccode(a) :
+                try:
+                    return a.ccode()
+                except :
+                    from sympy.printing import ccode
+                    return ccode(a)
             if atom.datatype and (atom.datatype=='std::vector<double>' or atom.datatype=='std::vector<std::complex<double> >') :
-                return '\n'.join([wrapper.fill('{0}[{1}] = {2};'.format(self.Variables[atom], i, atom.substitution[i].ccode()))
+                return '\n'.join([wrapper.fill('{0}[{1}] = {2};'.format(self.Variables[atom], i, Ccode(atom.substitution[i])))
                                   for i in range(len(atom.substitution))])
             else:
                 return wrapper.fill('{0} = {1};'.format(self.Variables[atom], atom.ccode()))
