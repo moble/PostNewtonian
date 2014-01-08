@@ -19,7 +19,7 @@ namespace PostNewtonian {
 		std::vector<double>& t, std::vector<double>& v,
 		std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
 		std::vector<Quaternions::Quaternion>& R_frame,
-		std::vector<double>& Phi
+		std::vector<double>& Phi, std::vector<std::vector<double> >& L
 		);
 
   void EvolvePN(const std::string& Approximant, const double PNOrder,
@@ -30,7 +30,7 @@ namespace PostNewtonian {
 		std::vector<double>& t, std::vector<double>& v,
 		std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
 		std::vector<Quaternions::Quaternion>& R_frame,
-		std::vector<double>& Phi,
+		std::vector<double>& Phi, std::vector<std::vector<double> >& L,
 		const bool ForwardInTime=true
 		);
 
@@ -40,7 +40,7 @@ namespace PostNewtonian {
 		  std::vector<double>& t, std::vector<double>& v,
 		  std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
 		  std::vector<Quaternions::Quaternion>& R_frame,
-		  std::vector<double>& Phi
+		  std::vector<double>& Phi, std::vector<std::vector<double> >& L
 		  );
 
   void EvolvePN_Q(const std::string& Approximant, const double PNOrder,
@@ -51,7 +51,7 @@ namespace PostNewtonian {
 		  std::vector<double>& t, std::vector<double>& v,
 		  std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
 		  std::vector<Quaternions::Quaternion>& R_frame,
-		  std::vector<double>& Phi,
+		  std::vector<double>& Phi, std::vector<std::vector<double> >& L,
 		  const bool ForwardInTime=true
 		  );
 

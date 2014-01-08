@@ -94,6 +94,7 @@ double dot(const std::vector<double>& a, const std::vector<double>& b) {
 ///////////////////////////////////
 class TaylorTn {
 public:
+  virtual std::vector<double> OrbitalAngularMomentum() = 0;
   virtual int TaylorT1(double t, const double* y, double* dydt) { return GSL_FAILURE; }
   virtual int TaylorT4(double t, const double* y, double* dydt) { return GSL_FAILURE; }
   virtual int TaylorT5(double t, const double* y, double* dydt) { return GSL_FAILURE; }
@@ -110,7 +111,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant,
 			     std::vector<double>& t, std::vector<double>& v,
 			     std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
 			     std::vector<Quaternions::Quaternion>& R_frame,
-			     std::vector<double>& Phi
+			     std::vector<double>& Phi, std::vector<std::vector<double> >& L
 			     )
 {
   EvolvePN(Approximant, 3.5,
@@ -121,7 +122,8 @@ void PostNewtonian::EvolvePN(const std::string& Approximant,
 	   t, v,
 	   chi1, chi2,
 	   R_frame,
-	   Phi
+	   Phi,
+	   L
 	   );
   return;
 }
@@ -164,7 +166,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
 			     std::vector<double>& t, std::vector<double>& v,
 			     std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
 			     std::vector<Quaternions::Quaternion>& R_frame,
-			     std::vector<double>& Phi,
+			     std::vector<double>& Phi, std::vector<std::vector<double> >& L,
 			     const bool ForwardInTime
 			     )
 {
@@ -321,6 +323,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   chi2.clear(); chi2.reserve(MinSteps);
   R_frame.clear(); R_frame.reserve(MinSteps);
   Phi.clear(); Phi.reserve(MinSteps);
+  L.clear(); L.reserve(MinSteps);
 
   // Declare and initialize the GSL ODE integrator
   const gsl_odeiv2_step_type* T = gsl_odeiv2_step_rk8pd;
@@ -361,6 +364,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
     chi2.push_back(chi2_i);
     R_frame.push_back(R_frame_i);
     Phi.push_back(y[10]);
+    L.push_back(Tn->OrbitalAngularMomentum());
     // std::cout << time << " " << y[11] << std::endl;
   }
 
@@ -403,6 +407,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
       chi2.push_back(chi2_i);
       R_frame.push_back(R_frame_i);
       Phi.push_back(y[10]);
+      L.push_back(Tn->OrbitalAngularMomentum());
       // std::cout << time << " " << y[11] << std::endl;
     }
 
@@ -436,10 +441,10 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   if(v_0<v_i && ForwardInTime) {
     // Run the reverse evolution
     std::vector<double> tBackward, vBackward, PhiBackward;
-    std::vector<std::vector<double> > chi1Backward, chi2Backward;
+    std::vector<std::vector<double> > chi1Backward, chi2Backward, LBackward;
     std::vector<Quaternions::Quaternion> R_frameBackward;
     EvolvePN(Approximant, PNOrder, v_0, v_i, m1, m2, chi1_i, chi2_i, R_frame_i,
-	     tBackward, vBackward, chi1Backward, chi2Backward, R_frameBackward, PhiBackward,
+	     tBackward, vBackward, chi1Backward, chi2Backward, R_frameBackward, PhiBackward, LBackward,
 	     false);
 
     // Remove the first element of each of the backward data vectors
@@ -449,6 +454,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
     PhiBackward.erase(PhiBackward.begin());
     chi1Backward.erase(chi1Backward.begin());
     chi2Backward.erase(chi2Backward.begin());
+    LBackward.erase(LBackward.begin());
     R_frameBackward.erase(R_frameBackward.begin());
 
     // Combine the data
@@ -457,6 +463,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
     CombineForwardAndBackward(Phi, PhiBackward);
     CombineForwardAndBackward(chi1, chi1Backward);
     CombineForwardAndBackward(chi2, chi2Backward);
+    CombineForwardAndBackward(L, LBackward);
     CombineForwardAndBackward(R_frame, R_frameBackward);
   }
 
