@@ -8,7 +8,7 @@ public:
     const double chi2_x_k, const double chi2_y_k, const double chi2_z_k,
     const double ellHat_x_k, const double ellHat_y_k, const double ellHat_z_k) = 0;
   virtual std::vector<std::complex<double> > operator()(
-    const double v_k, const std::vector<double> chi1, const std::vector<double> chi2)
+    const double v_k, const std::vector<double>& chi1, const std::vector<double>& chi2)
   {
     return this->operator()(v_k, chi1[0], chi1[1], chi1[2], chi2[0], chi2[1], chi2[2], 0.0, 0.0, 1.0);
   }
