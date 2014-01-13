@@ -1,6 +1,6 @@
 // -*- c++ -*-
 
-// Copyright (c) 2013, Michael Boyle
+// Copyright (c) 2014, Michael Boyle
 // See LICENSE file for details
 
 %module PNEvolution
