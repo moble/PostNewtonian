@@ -7,15 +7,111 @@
 
 // Quiet warnings about overloaded operators being ignored.
 #pragma SWIG nowarn=362,389,401,509
+%include <typemaps.i>
+%include <stl.i>
+
+#ifndef SWIGIMPORTED
+// Use numpy below
+%{
+  #define SWIG_FILE_WITH_INIT
+  %}
+%include "Quaternions/numpy.i"
+%init %{
+  import_array();
+%}
+%pythoncode %{
+  import numpy;
+%}
+#endif
+
+%import "Quaternions/Quaternions.i"
+%import "Quaternions/Quaternions_typemaps.i"
+
+
+///////////////////////////////////
+//// Handle exceptions cleanly ////
+///////////////////////////////////
+
+// // The following will appear in the header of the `_wrap.cpp` file.
+// %{
+//   const char* const PostNewtonianErrors[] = {
+//     "This function is not yet implemented.",
+//     "Failed system call.",
+//     "Bad file name.",
+//     "Failed GSL call.",
+//     "Unknown exception",
+//     "Unknown exception",
+//     "Unknown exception",
+//     "Unknown exception",
+//     "Unknown exception",
+//     "Unknown exception",
+//     "Bad value.",
+//     "Bad switches; we should not have gotten here.",
+//     "Index out of bounds.",
+//     "Unknown exception",
+//     "Unknown exception",
+//     "Vector size mismatch.",
+//     "Matrix size mismatch.",
+//     "Matrix size is assumed to be 3x3 in this function.",
+//     "Not enough points to take a derivative.",
+//     "Empty intersection requested.",
+//     "Waveform is missing requested (ell,m) component.",
+//     "Wrong frame type for this operation.",
+//     "Bad Waveform information."
+//   };
+//   const int PostNewtonianNumberOfErrors = 23;
+//   PyObject* const PostNewtonianExceptions[] = {
+//     PyExc_NotImplementedError, // Not implemented
+//     PyExc_SystemError, // Failed system call
+//     PyExc_IOError, // Bad file name
+//     PyExc_RuntimeError, // GSL failed
+//     PyExc_RuntimeError, // [empty]
+//     PyExc_RuntimeError, // [empty]
+//     PyExc_RuntimeError, // [empty]
+//     PyExc_RuntimeError, // [empty]
+//     PyExc_RuntimeError, // [empty]
+//     PyExc_RuntimeError, // [empty]
+//     PyExc_ValueError, // Bad value
+//     PyExc_ValueError, // Bad switches
+//     PyExc_IndexError, // Index out of bounds
+//     PyExc_RuntimeError, // [empty]
+//     PyExc_RuntimeError, // [empty]
+//     PyExc_AssertionError, // Mismatched vector size
+//     PyExc_AssertionError, // Mismatched matrix size
+//     PyExc_AssertionError, // 3x3 matrix assumed
+//     PyExc_AssertionError, // Not enough points for derivative
+//     PyExc_AssertionError, // Empty intersection
+//     PyExc_IndexError, // Waveform missing ell,m
+//     PyExc_AssertionError, // Bad frame type
+//     PyExc_ValueError, // Bad Waveform information
+//   };
+// %}
+
+// // This will go inside every python wrapper for any function I've
+// // included; the code of the function itself will replace `$action`.
+// // It's a good idea to try to keep this part brief, just to cut down
+// // the size of the wrapper file.
+// %exception {
+//   try {
+//     $action;
+//   } catch(int i) {
+//     std::stringstream s;
+//     if(i>-1 && i<PostNewtonianNumberOfErrors) { s << "PostNewtonian exception: " << PostNewtonianErrors[i]; }
+//     else  { s << "PostNewtonian: Unknown exception number {" << i << "}"; }
+//     PyErr_SetString(PostNewtonianExceptions[i], s.str().c_str());
+//     return NULL;
+//   }
+// }
 
 
 /////////////////////////////////////////////////
 //// These will be needed by the c++ wrapper ////
 /////////////////////////////////////////////////
 %{
-  #define SWIG_FILE_WITH_INIT
   #include <vector>
   #include <iostream>
+  #include <string>
+  #include <sstream>
   #include <iomanip>
   #include <complex>
   #include "Quaternions.hpp"
@@ -24,81 +120,41 @@
   #include "PNWaveformModes.hpp"
 %}
 
-///////////////////////////////////
-//// Handle exceptions cleanly ////
-///////////////////////////////////
-%exception {
-  try {
-    $action;
-  } catch(int i) {
-    if(i==0) {
-      PyErr_SetString(PyExc_RuntimeError, "Quaternions: Index out of bounds.");
-    } else if(i==1) {
-      PyErr_SetString(PyExc_RuntimeError, "Quaternions: Infinitely many solutions.");
-    } else if(i==2) {
-      PyErr_SetString(PyExc_RuntimeError, "Quaternions: Not enough points to take a derivative.");
-    } else if(i==3) {
-      PyErr_SetString(PyExc_RuntimeError, "Quaternions: Vector size not understood.");
-    } else if(i==4) {
-      PyErr_SetString(PyExc_RuntimeError, "Quaternions: Vector size inconsistent with another vector's size.");
-    } else if(i==5) {
-      PyErr_SetString(PyExc_RuntimeError, "Quaternions: Cannot extrapolate quaternions.");
-    } else if(i==6) {
-      PyErr_SetString(PyExc_RuntimeError, "Quaternions: Failed call to GSL.");
-    } else if(i==7) {
-      PyErr_SetString(PyExc_RuntimeError, "Quaternions: Unknown exception.");
-    } else  {
-      PyErr_SetString(PyExc_RuntimeError, "Unknown exception");
-    }
-    return NULL;
-  }
-}
+%pythoncode %{
+  ## We must be able to import numpy
+  import numpy
+
+  ## We must be able to import Quaternions
+  import Quaternions
+
+  ## We might be able to get away without spinsfast
+  try :
+    import spinsfast
+  except ImportError :
+    pass
+%}
 
 
-%include "Quaternions_typemaps.i"
-%include "Quaternions.hpp"
-// %include "IntegrateAngularVelocity.hpp"
-// #if defined(SWIGPYTHON_BUILTIN)
-// %feature("python:slot", "sq_length", functype="lenfunc") Quaternions::Quaternion::__len__;
-// %feature("python:slot", "mp_subscript", functype="binaryfunc") Quaternions::Quaternion::__getitem__;
-// %feature("python:slot", "mp_ass_subscript", functype="objobjargproc") Quaternions::Quaternion::__setitem__;
-// %feature("python:slot", "tp_str",  functype="reprfunc") Quaternions::Quaternion::__str__;
-// %feature("python:slot", "tp_repr", functype="reprfunc") Quaternions::Quaternion::__repr__;
-// #endif // SWIGPYTHON_BUILTIN
-// %extend Quaternions::Quaternion {
-//   unsigned int __len__() const {
-//     return 4;
-//   }
-//   inline double __getitem__(const unsigned int i) const {
-//     return (*$self)[i];
-//   }
-//   inline void __setitem__(const unsigned int i, const double a) {
-//     (*$self)[i] = a;
-//   }
-//   const char* __str__() {
-//     std::stringstream S;
-//     S << std::setprecision(15) << "["
-//       << $self->operator[](0) << ", "
-//       << $self->operator[](1) << ", "
-//       << $self->operator[](2) << ", "
-//       << $self->operator[](3) << "]";
-//     const std::string& tmp = S.str();
-//     const char* cstr = tmp.c_str();
-//     return cstr;
-//   }
-//   const char* __repr__() {
-//     std::stringstream S;
-//     S << std::setprecision(15) << "Quaternion("
-//       << $self->operator[](0) << ", "
-//       << $self->operator[](1) << ", "
-//       << $self->operator[](2) << ", "
-//       << $self->operator[](3) << ")";
-//     const std::string& tmp = S.str();
-//     const char* cstr = tmp.c_str();
-//     return cstr;
-//   }
-//  };
 
+//////////////////////////////////////////////////////////////////////
+//// The following translates between c++ and python types nicely ////
+//////////////////////////////////////////////////////////////////////
+//// Make sure std::strings are dealt with appropriately
+%include <std_string.i>
+//// Make sure std::complex numbers are dealt with appropriately
+%include <std_complex.i>
+//// Make sure std::vectors are dealt with appropriately
+%include <std_vector.i>
+namespace std {
+  // %template(complexd) complex<double>; // Don't use this line!!!
+  %template(vectori) vector<int>;
+  %template(vectorvectori) vector<vector<int> >;
+  %template(vectorc) vector<std::complex<double> >;
+  %template(vectorvectorc) vector<vector<std::complex<double> > >;
+  %template(vectorq) vector<Quaternions::Quaternion>;
+  %template(vectors) vector<string>;
+  %template(vectorvectors) vector<vector<std::string> >;
+};
 
 // Return the values by reference as python
 ARGOUT_TYPEMAP_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, t, NPY_DOUBLE)
@@ -110,22 +166,10 @@ ARGOUT_TYPEMAP_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, Phi, NPY_DOUBLE)
 ARGOUT_TYPEMAP_STD_VECTOR_OF_STD_VECTOR_OF_PRIMITIVES(double, DOUBLE, L, NPY_DOUBLE)
 OUT_TYPEMAP_STD_VECTOR_OF_STD_VECTOR_OF_PRIMITIVES(double, NPY_DOUBLE)
 
-//// Make sure std::complex numbers are dealt with appropriately
-%include <std_complex.i>
-// namespace std {
-//   %template(complexd) complex<double>; // Don't use this line!!!
-// };
-//// Make sure std::vectors are dealt with appropriately
-%include <std_vector.i>
-namespace std {
-  %template(vectorc) vector<std::complex<double> >;
-  %template(vectorvectorc) vector<vector<std::complex<double> > >;
-};
 
-
-//////////////////////////////////////
-//// Import the PNEvolution class ////
-//////////////////////////////////////
+///////////////////////////////
+//// Import the PN classes ////
+///////////////////////////////
 %include "PNEvolution.hpp"
 %include "PNWaveformModes.hpp"
 
