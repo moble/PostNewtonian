@@ -112,7 +112,7 @@ public:
     const double dEdv = -E_0*m*nu*v;
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -120,7 +120,7 @@ public:
     Recalculate(t, y);
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
     const double dvdt_T4 = 1.0*Fcal_0*Fcal_coeff/(E_0*m*nu*v);
-    if(dvdt_T4<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -129,7 +129,7 @@ public:
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
     const double dtdv = 1.0*E_0*m*nu*v/(Fcal_0*Fcal_coeff);
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -266,7 +266,7 @@ public:
     const double dEdv = -E_0*m*nu*v;
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -274,7 +274,7 @@ public:
     Recalculate(t, y);
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
     const double dvdt_T4 = 1.0*Fcal_0*Fcal_coeff/(E_0*m*nu*v);
-    if(dvdt_T4<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -283,7 +283,7 @@ public:
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
     const double dtdv = 1.0*E_0*m*nu*v/(Fcal_0*Fcal_coeff);
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -426,7 +426,7 @@ public:
     const double dEdv = -m*nu*v*(E_0 + 2.0*E_2*pow(v, 2));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -435,7 +435,7 @@ public:
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
     const double dvdt_T4 = -2.0*Fcal_coeff*(-0.5*Fcal_0/(E_0*m) + pow(v, 2)*(-0.5*Fcal_2/m +
       1.0*E_2*Fcal_0/(E_0*m))/E_0)/(nu*v);
-    if(dvdt_T4<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -444,7 +444,7 @@ public:
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
     const double dtdv = -0.5*nu*v*(-2.0*E_0*m/Fcal_0 + m*pow(v, 2)*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0)/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -609,7 +609,7 @@ public:
     const double dEdv = -0.5*m*nu*v*(2.0*E_0 + pow(v, 2)*(4.0*E_2 + 5.0*E_SO_3*v));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -618,7 +618,7 @@ public:
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
     const double dvdt_T4 = -2.0*Fcal_coeff*(pow(v, 2)*(v*((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m +
       1.25*E_SO_3*Fcal_0/(E_0*m))/E_0 + (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -628,7 +628,7 @@ public:
     const double dtdv = -0.5*nu*v*(-2.0*E_0*m/Fcal_0 + pow(v, 2)*(m*v*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 -
       5.0*E_SO_3)/Fcal_0 + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -811,7 +811,7 @@ public:
     const double dEdv = -0.5*m*nu*v*(2.0*E_0 + pow(v, 2)*(4.0*E_2 + v*(5.0*E_SO_3 + 6.0*v*(E_4 + E_SQ_4))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -822,7 +822,7 @@ public:
       1.5*E_4*Fcal_0 + 1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2, 2)*Fcal_0/(E_0*m))/E_0)/E_0 + ((-0.5*Fcal_3 -
       0.5*Fcal_SO_3)/m + 1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) + (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) -
       0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -833,7 +833,7 @@ public:
       2.0*Fcal_SQ_4) - 2.0*E_0*pow(Fcal_2, 2)/Fcal_0 + 4.0*E_2*Fcal_2)/Fcal_0)/Fcal_0 + m*(E_0*(2.0*Fcal_3 +
       2.0*Fcal_SO_3)/Fcal_0 - 5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -1027,7 +1027,7 @@ public:
       6.0*E_SQ_4))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -1039,7 +1039,7 @@ public:
       ((-0.5*Fcal_4 - 0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 + 1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2,
       2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m + 1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) +
       (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -1052,7 +1052,7 @@ public:
       2.0*E_0*pow(Fcal_2, 2)/Fcal_0 + 4.0*E_2*Fcal_2)/Fcal_0)/Fcal_0) + m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 -
       5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -1255,7 +1255,7 @@ public:
       v*(8.0*E_6*v + 7.0*E_SO_5)))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -1270,7 +1270,7 @@ public:
       5.0*E_2*E_SO_3*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_4 - 0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 +
       1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2, 2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m +
       1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) + (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -1287,7 +1287,7 @@ public:
       m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 - 5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 -
       4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -1505,7 +1505,7 @@ public:
       v*(7.0*E_SO_5 + v*(8.0*E_6 + 9.0*E_SO_7*v))))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -1524,7 +1524,7 @@ public:
       5.0*E_2*E_SO_3*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_4 - 0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 +
       1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2, 2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m +
       1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) + (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -1546,7 +1546,7 @@ public:
       m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 - 5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 -
       4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -1775,7 +1775,7 @@ public:
       v*(7.0*E_SO_5 + v*(8.0*E_6 + v*(9.0*E_SO_7 + v*(10.0*E_8 + E_lnv_8*(10.0*logv + 1.0)))))))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -1802,7 +1802,7 @@ public:
       0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 + 1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2,
       2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m + 1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) +
       (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -1832,7 +1832,7 @@ public:
       - 2.0*E_0*pow(Fcal_2, 2)/Fcal_0 + 4.0*E_2*Fcal_2)/Fcal_0)/Fcal_0) + m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 -
       5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -2062,7 +2062,7 @@ public:
       v*(7.0*E_SO_5 + v*(8.0*E_6 + v*(9.0*E_SO_7 + v*(10.0*E_8 + E_lnv_8*(10.0*logv + 1.0)))))))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -2097,7 +2097,7 @@ public:
       5.0*E_2*E_SO_3*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_4 - 0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 +
       1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2, 2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m +
       1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) + (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -2140,7 +2140,7 @@ public:
       - 2.0*E_0*pow(Fcal_2, 2)/Fcal_0 + 4.0*E_2*Fcal_2)/Fcal_0)/Fcal_0) + m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 -
       5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -2376,7 +2376,7 @@ public:
       E_lnv_10*(12.0*logv + 1.0))))))))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -2426,7 +2426,7 @@ public:
       5.0*E_2*E_SO_3*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_4 - 0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 +
       1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2, 2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m +
       1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) + (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -2491,7 +2491,7 @@ public:
       - 2.0*E_0*pow(Fcal_2, 2)/Fcal_0 + 4.0*E_2*Fcal_2)/Fcal_0)/Fcal_0) + m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 -
       5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -2729,7 +2729,7 @@ public:
       13.0*E_11*v + E_lnv_10*(12.0*logv + 1.0))))))))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -2799,7 +2799,7 @@ public:
       5.0*E_2*E_SO_3*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_4 - 0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 +
       1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2, 2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m +
       1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) + (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -2896,7 +2896,7 @@ public:
       - 2.0*E_0*pow(Fcal_2, 2)/Fcal_0 + 4.0*E_2*Fcal_2)/Fcal_0)/Fcal_0) + m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 -
       5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -3137,7 +3137,7 @@ public:
       E_lnv_10*(12.0*logv + 1.0) + v*(13.0*E_11 + v*(14.0*E_12 + E_lnv_12*(14.0*logv + 1.0))))))))))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -3238,7 +3238,7 @@ public:
       0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 + 1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2,
       2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m + 1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) +
       (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -3388,7 +3388,7 @@ public:
       - 2.0*E_0*pow(Fcal_2, 2)/Fcal_0 + 4.0*E_2*Fcal_2)/Fcal_0)/Fcal_0) + m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 -
       5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<0.0) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
