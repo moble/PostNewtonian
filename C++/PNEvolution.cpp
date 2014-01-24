@@ -312,6 +312,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   const double eps_abs = 1.e-13;
   const double eps_rel = 1.e-13;
   const double hmin = ForwardInTime ? 1.0e-7 : -1.0e-7;
+  const double hmin_storage = ForwardInTime ? 1.0e-5 : -1.0e-5;
   const double hmax = (endtime-time) / (2.0*MinSteps); // Time-direction is taken care of
 
   // We will be using `push_back`, so we first reserve the rough lower
@@ -388,9 +389,9 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
       break;
     }
 
-    // If it worked, store the data
-    {
-      Tn->Recalculate(time, &y[0]);
+    // If the time step was large enough, store the data
+    Tn->Recalculate(time, &y[0]);
+    if(std::abs(t.back()-time)>=std::abs(hmin_storage)) {
       vector<double> chi1_i(3), chi2_i(3);
       chi1_i[0] = y[1];
       chi1_i[1] = y[2];
@@ -415,7 +416,8 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
     if((ForwardInTime && time>=endtime)
        || (!ForwardInTime && time<endtime)) {
       std::cerr << "Time has gone on four times as long as expected.  This seems strange, so we'll stop."
-		<< "\nNote that this is unusual.  You may have a short waveform that stops before merger." << std::endl;
+		<< "\nNote that this is unusual.  You may have a short waveform that stops before merger,"
+		<< "\nor one of the stopping criteria may have gotten fooled." << std::endl;
       break;
     }
 
