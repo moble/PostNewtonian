@@ -47,3 +47,10 @@ EvolvePN_Q : EvolvePN_Q.cpp PNEvolution.o PNEvolution_Q.o PNEvolution.hpp PNAppr
 clean:
 	/bin/rm -f *.o EvolvePN EvolvePN_Q
 	/bin/rm -rf build _PNEvolution.so PNEvolution.py PNEvolution/__init__.py
+
+# Mike likes to use python's virtual environments to build with
+# various versions and arrangements of python.  As such, he finds that
+# the following is, unfortunately, necessary for him.  This makes him
+# happy.  It is probably not necessary for most users, however.
+MikeHappy :
+	$(VIRTUAL_ENV)/bin/python setup.py install --prefix=$(VIRTUAL_ENV)
