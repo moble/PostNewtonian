@@ -39,25 +39,25 @@ public:
 
 
 void PostNewtonian::EvolvePN_Q(const std::string& Approximant,
-			       const double v_i, const double m1, const double m2,
-			       const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
-			       std::vector<double>& t, std::vector<double>& v,
-			       std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
-			       std::vector<Quaternions::Quaternion>& R_frame,
-			       std::vector<double>& Phi, std::vector<std::vector<double> >& L
-			       )
+                               const double v_i, const double m1, const double m2,
+                               const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
+                               std::vector<double>& t, std::vector<double>& v,
+                               std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
+                               std::vector<Quaternions::Quaternion>& R_frame,
+                               std::vector<double>& Phi, std::vector<std::vector<double> >& L
+                               )
 {
   EvolvePN(Approximant, 3.5,
-	   v_i, v_i,
-	   m1, m2,
-	   chi1_i, chi2_i,
-	   Quaternion(1,0,0,0),
-	   t, v,
-	   chi1, chi2,
-	   R_frame,
-	   Phi,
-	   L
-	   );
+           v_i, v_i,
+           m1, m2,
+           chi1_i, chi2_i,
+           Quaternion(1,0,0,0),
+           t, v,
+           chi1, chi2,
+           R_frame,
+           Phi,
+           L
+           );
   return;
 }
 
@@ -94,16 +94,16 @@ void CombineForwardAndBackward(std::vector<T>& Forward, const std::vector<T>& Ba
 }
 
 void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOrder,
-			       const double v_0, const double v_i,
-			       const double m1, const double m2,
-			       const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
-			       const Quaternions::Quaternion& R_frame_i,
-			       std::vector<double>& t, std::vector<double>& v,
-			       std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
-			       std::vector<Quaternions::Quaternion>& R_frame,
-			       std::vector<double>& Phi, std::vector<std::vector<double> >& L,
-			       const bool ForwardInTime
-			       )
+                               const double v_0, const double v_i,
+                               const double m1, const double m2,
+                               const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
+                               const Quaternions::Quaternion& R_frame_i,
+                               std::vector<double>& t, std::vector<double>& v,
+                               std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
+                               std::vector<Quaternions::Quaternion>& R_frame,
+                               std::vector<double>& Phi, std::vector<std::vector<double> >& L,
+                               const bool ForwardInTime
+                               )
 {
   // Transform the input into the forms we will actually use
   const double chi1Mag_i = std::sqrt(chi1_i[0]*chi1_i[0] + chi1_i[1]*chi1_i[1] + chi1_i[2]*chi1_i[2]);
@@ -130,81 +130,81 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   switch(int(2*PNOrder)) {
   case 0:
     Tn = new TaylorTn_0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-			    chi1Mag_i, chi2Mag_i,
-			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                            chi1Mag_i, chi2Mag_i,
+                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 1:
     Tn = new TaylorTn_0p50PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-			       chi1Mag_i, chi2Mag_i,
-			       rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-			       rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                               chi1Mag_i, chi2Mag_i,
+                               rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+                               rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 2:
     Tn = new TaylorTn_1p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-			    chi1Mag_i, chi2Mag_i,
-			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                            chi1Mag_i, chi2Mag_i,
+                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 3:
     Tn = new TaylorTn_1p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-			    chi1Mag_i, chi2Mag_i,
-			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                            chi1Mag_i, chi2Mag_i,
+                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 4:
     Tn = new TaylorTn_2p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-			    chi1Mag_i, chi2Mag_i,
-			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                            chi1Mag_i, chi2Mag_i,
+                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 5:
     Tn = new TaylorTn_2p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-			    chi1Mag_i, chi2Mag_i,
-			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                            chi1Mag_i, chi2Mag_i,
+                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 6:
     Tn = new TaylorTn_3p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-			    chi1Mag_i, chi2Mag_i,
-			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                            chi1Mag_i, chi2Mag_i,
+                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 7:
     Tn = new TaylorTn_3p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-			    chi1Mag_i, chi2Mag_i,
-			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                            chi1Mag_i, chi2Mag_i,
+                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 8:
     Tn = new TaylorTn_4p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-			    chi1Mag_i, chi2Mag_i,
-			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                            chi1Mag_i, chi2Mag_i,
+                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 9:
     Tn = new TaylorTn_4p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-			    chi1Mag_i, chi2Mag_i,
-			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                            chi1Mag_i, chi2Mag_i,
+                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 10:
     Tn = new TaylorTn_5p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-			    chi1Mag_i, chi2Mag_i,
-			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                            chi1Mag_i, chi2Mag_i,
+                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 11:
     Tn = new TaylorTn_5p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-			    chi1Mag_i, chi2Mag_i,
-			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                            chi1Mag_i, chi2Mag_i,
+                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   case 12:
     Tn = new TaylorTn_6p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-			    chi1Mag_i, chi2Mag_i,
-			    rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-			    rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                            chi1Mag_i, chi2Mag_i,
+                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
+                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
     break;
   default:
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": PN order " << PNOrder << " is not yet implemented." << std::endl;
@@ -282,7 +282,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   unsigned int NSteps = 0;
   unsigned int nSteps = 0;
   while ((ForwardInTime && time < endtime) ||
-	 (!ForwardInTime && y[0]>v_0)) {
+         (!ForwardInTime && y[0]>v_0)) {
     // Take a step
     int status = gsl_odeiv2_evolve_apply(e, c, s, sys, &time, time+hmax, &h, &y[0]);
     ++NSteps;
@@ -290,10 +290,10 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
 
     // Check if it worked and the system is still reasonable
     if(status == GSL_EDOM) {
-      // std::cout << "Velocity v has become greater than 1.0" << std::endl;
+      std::cout << "Velocity v has become greater than 1.0" << std::endl;
       break;
     } else if(status == GSL_EDIVERGE) {
-      // std::cout << "Velocity is no longer increasing" << std::endl;
+      std::cout << "Velocity is no longer increasing" << std::endl;
       break;
     } else if(status != GSL_SUCCESS) {
       std::cerr << "GSL odeiv2 error.  Return value=" << status << "\n" << std::endl;
@@ -319,15 +319,15 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     if((ForwardInTime && time>=endtime)
        || (!ForwardInTime && time<endtime)) {
       std::cerr << "Time has gone on four times as long as expected.  This seems strange, so we'll stop."
-		<< "\nNote that this is unusual.  You may have a short waveform that stops before merger,"
-		<< "\nor one of the stopping criteria may have gotten fooled." << std::endl;
+                << "\nNote that this is unusual.  You may have a short waveform that stops before merger,"
+                << "\nor one of the stopping criteria may have gotten fooled." << std::endl;
       break;
     }
 
     // Check if we should stop because there have been too many steps
     if(NSteps>MaxSteps) {
       std::cerr << "\n\nThe integration has taken " << NSteps << ".  This seems excessive, so we'll stop."
-		<< "\nNote that this is unusual.  You may have a short waveform that stops before merger." << std::endl;
+                << "\nNote that this is unusual.  You may have a short waveform that stops before merger." << std::endl;
       break;
     }
 
@@ -373,8 +373,8 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     std::vector<std::vector<double> > chi1Backward, chi2Backward, LBackward;
     std::vector<Quaternions::Quaternion> R_frameBackward;
     EvolvePN_Q(Approximant, PNOrder, v_0, v_i, m1, m2, chi1_i, chi2_i, R_frame_i,
-	       tBackward, vBackward, chi1Backward, chi2Backward, R_frameBackward, PhiBackward, LBackward,
-	       false);
+               tBackward, vBackward, chi1Backward, chi2Backward, R_frameBackward, PhiBackward, LBackward,
+               false);
 
     // Remove the first element of each of the backward data vectors
     // so that point is not duplicated
