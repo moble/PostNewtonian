@@ -3,7 +3,24 @@ PostNewtonian
 
 Sympy code to collect and process terms for various post-Newtonian
 (PN) equations, and to generate working python/C/C++ code to evolve PN
-systems
+systems.
+
+[Sympy](http://www.sympy.org) is python's library for symbolic math.
+Though not as mature as Mathematica, it is in many ways ready to
+replace Mathematica -- and in [some important
+ways](http://docs.sympy.org/0.7.1/modules/galgebra/GA/GAsympy.html),
+much better already.  Plus, it's open source, and fits right in with
+all the power of python.  What's not to love?
+
+The [ipython notebook](http://ipython.org/notebook) is a general
+replacement for the notebook interface of Mathematica, and already
+vastly superior in almost every way.  It runs in the web browser, is
+tremendously powerful, and again is open source.  And it just keeps
+getting better.  I believe this is how science should be done on a
+computer.
+
+This module combines sympy and ipython notebooks, and applies them to
+the complex issue of post-Newtonian constructions.
 
 
 Just looking
@@ -11,8 +28,9 @@ Just looking
 
 I wouldn't want to discourage anyone from installing and using the
 fantastically excellent, powerful, and simple `ipython notebook`
-interface.  However, if you're too lazy or just don't believe me, you
-can just view the important notebooks in this module at on `nbviewer`:
+interface.  However, if you're too lazy or just don't believe me how
+great the combination of `ipython` and `notebook` is, you can just
+view the important notebooks in this module at on `nbviewer`:
 
   * [AngularMomentum](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/AngularMomentum.ipynb)
   * [BindingEnergy](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/BindingEnergy.ipynb)
@@ -38,6 +56,7 @@ notebooks.  (If not, see the [Installation](#Installation) section
 below.)  Click one of those notebooks, which should open in a new tab.
 To run code, just put your cursor in any code cell and hit
 Shift-Enter, as with Mathematica.
+
 
 Introduction
 ============
