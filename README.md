@@ -14,15 +14,15 @@ fantastically excellent, powerful, and simple `ipython notebook`
 interface.  However, if you're too lazy or just don't believe me, you
 can just view the important notebooks in this module at on `nbviewer`:
 
-  * [AngularMomentum](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/angularmomentum.ipynb)
-  * [BindingEnergy](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/bindingenergy.ipynb)
-  * [EnergyAbsorption](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/energyabsorption.ipynb)
-  * [Flux](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/flux.ipynb)
-  * [OrbitalEvolution](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/orbitalevolution.ipynb)
-  * [Precession](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/precession.ipynb)
-  * [Variables](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/variables.ipynb)
-  * [Variables_Q](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/variables_q.ipynb)
-  * [WaveformModes](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/waveformmodes.ipynb)
+  * [AngularMomentum](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/AngularMomentum.ipynb)
+  * [BindingEnergy](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/BindingEnergy.ipynb)
+  * [EnergyAbsorption](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/EnergyAbsorption.ipynb)
+  * [Flux](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/Flux.ipynb)
+  * [OrbitalEvolution](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/OrbitalEvolution.ipynb)
+  * [Precession](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/Precession.ipynb)
+  * [Variables](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/Variables.ipynb)
+  * [Variables_Q](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/Variables_Q.ipynb)
+  * [WaveformModes](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/WaveformModes.ipynb)
 
 
 Quick Start
