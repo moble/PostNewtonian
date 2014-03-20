@@ -6,6 +6,25 @@ Sympy code to collect and process terms for various post-Newtonian
 systems
 
 
+Just looking
+============
+
+I wouldn't want to discourage anyone from installing and using the
+fantastically excellent, powerful, and simple `ipython notebook`
+interface.  However, if you're too lazy or just don't believe me, you
+can just view the important notebooks in this module at on `nbviewer`:
+
+  * [AngularMomentum](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/angularmomentum.ipynb)
+  * [BindingEnergy](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/bindingenergy.ipynb)
+  * [EnergyAbsorption](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/energyabsorption.ipynb)
+  * [Flux](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/flux.ipynb)
+  * [OrbitalEvolution](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/orbitalevolution.ipynb)
+  * [Precession](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/precession.ipynb)
+  * [Variables](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/variables.ipynb)
+  * [Variables_Q](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/variables_q.ipynb)
+  * [WaveformModes](http://nbviewer.ipython.org/github/moble/postnewtonian/blob/master/pnterms/waveformmodes.ipynb)
+
+
 Quick Start
 ===========
 
