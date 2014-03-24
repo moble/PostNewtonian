@@ -4,6 +4,9 @@ import sympy
 from sympy import *
 from sympy import Rational as frac
 
+####################################
+### First, a few vector thingies ###
+####################################
 class _VectorFunctionOfTime(Function):
     """\
     This is just a base class for deriving other vectors from.
@@ -31,7 +34,7 @@ class _VectorFunctionOfTime(Function):
     def diff(self, *args, **kwargs):
         return self._eval_derivative(*args, **kwargs)
 
-def VectorFunctionFactory(Name, ComponentFunctions, DerivativeFunction=None):
+def _VectorFunctionFactory(Name, ComponentFunctions, DerivativeFunction=None):
     """Create a new vector function
 
     This function creates a class that is a subclass of
@@ -58,8 +61,16 @@ def VectorFunctionFactory(Name, ComponentFunctions, DerivativeFunction=None):
     Vector.__name__ = Name
     return Vector
 
+VectorFunctionOfTime = _VectorFunctionFactory
+
+def VectorConstant(Name, Components):
+    return _VectorFunctionFactory(Name, Components, lambda self, *args, **kwargs: 0)
 
 
+
+################################
+### Now, the tensor products ###
+################################
 class TensorProduct(object):
     LaTeXProductString = r'\otimes'
 
@@ -195,6 +206,9 @@ class TensorProduct(object):
 
 
 
+##############################
+### And tensors themselves ###
+##############################
 class Tensor(object):
     def __init__(self, *tensor_products, **kwargs):
         if(len(tensor_products)==1 and isinstance(tensor_products[0], Tensor)) :
@@ -330,8 +344,10 @@ TensorProduct.__add__ = lambda self, T: Tensor(self)+T
 TensorProduct.__radd__ = TensorProduct.__add__
 
 
-# In[10]:
 
+##############################################
+### And finally, symmetric tensor products ###
+##############################################
 class SymmetricTensorProduct(TensorProduct):
     """
     Specialized class for symmetric tensor products
