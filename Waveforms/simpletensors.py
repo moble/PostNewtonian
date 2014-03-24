@@ -58,17 +58,6 @@ def VectorFunctionFactory(Name, ComponentFunctions, DerivativeFunction=None):
     Vector.__name__ = Name
     return Vector
 
-var('t')
-var('Omega', cls=Function)
-var('S_n, S_lambda, S_ell', cls=Function)
-var('Sigma_n, Sigma_lambda, Sigma_ell', cls=Function)
-var('nHat, lambdaHat, ellHat', cls=Function); # These will get redefined momentarily...
-Omega = Omega(t)
-nHat = VectorFunctionFactory('nHat', [1,0,0,], lambda self, *args, **kwargs: Omega*lambdaHat)(t)
-lambdaHat = VectorFunctionFactory('lambdaHat', [0,1,0,], lambda self, *args, **kwargs: -Omega*nHat)(t)
-ellHat = VectorFunctionFactory('ellHat', [0,0,1,], lambda self, *args, **kwargs: 0)(t)
-SigmaVec = VectorFunctionFactory('SigmaVec', [Sigma_n(t), Sigma_lambda(t), Sigma_ell(t)])(t)
-SVec = VectorFunctionFactory('SVec', [S_n(t), S_lambda(t), S_ell(t)])(t)
 
 
 class TensorProduct(object):
