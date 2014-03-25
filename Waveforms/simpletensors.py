@@ -2,6 +2,7 @@ from __future__ import division
 # import sympy
 from sympy import simplify, Function, latex, prod, Symbol, flatten, factorial
 from sympy import Rational as frac
+from copy import deepcopy
 
 def DifferentiateString(s, param='t'):
     "Add latex to string indicating differentiation by time."
@@ -111,11 +112,7 @@ def VectorConstant(Name, Components):
 ################################
 ### Now, the tensor products ###
 ################################
-class _TensorProductFunction(Function):
-    vectors = None
-    coefficient = None
-    symmetric = False
-
+class TensorProductFunction(Function):
     @property
     def LaTeXProductString(self):
         if(self.symmetric):
@@ -147,7 +144,7 @@ class _TensorProductFunction(Function):
     def __or__(self,B):
         if(B.rank != self.rank):
             raise ValueError("Cannot contract rank-{0} tensor with rank-{1} tensor.".format(self.rank, B.rank))
-        if(isinstance(B, _TensorProductFunction)):
+        if(isinstance(B, TensorProductFunction)):
             if(self.symmetric):
                 from itertools import permutations
                 # It suffices to just iterate over rearrangements of `self`.
@@ -160,7 +157,7 @@ class _TensorProductFunction(Function):
             try:
                 return sum( [(self|t_p) for t_p in B] )
             except AttributeError:
-                raise ValueError("Don't know how to contract _TensorProductFunction with '{0}'".format(type(B)))
+                raise ValueError("Don't know how to contract TensorProductFunction with '{0}'".format(type(B)))
 
     def trace(self, j=-1, k=-1):
         if(not self.symmetric and (j==-1 or k==-1)):
@@ -170,8 +167,6 @@ class _TensorProductFunction(Function):
             return coefficient
         if(coefficient==0): return 0
         if(self.symmetric):
-            if(self.rank==2):
-                return simplify( self.coefficient * (self.vectors[0]|self.vectors[1]) )
             from itertools import permutations
             T = 0
             for j,k in permutations(range(self.rank), 2):
@@ -189,26 +184,26 @@ class _TensorProductFunction(Function):
         """
         Return the scalar or tensor product
         """
-        #print('_TensorProductFunction.__mul__')
+        #print('TensorProductFunction.__mul__')
         #print(type(B), type(self))
         if(simplify(B)==0): return 0
         if(hasattr(B, '_is_tensor') and B._is_tensor):
             # Fall back to Tensor.__rmul__ by doing this:
             return NotImplemented
-        if(isinstance(B, _TensorProductFunction)):
+        if(isinstance(B, TensorProductFunction)):
             # Do tensor product
-            #print('_TensorProductFunction.__mul__ return 1')
+            #print('TensorProductFunction.__mul__ return 1')
             return TensorProduct(self.vectors + B.vectors,
                                  coefficient=simplify( self.coefficient * B.coefficient ),
                                  symmetric = self.symmetric)
         elif(isinstance(B, _VectorFunction)):
-            #print('_TensorProductFunction.__mul__ return 2')
+            #print('TensorProductFunction.__mul__ return 2')
             return TensorProduct(self.vectors + [B,],
                                  coefficient=self.coefficient,
                                  symmetric = self.symmetric)
         else:
             # Otherwise, try scalar multiplication
-            #print('_TensorProductFunction.__mul__ return 3')
+            #print('TensorProductFunction.__mul__ return 3')
             return TensorProduct(self.vectors,
                                  coefficient=self.coefficient*B,
                                  symmetric = self.symmetric)
@@ -217,34 +212,34 @@ class _TensorProductFunction(Function):
         """
         Return the scalar or tensor product
         """
-        #print('_TensorProductFunction.__rmul__')
+        #print('TensorProductFunction.__rmul__')
         #print(type(B), type(self))
         if(simplify(B)==0): return 0
         if(hasattr(B, '_is_tensor') and B._is_tensor):
             # Fall back to Tensor.__rmul__ by doing this:
             return NotImplemented
-        if(isinstance(B, _TensorProductFunction)):
+        if(isinstance(B, TensorProductFunction)):
             # Do tensor product
-            #print('_TensorProductFunction.__rmul__ return 1')
+            #print('TensorProductFunction.__rmul__ return 1')
             return TensorProduct(B.vectors+self.vectors,
                                  coefficient=simplify( B.coefficient * self.coefficient ),
                                  symmetric = self.symmetric)
         elif(isinstance(B, _VectorFunction)):
-            #print('_TensorProductFunction.__rmul__ return 2')
+            #print('TensorProductFunction.__rmul__ return 2')
             return TensorProduct([B,] + self.vectors,
                                  coefficient=self.coefficient,
                                  symmetric = self.symmetric)
         else:
             # Otherwise, try scalar multiplication
-            #print('_TensorProductFunction.__rmul__ return 3')
+            #print('TensorProductFunction.__rmul__ return 3')
             return TensorProduct(self.vectors,
                                  coefficient=B*self.coefficient,
                                  symmetric = self.symmetric)
 
     # These two will be defined below, once we have defined Tensor
     # objects:
-    # _TensorProductFunction.__add__ = lambda self, T: Tensor(self)+T
-    # _TensorProductFunction.__radd__ = _TensorProductFunction.__add__
+    # TensorProductFunction.__add__ = lambda self, T: Tensor(self)+T
+    # TensorProductFunction.__radd__ = TensorProductFunction.__add__
 
     def __str__(self):
         if(self.coefficient==1):
@@ -276,24 +271,37 @@ class _TensorProductFunction(Function):
     def _repr_latex_(self):
         return '$'+ self._latex_str_() + '$'
 
-
+_TensorProduct_count = 0
 def TensorProduct(*input_vectors, **kwargs):
-    # Since TensorProducts are multiplicative, the empty object should be 1
+    ## First, go through and make the data nice
     if(len(input_vectors)==0):
+        # Since TensorProducts are multiplicative, the empty object should be 1
         return kwargs.get('coefficient', 1)
-    if(len(input_vectors)==1 and isinstance(input_vectors[0], _TensorProductFunction)) :
-        class TensorProductFunction(_TensorProductFunction):
-            vectors = input_vectors[0].vectors
-            coefficient = input_vectors[0].coefficient
-            symmetric = input_vectors[0].symmetric
+    if(len(input_vectors)==1 and isinstance(input_vectors[0], TensorProductFunction)) :
+        vectors = list(input_vectors[0].vectors)
+        coefficient = deepcopy(input_vectors[0].coefficient)
+        symmetric = bool(input_vectors[0].symmetric)
     else:
         if(len(input_vectors)==1 and isinstance(input_vectors[0], list)):
             input_vectors = input_vectors[0]
-        class TensorProductFunction(_TensorProductFunction):
-            vectors = list(input_vectors)
-            coefficient = kwargs.get('coefficient', 1)
-            symmetric = kwargs.get('symmetric', False)
-    return TensorProductFunction( *tuple( set( flatten( [v.args for v in TensorProductFunction.vectors] ) ) ) )
+        vectors = list(input_vectors)
+        coefficient = deepcopy(kwargs.get('coefficient', 1))
+        symmetric = bool(kwargs.get('symmetric', False))
+
+    ## Now, create the object and set its data.  Because of sympy's
+    ## caching, tensor products with different data need to be created
+    ## as classes with different names.  So we just create a
+    ## lighweight subclass with a unique name (the number at the end
+    ## gets incremented every time we construct a tensor product).
+    global _TensorProduct_count
+    ThisTensorProductFunction = type('TensorProductFunction_'+str(_TensorProduct_count),
+                                     (TensorProductFunction,), {})
+    _TensorProduct_count += 1
+    TP = ThisTensorProductFunction( *tuple( set( flatten( [v.args for v in vectors] ) ) ) )
+    TP.vectors = vectors
+    TP.coefficient = coefficient
+    TP.symmetric = symmetric
+    return TP
 
 def SymmetricTensorProduct(*input_vectors, **kwargs):
     kwargs['symmetric'] = True
@@ -303,19 +311,17 @@ def SymmetricTensorProduct(*input_vectors, **kwargs):
 ##############################
 ### And tensors themselves ###
 ##############################
-class _TensorFunction(Function):
+class TensorFunction(Function):
     """
     This is just a base class for deriving other tensors from.
 
     You probably won't need to use this class directly; it is just the
-    base class for the class created in _TensorFunctionFactory below.
+    base class for the class created in TensorFunctionFactory below.
 
     Technically, this could all be in the factory, but I think it's
     nice to separate the more universal elements of the tensor from
     its factory.
     """
-
-    tensor_products = None
 
     @property
     def _is_tensor(self):
@@ -337,8 +343,8 @@ class _TensorFunction(Function):
             raise StopIteration()
 
     def compress(self):
-        print("compressing")
-        print(self)
+        # print("compressing")
+        # print(self)
         removed_elements = []
         for i in range(len(self.tensor_products)):
             if(i in removed_elements):
@@ -347,19 +353,19 @@ class _TensorFunction(Function):
                 if(j in removed_elements):
                     continue
                 if self.tensor_products[i].has_same_basis_element(self.tensor_products[j]):
-                    print("Removing {0} because {1} is already here".format(j,i))
+                    # print("Removing {0} because {1} is already here".format(j,i))
                     self.tensor_products[i].coefficient = \
                         simplify( self.tensor_products[i].coefficient + self.tensor_products[j].coefficient )
                     removed_elements.append(j)
             if removed_elements:
                 if(self.tensor_products[i].coefficient==0):
                     removed_elements += [i]
-                print("Removing {0} because {1} is already here".format(removed_elements,i))
+                # print("Removing {0} because {1} is already here".format(removed_elements,i))
         self.tensor_products = list(t_p for i,t_p in enumerate(self) if i not in removed_elements)
         if not self.tensor_products:
-            print("compressed to 0")
+            # print("compressed to 0")
             return 0
-        print("compressed to {0}".format(self))
+        # print("compressed to {0}".format(self))
         return self
 
     def __add__(self, T):
@@ -371,9 +377,9 @@ class _TensorFunction(Function):
             return self
         if(T.rank!=self.rank):
             raise ValueError("Cannot add rank-{0} tensor to rank-{1} tensor.".format(T.rank, self.rank))
-        if(isinstance(T, _TensorFunction)) :
+        if(isinstance(T, TensorFunction)) :
             return Tensor(self.tensor_products + T.tensor_products)
-        elif(isinstance(T, _TensorProductFunction)) :
+        elif(isinstance(T, TensorProductFunction)) :
             return Tensor(self.tensor_products + [T,])
 
     def __radd__(self, T):
@@ -384,9 +390,9 @@ class _TensorFunction(Function):
     def __or__(self, B):
         if(B.rank != self.rank):
             raise ValueError("Cannot contract rank-{0} tensor with rank-{1} tensor.".format(self.rank, B.rank))
-        if(isinstance(B, _TensorFunction)) :
+        if(isinstance(B, TensorFunction)) :
             return sum([T1|T2 for T1 in self for T2 in B])
-        elif(isinstance(B, _TensorProductFunction)) :
+        elif(isinstance(B, TensorProductFunction)) :
             return sum([T1|B  for T1 in self])
 
     def trace(self, j=0, k=1):
@@ -402,7 +408,7 @@ class _TensorFunction(Function):
 
     def __mul__(self, B):
         #print('Tensor.__mul__')
-        if(isinstance(B, _TensorFunction)):
+        if(isinstance(B, TensorFunction)):
             #print('TensorFunction.__mul__ return 1')
             return Tensor(list(t_pA*t_pB for t_pA in self for t_pB in B))
         else:
@@ -411,7 +417,7 @@ class _TensorFunction(Function):
 
     def __rmul__(self, B):
         #print('TensorFunction.__rmul__')
-        if(isinstance(B, _TensorFunction)):
+        if(isinstance(B, TensorFunction)):
             #print('TensorFunction.__rmul__ return 1')
             return Tensor(list(t_pB*t_pA for t_pA in self for t_pB in B))
         else:
@@ -422,7 +428,7 @@ class _TensorFunction(Function):
         return self._eval_derivative(*args, **kwargs)
 
     def _eval_derivative(self, *args, **kwargs):
-        return _TensorFunctionFactory(list(t_p._eval_derivative(*args, **kwargs) for t_p in self))
+        return TensorFunctionFactory(list(t_p._eval_derivative(*args, **kwargs) for t_p in self))
 
     def __str__(self):
         return DelimitString( '\n'.join([str(t_p) for t_p in self]), latex=False)
@@ -442,12 +448,12 @@ class _TensorFunction(Function):
     def _repr_latex_(self):
         return r'\begin{align}'+ self._latex_str_() + r'\end{align}'
 
-
+_Tensor_count = 0
 def Tensor(*tensor_products):
     """Create a new tensor
 
     This function creates a class that is a subclass of
-    `_TensorFunction`, which is itself a subclass of `sympy.Function`.
+    `TensorFunction`, which is itself a subclass of `sympy.Function`.
     Thus, the resulting quantity should be differentiable.  The class
     is created, and a class variable set to store the input
     TensorProduct objects, of which this tensor is a sum.  Then, the
@@ -458,12 +464,13 @@ def Tensor(*tensor_products):
     latex commands.  That's okay, since it's just a string.
 
     """
-    # Since Tensor objects are additive, the empty object should be zero
+    ## First, go through and make the data nice
     if(len(tensor_products)==0):
+        # Since Tensor objects are additive, the empty object should be zero
         return 0
-    if(len(tensor_products)==1 and isinstance(tensor_products[0], _TensorFunction)) :
-        tensor_products = tensor_products[0].tensor_products
-    elif(len(tensor_products)==1 and isinstance(tensor_products[0], _TensorProductFunction)) :
+    if(len(tensor_products)==1 and isinstance(tensor_products[0], TensorFunction)) :
+        tensor_products = list(tensor_products[0].tensor_products)
+    elif(len(tensor_products)==1 and isinstance(tensor_products[0], TensorProductFunction)) :
         tensor_products = [tensor_products[0],]
     else:
         if(len(tensor_products)==1 and isinstance(tensor_products[0], list)):
@@ -474,12 +481,22 @@ def Tensor(*tensor_products):
             for t_p in tensor_products:
                 if(t_p.rank != rank):
                     raise ValueError("Cannot add rank-{0} tensor to rank-{1} tensors.".format(t_p.rank, rank))
-    T = TensorFunction( *tuple( set( flatten( [t_p.args for t_p in tensor_products] ) ) ) )
+
+    ## Now, create the object and set its data.  Because of sympy's
+    ## caching, tensors with different data need to be created as
+    ## classes with different names.  So we just create a lighweight
+    ## subclass with a unique name (the number at the end gets
+    ## incremented every time we construct a tensor).
+    global _Tensor_count
+    ThisTensorFunction = type('TensorFunction_'+str(_Tensor_count),
+                             (TensorFunction,), {})
+    _Tensor_count += 1
+    T = ThisTensorFunction( *tuple( set( flatten( [t_p.args for t_p in tensor_products] ) ) ) )
     T.tensor_products = tensor_products
     return T
 
 
 # Since the sum of two `TensorProduct`s is a `Tensor`, we
 # had to wait until we got here to define these methods:
-_TensorProductFunction.__add__ = lambda self, T: Tensor(self)+T
-_TensorProductFunction.__radd__ = _TensorProductFunction.__add__
+TensorProductFunction.__add__ = lambda self, T: Tensor(self)+T
+TensorProductFunction.__radd__ = TensorProductFunction.__add__
