@@ -278,6 +278,7 @@ class _TensorProductFunction(Function):
 
 
 def TensorProduct(*input_vectors, **kwargs):
+    # Since TensorProducts are multiplicative, the empty object should be 1
     if(len(input_vectors)==0):
         return kwargs.get('coefficient', 1)
     if(len(input_vectors)==1 and isinstance(input_vectors[0], _TensorProductFunction)) :
@@ -336,6 +337,7 @@ class _TensorFunction(Function):
             raise StopIteration()
 
     def compress(self):
+        print("compressing")
         print(self)
         removed_elements = []
         for i in range(len(self.tensor_products)):
@@ -355,7 +357,9 @@ class _TensorFunction(Function):
                 print("Removing {0} because {1} is already here".format(removed_elements,i))
         self.tensor_products = list(t_p for i,t_p in enumerate(self) if i not in removed_elements)
         if not self.tensor_products:
+            print("compressed to 0")
             return 0
+        print("compressed to {0}".format(self))
         return self
 
     def __add__(self, T):
@@ -386,12 +390,14 @@ class _TensorFunction(Function):
             return sum([T1|B  for T1 in self])
 
     def trace(self, j=0, k=1):
+        print("Summing trace")
+        print(self)
         t = sum([T.trace(j,k) for T in self])
         try:
-            #print("Trying to compress the Tensor trace")
+            print("Trying to compress the Tensor trace")
             return t.compress()
         except:
-            #print("Failed to compress the Tensor trace")
+            print("Failed to compress the Tensor trace")
             return t
 
     def __mul__(self, B):
@@ -437,7 +443,7 @@ class _TensorFunction(Function):
         return r'\begin{align}'+ self._latex_str_() + r'\end{align}'
 
 
-def Tensor(*TensorProducts):
+def Tensor(*tensor_products):
     """Create a new tensor
 
     This function creates a class that is a subclass of
@@ -452,26 +458,25 @@ def Tensor(*TensorProducts):
     latex commands.  That's okay, since it's just a string.
 
     """
-    if(len(TensorProducts)==0):
+    # Since Tensor objects are additive, the empty object should be zero
+    if(len(tensor_products)==0):
         return 0
-    if(len(TensorProducts)==1 and isinstance(TensorProducts[0], _TensorFunction)) :
-        class TensorFunction(_TensorFunction):
-            tensor_products = TensorProducts[0].tensor_products
-    elif(len(TensorProducts)==1 and isinstance(TensorProducts[0], _TensorProductFunction)) :
-        class TensorFunction(_TensorFunction):
-            tensor_products = [TensorProducts[0],]
+    if(len(tensor_products)==1 and isinstance(tensor_products[0], _TensorFunction)) :
+        tensor_products = tensor_products[0].tensor_products
+    elif(len(tensor_products)==1 and isinstance(tensor_products[0], _TensorProductFunction)) :
+        tensor_products = [tensor_products[0],]
     else:
-        if(len(TensorProducts)==1 and isinstance(TensorProducts[0], list)):
-            TensorProducts = TensorProducts[0]
-        class TensorFunction(_TensorFunction):
-            tensor_products = flatten(list(TensorProducts))
-        if(len(TensorFunction.tensor_products)>0):
-            rank=TensorFunction.tensor_products[0].rank
-            for t_p in TensorFunction.tensor_products:
+        if(len(tensor_products)==1 and isinstance(tensor_products[0], list)):
+            tensor_products = tensor_products[0]
+        tensor_products = flatten(list(tensor_products))
+        if(len(tensor_products)>0):
+            rank=tensor_products[0].rank
+            for t_p in tensor_products:
                 if(t_p.rank != rank):
                     raise ValueError("Cannot add rank-{0} tensor to rank-{1} tensors.".format(t_p.rank, rank))
-    return TensorFunction( *tuple( set( flatten( [t_p.args for t_p in TensorFunction.tensor_products] ) ) ) )
-
+    T = TensorFunction( *tuple( set( flatten( [t_p.args for t_p in tensor_products] ) ) ) )
+    T.tensor_products = tensor_products
+    return T
 
 
 # Since the sum of two `TensorProduct`s is a `Tensor`, we
