@@ -1,6 +1,6 @@
 from __future__ import division
 # import sympy
-from sympy import simplify, Function, latex, prod, Symbol, flatten, factorial
+from sympy import simplify, Function, latex, prod, Symbol, flatten, factorial, Derivative
 from sympy import Rational as frac
 from copy import deepcopy
 
@@ -45,7 +45,7 @@ class _VectorFunction(Function):
     This is just a base class for deriving other vectors from.
 
     You probably won't need to use this class directly; it is just the
-    base class for the class created in _VectorFunctionFactory below.
+    base class for the class created in VectorFunction factory below.
 
     This used to be more important because there were other subclasses
     of this, but now it's mostly just for convenient separation of a
@@ -67,14 +67,34 @@ class _VectorFunction(Function):
         return sum( s*o for s,o in zip(self, other) )
     def __iter__(self):
         for c in self.__class__.components: yield c
-    def diff(self, *args, **kwargs):
-        return self._eval_derivative(*args, **kwargs)
     def __mul__(self, other):
         if(hasattr(other, '_is_tensor_product') or hasattr(other, '_is_tensor')):
             return NotImplemented
     def __rmul__(self, other):
         if(hasattr(other, '_is_tensor_product') or hasattr(other, '_is_tensor')):
             return NotImplemented
+    def _eval_derivative(self, s):
+        """Return derivative of the function with respect to `s`.
+
+        Note that we must take the chain rule into account in this
+        function, but not in `fdiff`.
+
+        """
+        return self.fdiff(1) * self.args[0].diff(s)
+    def fdiff(self, argindex=1):
+        """Returns the first derivative of the function.
+
+        To be precise, this is the first derivative with respect to
+        the function's argument, whatever that argument may be.  And
+        in particular, we don't need to account for the chain rule.
+
+        """
+        from sympy.core.function import ArgumentIndexError
+        if (argindex != 1):
+            raise ArgumentIndexError(self, argindex)
+        return VectorFunction(DifferentiateString(self.name, self.args[0]),
+                              [Derivative(c, self.args[0], evaluate=False)
+                               for c in self])(self.args[0])
 
 
 def VectorFunction(Name, ComponentFunctions, DerivativeFunction=None):
@@ -95,17 +115,12 @@ def VectorFunction(Name, ComponentFunctions, DerivativeFunction=None):
     class Vector(_VectorFunction):
         components = ComponentFunctions
     if(DerivativeFunction):
-        Vector._eval_derivative = DerivativeFunction
-    else:
-        Vector._eval_derivative = lambda self, *args, **kwargs: \
-                                  VectorFunction(DifferentiateString(Name, self.args[0]),
-                                                 [c._eval_derivative(args[0])
-                                                  for c in ComponentFunctions])(self.args[0])
+        Vector.fdiff = DerivativeFunction
     Vector.__name__ = Name
     return Vector
 
 def VectorConstant(Name, Components):
-    return VectorFunction(Name, Components, lambda self, *args, **kwargs: 0)
+    return VectorFunction(Name, Components, lambda self, argindex=1: 0)
 
 
 
@@ -160,23 +175,33 @@ class TensorProductFunction(Function):
                 raise ValueError("Don't know how to contract TensorProductFunction with '{0}'".format(type(B)))
 
     def trace(self, j=-1, k=-1):
+        # print("\nTP.trace({0}, {1}) running on rank {2} {3}tensor {4}".format(j,k,self.rank, ('symmetric ' if self.symmetric else ''), self))
         if(not self.symmetric and (j==-1 or k==-1)):
             raise TypeError("trace() takes exactly 3 arguments for non-symmetric tensor products (1 given)")
         coefficient = simplify(self.coefficient * (self.vectors[j]|self.vectors[k]))
         if(self.rank==2):
+            # print("Finished TP.trace 1\n")
             return coefficient
-        if(coefficient==0): return 0
         if(self.symmetric):
             from itertools import permutations
             T = 0
             for j,k in permutations(range(self.rank), 2):
+                # print(j,k)
                 coefficient = simplify( self.coefficient * (self.vectors[j]|self.vectors[k]) )
                 if(coefficient==0):
                     continue
                 T += TensorProduct(list(v for i,v in enumerate(self.vectors) if (i!=j and i!=k)),
                                    coefficient = coefficient*frac(1,factorial(self.rank)),
                                    symmetric=True)
-            return T.compress()
+            # print("Finished TP.trace 2\n")
+            try:
+                return T.compress()
+            except AttributeError:
+                return T
+        elif(coefficient==0):
+            # print("Finished TP.trace 3\n")
+            return 0
+        # print("Finished TP.trace 4\n")
         return TensorProduct(list(v for i,v in enumerate(self) if (i!=j and i!=k)),
                              coefficient=coefficient, symmetric=False)
 
@@ -184,26 +209,26 @@ class TensorProductFunction(Function):
         """
         Return the scalar or tensor product
         """
-        #print('TensorProductFunction.__mul__')
-        #print(type(B), type(self))
+        # print('TensorProductFunction.__mul__')
+        # print(type(B), type(self))
         if(simplify(B)==0): return 0
         if(hasattr(B, '_is_tensor') and B._is_tensor):
             # Fall back to Tensor.__rmul__ by doing this:
             return NotImplemented
         if(isinstance(B, TensorProductFunction)):
             # Do tensor product
-            #print('TensorProductFunction.__mul__ return 1')
+            # print('TensorProductFunction.__mul__ return 1')
             return TensorProduct(self.vectors + B.vectors,
                                  coefficient=simplify( self.coefficient * B.coefficient ),
                                  symmetric = self.symmetric)
         elif(isinstance(B, _VectorFunction)):
-            #print('TensorProductFunction.__mul__ return 2')
+            # print('TensorProductFunction.__mul__ return 2')
             return TensorProduct(self.vectors + [B,],
                                  coefficient=self.coefficient,
                                  symmetric = self.symmetric)
         else:
             # Otherwise, try scalar multiplication
-            #print('TensorProductFunction.__mul__ return 3')
+            # print('TensorProductFunction.__mul__ return 3')
             return TensorProduct(self.vectors,
                                  coefficient=self.coefficient*B,
                                  symmetric = self.symmetric)
@@ -212,26 +237,26 @@ class TensorProductFunction(Function):
         """
         Return the scalar or tensor product
         """
-        #print('TensorProductFunction.__rmul__')
-        #print(type(B), type(self))
+        # print('TensorProductFunction.__rmul__')
+        # print(type(B), type(self))
         if(simplify(B)==0): return 0
         if(hasattr(B, '_is_tensor') and B._is_tensor):
             # Fall back to Tensor.__rmul__ by doing this:
             return NotImplemented
         if(isinstance(B, TensorProductFunction)):
             # Do tensor product
-            #print('TensorProductFunction.__rmul__ return 1')
+            # print('TensorProductFunction.__rmul__ return 1')
             return TensorProduct(B.vectors+self.vectors,
                                  coefficient=simplify( B.coefficient * self.coefficient ),
                                  symmetric = self.symmetric)
         elif(isinstance(B, _VectorFunction)):
-            #print('TensorProductFunction.__rmul__ return 2')
+            # print('TensorProductFunction.__rmul__ return 2')
             return TensorProduct([B,] + self.vectors,
                                  coefficient=self.coefficient,
                                  symmetric = self.symmetric)
         else:
             # Otherwise, try scalar multiplication
-            #print('TensorProductFunction.__rmul__ return 3')
+            # print('TensorProductFunction.__rmul__ return 3')
             return TensorProduct(self.vectors,
                                  coefficient=B*self.coefficient,
                                  symmetric = self.symmetric)
@@ -240,6 +265,38 @@ class TensorProductFunction(Function):
     # objects:
     # TensorProductFunction.__add__ = lambda self, T: Tensor(self)+T
     # TensorProductFunction.__radd__ = TensorProductFunction.__add__
+
+    def _eval_derivative(self, s):
+        """Return derivative of the function with respect to `s`.
+
+        Note that we must take the chain rule into account in this
+        function, but not in `fdiff`.
+
+        """
+        return self.fdiff(1) * self.args[0].diff(s)
+
+    def fdiff(self, argindex=1):
+        """Returns the first derivative of the function.
+
+        To be precise, this is the first derivative with respect to
+        the function's argument, whatever that argument may be.  And
+        in particular, we don't need to account for the chain rule.
+
+        """
+        from sympy.core.function import ArgumentIndexError
+        if (argindex != 1):
+            raise ArgumentIndexError(self, argindex)
+        return VectorFunction(DifferentiateString(self.name, self.args[0]),
+                              [Derivative(c, self.args[0], evaluate=False)
+                               for c in self])(self.args[0])
+
+    def fdiff(self, argindex=1):
+        return TensorProduct(list(self.vectors),
+                             coefficient = Derivative(self.coefficient, self.args[0], evaluate=False),
+                             symmetric = self.symmetric) \
+            + sum( [ TensorProduct([t.fdiff(argindex) if i==j else t for j,t in enumerate(self)],
+                                   coefficient = self.coefficient, symmetric=self.symmetric)
+                     for i in range(self.rank) ] )
 
     def __str__(self):
         if(self.coefficient==1):
@@ -260,12 +317,8 @@ class TensorProductFunction(Function):
                               + self.LaTeXProductString.join([latex(v) for v in self]) )
 
     def _latex(self, printer):
-        #printer._settings['mode'] = 'align*'
-        return r'&\left\{{\sum_i^{{\infty}}\left({0}\right)\right. \\ &\left.\quad b\right\}}'.format(','.join([ str(printer._print(arg)) for arg in self.args ]))
-
-    def _latex(self, printer):
         "Sympy looks for this when latex printing is on"
-        printer._settings['mode'] = 'equation*'
+        # printer._settings['mode'] = 'equation*'
         return self._latex_str_()
 
     def _repr_latex_(self):
@@ -273,6 +326,9 @@ class TensorProductFunction(Function):
 
 _TensorProduct_count = 0
 def TensorProduct(*input_vectors, **kwargs):
+    if('coefficient' in kwargs and kwargs['coefficient']==0):
+        return 0
+
     ## First, go through and make the data nice
     if(len(input_vectors)==0):
         # Since TensorProducts are multiplicative, the empty object should be 1
@@ -316,11 +372,7 @@ class TensorFunction(Function):
     This is just a base class for deriving other tensors from.
 
     You probably won't need to use this class directly; it is just the
-    base class for the class created in TensorFunctionFactory below.
-
-    Technically, this could all be in the factory, but I think it's
-    nice to separate the more universal elements of the tensor from
-    its factory.
+    base class for the class created in Tensor below.
     """
 
     @property
@@ -343,7 +395,7 @@ class TensorFunction(Function):
             raise StopIteration()
 
     def compress(self):
-        # print("compressing")
+        # print("\ncompressing")
         # print(self)
         removed_elements = []
         for i in range(len(self.tensor_products)):
@@ -354,8 +406,9 @@ class TensorFunction(Function):
                     continue
                 if self.tensor_products[i].has_same_basis_element(self.tensor_products[j]):
                     # print("Removing {0} because {1} is already here".format(j,i))
-                    self.tensor_products[i].coefficient = \
-                        simplify( self.tensor_products[i].coefficient + self.tensor_products[j].coefficient )
+                    self.tensor_products[i] = TensorProduct(self.tensor_products[i].vectors,
+                                                            coefficient=simplify( self.tensor_products[i].coefficient + self.tensor_products[j].coefficient ),
+                                                            symmetric=self.tensor_products[i].symmetric)
                     removed_elements.append(j)
             if removed_elements:
                 if(self.tensor_products[i].coefficient==0):
@@ -365,7 +418,7 @@ class TensorFunction(Function):
         if not self.tensor_products:
             # print("compressed to 0")
             return 0
-        # print("compressed to {0}".format(self))
+        # print("compressed to {0}\n".format(self))
         return self
 
     def __add__(self, T):
@@ -396,39 +449,41 @@ class TensorFunction(Function):
             return sum([T1|B  for T1 in self])
 
     def trace(self, j=0, k=1):
-        print("Summing trace")
-        print(self)
+        # print("\nSumming trace")
+        # print(self)
+        # for T in self:
+        #     # print(T)
+        #     # print("")
+        # print("The sum will run next:")
         t = sum([T.trace(j,k) for T in self])
+        # print("Sum:", t)
         try:
-            print("Trying to compress the Tensor trace")
+            # print("Trying to compress the Tensor trace")
             return t.compress()
-        except:
-            print("Failed to compress the Tensor trace")
+        except AttributeError:
+            # print("Failed to compress the Tensor trace")
             return t
 
     def __mul__(self, B):
-        #print('Tensor.__mul__')
+        # print('Tensor.__mul__')
         if(isinstance(B, TensorFunction)):
-            #print('TensorFunction.__mul__ return 1')
+            # print('TensorFunction.__mul__ return 1')
             return Tensor(list(t_pA*t_pB for t_pA in self for t_pB in B))
         else:
-            #print('TensorFunction.__mul__ return 2')
+            # print('TensorFunction.__mul__ return 2')
             return Tensor(list(t_p*B for t_p in self))
 
     def __rmul__(self, B):
-        #print('TensorFunction.__rmul__')
+        # print('TensorFunction.__rmul__')
         if(isinstance(B, TensorFunction)):
-            #print('TensorFunction.__rmul__ return 1')
+            # print('TensorFunction.__rmul__ return 1')
             return Tensor(list(t_pB*t_pA for t_pA in self for t_pB in B))
         else:
-            #print('TensorFunction.__rmul__ return 2')
+            # print('TensorFunction.__rmul__ return 2')
             return Tensor(list(B*t_p for t_p in self))
 
-    def diff(self, *args, **kwargs):
-        return self._eval_derivative(*args, **kwargs)
-
-    def _eval_derivative(self, *args, **kwargs):
-        return TensorFunctionFactory(list(t_p._eval_derivative(*args, **kwargs) for t_p in self))
+    def fdiff(self, argindex=1):
+        return Tensor(list(t_p.fdiff(argindex) for t_p in self))
 
     def __str__(self):
         return DelimitString( '\n'.join([str(t_p) for t_p in self]), latex=False)
@@ -450,20 +505,7 @@ class TensorFunction(Function):
 
 _Tensor_count = 0
 def Tensor(*tensor_products):
-    """Create a new tensor
-
-    This function creates a class that is a subclass of
-    `TensorFunction`, which is itself a subclass of `sympy.Function`.
-    Thus, the resulting quantity should be differentiable.  The class
-    is created, and a class variable set to store the input
-    TensorProduct objects, of which this tensor is a sum.  Then, the
-    class is renamed to carry the input `Name`, so that sympy output
-    looks nice, etc.  Note that `Name` can be an arbitrary string, and
-    the class will never be called directly again, so it can really be
-    anything.  In particular, it can contain python operators and
-    latex commands.  That's okay, since it's just a string.
-
-    """
+    """Create a new tensor"""
     ## First, go through and make the data nice
     if(len(tensor_products)==0):
         # Since Tensor objects are additive, the empty object should be zero
