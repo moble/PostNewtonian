@@ -20,12 +20,14 @@ def DelimitString(S, latex=True):
     "Surround string by parentheses, brackets, or braces as appropriate"
     if(latex):
         left, right = [r'\left', r'\right']
-        DelimiterOpeners, DelimiterClosers = [['(','[','\{'], [')',']','\}']]
+        DelimiterOpeners, DelimiterClosers = [['(','[',r'\{'], [')',']',r'\}']]
     else:
         left, right = ['', '']
         DelimiterOpeners, DelimiterClosers = ['([{', ')]}']
     def FindFirst(S, D):
-        for s in S:
+        for i,s in enumerate(S):
+            if(s=='\\' and i+1<len(S)):
+                s += S[i+1]
             for d in D:
                 if(s==d):
                     return d
@@ -36,6 +38,26 @@ def DelimitString(S, latex=True):
     return r'{0}{1} {2} {3}{4}'.format(left, DelimiterOpeners[NewDelimiterIndex],
                                        S, right, DelimiterClosers[NewDelimiterIndex])
 
+def LatexSubs(S, subsargs, subskwargs):
+    """Construct latex showing that variables have been substituted
+
+    Note that `subs` accepts either one or two arguments.  If two, the
+    first is the variable in the expression currently, and the second
+    is the replacement value.  If there is only one argument, it may
+    be a dictionary of replacement pairs or an iterable of tuples.
+    There is some clever logic in the `subs` function itself for
+    dealing with a dictionary involving operation counts, etc.; I'll
+    will be stupid about it and just iterate through the dictionary.
+
+    """
+    if(len(subsargs)>2 or len(subsargs)<1):
+        raise ValueError('`subs` got {0} args: "{1}"'.format(len(subsargs), subsargs))
+    if(len(subsargs)==2):
+        return r'\left.' + S + r'\right|_{{{0}={1}}}'.format(latex(subsargs[0]), latex(subsargs[1]))
+    subsargs = subsargs[0]
+    subsstring = ','.join('{0}={1}'.format(latex(a),latex(b))
+                          for a,b in (subsargs.items() if isinstance(subsargs,dict) else subsargs))
+    return r'\left.' + S + r'\right|_{{{0}}}'.format(subsstring)
 
 ####################################
 ### First, a few vector thingies ###
@@ -138,8 +160,12 @@ class VectorFunction(Function):
             return 0
         return V(self.args[0])
     def subs(self, *args, **kwargs):
+        if(len(args)==0):
+            return self
+        if(len(args)==1 and isinstance(args[0], list) and not args[0]):
+            return self
         V = Vector(self.name+'.subs({0}, {1})'.format(args, kwargs),
-                   self.latex_name,
+                   LatexSubs(self.latex_name, args, kwargs),
                    [sympify(c).subs(*args, **kwargs) for c in self])
         if V==0: return 0
         return V(self.args[0])
@@ -185,6 +211,10 @@ def Vector(Name, LatexName, ComponentFunctions):
     ThisVectorFunction.components = list(ComponentFunctions)
     return ThisVectorFunction
 
+
+xHat = Vector('xHat', r'\hat{x}', [1,0,0])
+yHat = Vector('yHat', r'\hat{y}', [0,1,0])
+zHat = Vector('zHat', r'\hat{z}', [0,0,1])
 
 
 ################################
@@ -374,7 +404,7 @@ class TensorProductFunction(Function):
 
     def subs(self, *args, **kwargs):
         TP = TensorProduct([c.subs(*args, **kwargs) for c in self],
-                           coefficient = self.coefficient, symmetric=self.symmetric)
+                           coefficient = self.coefficient.subs(*args, **kwargs), symmetric=self.symmetric)
         try:
             return TP.compress()
         except:
@@ -387,14 +417,14 @@ class TensorProductFunction(Function):
     def __str__(self):
         if(self.coefficient==1):
             return DelimitString('*'.join([str(v) for v in self]), latex=False)
-        return DelimitString( DelimitString(str(self.coefficient))
-                              + '*' + '*'.join([str(v) for v in self]) )
+        return DelimitString( DelimitString(str(self.coefficient), latex=False)
+                              + '*' + '*'.join([str(v) for v in self]), latex=False )
 
     def __repr__(self):
         if(self.coefficient==1):
             return DelimitString('*'.join([repr(v) for v in self]), latex=False)
-        return DelimitString( DelimitString(str(self.coefficient))
-                              + '*' + '*'.join([repr(v) for v in self]) )
+        return DelimitString( DelimitString(str(self.coefficient), latex=False)
+                              + '*' + '*'.join([repr(v) for v in self]), latex=False )
 
     def _latex_str_(self):
         if(self.coefficient==1):
@@ -417,7 +447,8 @@ def TensorProduct(*input_vectors, **kwargs):
 
     ## First, go through and make the data nice
     if(len(input_vectors)==0):
-        # Since TensorProducts are multiplicative, the empty object should be 1
+        # Since TensorProducts are multiplicative, the empty object
+        # should be 1 (or whatever coefficient was passed, if any)
         return kwargs.get('coefficient', 1)
     if(len(input_vectors)==1 and isinstance(input_vectors[0], TensorProductFunction)) :
         vectors = list(input_vectors[0].vectors)
@@ -486,30 +517,46 @@ class TensorFunction(Function):
             raise StopIteration()
 
     def compress(self):
-        # print("\ncompressing")
-        # print(self)
+        # def debugcompress(s):
+        #     print(s)
+        # debugcompress("\ncompressing")
+        # debugcompress(self)
         removed_elements = []
         for i in range(len(self.tensor_products)):
+            # debugcompress("\t%s"%i)
             if(i in removed_elements):
+                # debugcompress("\t\tskipping %s"%i)
                 continue
             for j in range(i+1,len(self.tensor_products)):
+                # debugcompress("\t\t%s"%j)
                 if(j in removed_elements):
+                    # debugcompress("\t\t\tskipping %s"%j)
                     continue
                 if self.tensor_products[i].has_same_basis_element(self.tensor_products[j]):
-                    # print("Removing {0} because {1} is already here".format(j,i))
-                    self.tensor_products[i] = TensorProduct(self.tensor_products[i].vectors,
-                                                            coefficient=simplify( self.tensor_products[i].coefficient + self.tensor_products[j].coefficient ),
-                                                            symmetric=self.tensor_products[i].symmetric)
+                    # debugcompress("Removing {0} because {1} is already here".format(j,i))
                     removed_elements.append(j)
+                    NewCoefficient = simplify( self.tensor_products[i].coefficient + self.tensor_products[j].coefficient )
+                    if(NewCoefficient==0):
+                        # debugcompress("Also removing {0} because {1} cancelled it out".format(i,j))
+                        removed_elements.append(i)
+                        break
+                    self.tensor_products[i] = TensorProduct(self.tensor_products[i].vectors,
+                                                            coefficient=NewCoefficient,
+                                                            symmetric=self.tensor_products[i].symmetric)
+                # debugcompress("\t\t\tfinished %s"%j)
+            # debugcompress("\t\tfinished j loop for %s"%i)
             if removed_elements:
-                if(self.tensor_products[i].coefficient==0):
+                if(self.tensor_products[i].coefficient==0 or self.tensor_products[i]==0):
                     removed_elements += [i]
-                # print("Removing {0} because {1} is already here".format(removed_elements,i))
-        self.tensor_products = list(t_p for i,t_p in enumerate(self) if i not in removed_elements)
+                # debugcompress("Removing {0} because {1} is already here".format(removed_elements,i))
+            # debugcompress("\t\tfinished %s"%i)
+        # debugcompress("compression results in {0} elements".format(len(self.tensor_products) - len(removed_elements)))
+        self.tensor_products = list(t_p for i,t_p in enumerate(self) if i not in removed_elements and t_p!=0 and t_p.coefficient!=0)
+        # debugcompress("compression results in {0} elements:\n{1}\n.\n".format(len(self.tensor_products), self.tensor_products))
         if not self.tensor_products:
-            # print("compressed to 0")
+            # debugcompress("compressed to 0")
             return 0
-        # print("compressed to {0}\n".format(self))
+        # debugcompress("compressed to {0}\n".format(self))
         return self
 
     def __add__(self, T):
@@ -617,10 +664,10 @@ class TensorFunction(Function):
             return T
 
     def __str__(self):
-        return DelimitString( '\n'.join([str(t_p) for t_p in self]), latex=False)
+        return DelimitString( '\n +'.join([str(t_p) for t_p in self]), latex=False)
 
     def __repr__(self):
-        return DelimitString( '\n'.join([repr(t_p) for t_p in self]), latex=False)
+        return DelimitString( '\n +'.join([repr(t_p) for t_p in self]), latex=False)
 
     def _latex_str_(self):
         return '&' + DelimitString( r' \right. \nonumber \\&\quad \left. + '.join(
@@ -642,13 +689,13 @@ def Tensor(*tensor_products):
         # Since Tensor objects are additive, the empty object should be zero
         return 0
     if(len(tensor_products)==1 and isinstance(tensor_products[0], TensorFunction)) :
-        tensor_products = list(tensor_products[0].tensor_products)
+        tensor_products = list(t_p for t_p in tensor_products[0].tensor_products if t_p!=0)
     elif(len(tensor_products)==1 and isinstance(tensor_products[0], TensorProductFunction)) :
         tensor_products = [tensor_products[0],]
     else:
         if(len(tensor_products)==1 and isinstance(tensor_products[0], list)):
             tensor_products = tensor_products[0]
-        tensor_products = flatten(list(tensor_products))
+        tensor_products = flatten(list(t_p for t_p in tensor_products if t_p!=0))
         if(len(tensor_products)>0):
             rank=tensor_products[0].rank
             for t_p in tensor_products:
