@@ -1,6 +1,6 @@
 from __future__ import division
 # import sympy
-from sympy import simplify, Function, latex, prod, Symbol, flatten, factorial, Derivative
+from sympy import simplify, Function, latex, prod, Symbol, flatten, factorial, Derivative, diff, sympify
 from sympy import Rational as frac
 from copy import deepcopy
 
@@ -10,7 +10,7 @@ def DifferentiateString(s, param='t'):
         from re import sub
         def increment_match(match):
             return r'\partial_{0}^{{{1}}}{2}'.format(param, int(match.group(1))+1, match.group(2))
-        return sub(r'\\partial_.*?\^\{(.*)\}(.*)', increment_match, s)
+        return sub(r'\\partial_.*?\^\{(.*?)\}(.*)', increment_match, s)
     elif(s.startswith(r'\partial_{0}'.format(param))):
         return r'\partial_{0}^{{2}}'.format(param) + s[10:]
     else:
@@ -40,7 +40,7 @@ def DelimitString(S, latex=True):
 ####################################
 ### First, a few vector thingies ###
 ####################################
-class _VectorFunction(Function):
+class VectorFunction(Function):
     """\
     This is just a base class for deriving other vectors from.
 
@@ -53,9 +53,20 @@ class _VectorFunction(Function):
 
     """
     components = None
+    coefficient = 1
     @property
-    def name(self):
-        return self.__class__.__name__
+    def _is_vector(self):
+        return True
+    def __eq__(self, other):
+        try:
+            if(len(self.components)!=len(other.components)):
+                return False
+            for c1,c2 in zip(self, other):
+                if c1!=c2:
+                    return False
+        except:
+            return False
+        return True
     def __or__(self,other):
         """
         In keeping with the notation of various other packages
@@ -64,22 +75,45 @@ class _VectorFunction(Function):
         vectors `v` and `w` is just `v|w`.  This notation will
         be used in the tensor classes also.
         """
-        return sum( s*o for s,o in zip(self, other) )
+        return self.coefficient*other.coefficient * sum( s*o for s,o in zip(self, other) )
     def __iter__(self):
         for c in self.__class__.components: yield c
     def __mul__(self, other):
+        if(other==1):
+            return self
+        if(other==0):
+            return 0
         if(hasattr(other, '_is_tensor_product') or hasattr(other, '_is_tensor')):
             return NotImplemented
+        if(hasattr(other, '_is_vector')):
+            return TensorProduct(self, other)
+        return Vector(str(other)+'*'+self.name,
+                      latex(other)+r'\,'+self.latex_name,
+                      [other*c for c in self])
     def __rmul__(self, other):
+        if(other==1):
+            return self
+        if(other==0):
+            return 0
         if(hasattr(other, '_is_tensor_product') or hasattr(other, '_is_tensor')):
             return NotImplemented
+        if(hasattr(other, '_is_vector')):
+            return TensorProduct(other, self)
+        return Vector(self.name+'*'+str(other),
+                      self.latex_name+r'\,'+latex(other),
+                      [c*other for c in self])
     def _eval_derivative(self, s):
         """Return derivative of the function with respect to `s`.
 
         Note that we must take the chain rule into account in this
         function, but not in `fdiff`.
 
+        Note that `diff` is the general function for evaluating
+        derivatives; `Derivative` results in unevaluated derivatives.
+
         """
+        # print(self.fdiff(1))
+        # print(self.args[0].diff(s))
         return self.fdiff(1) * self.args[0].diff(s)
     def fdiff(self, argindex=1):
         """Returns the first derivative of the function.
@@ -88,20 +122,42 @@ class _VectorFunction(Function):
         the function's argument, whatever that argument may be.  And
         in particular, we don't need to account for the chain rule.
 
+        Note that `diff` is the general function for evaluating
+        derivatives; `Derivative` results in unevaluated derivatives.
+
         """
         from sympy.core.function import ArgumentIndexError
+        # print("VectorFunction.fdiff")
         if (argindex != 1):
             raise ArgumentIndexError(self, argindex)
-        return VectorFunction(DifferentiateString(self.name, self.args[0]),
-                              [Derivative(c, self.args[0], evaluate=False)
-                               for c in self])(self.args[0])
+        # print("Returning from VectorFunction.fdiff")
+        V = Vector('d'+self.name+'d'+str(self.args[0]),
+                   DifferentiateString(self.latex_name, self.args[0]),
+                   [diff(c, self.args[0]) for c in self])
+        if V==0:
+            return 0
+        return V(self.args[0])
+    def subs(self, *args, **kwargs):
+        V = Vector(self.name+'.subs({0}, {1})'.format(args, kwargs),
+                   self.latex_name,
+                   [sympify(c).subs(*args, **kwargs) for c in self])
+        if V==0: return 0
+        return V(self.args[0])
+    def __str__(self):
+        return self.name
+    def __repr__(self):
+        return self.name
+    def _latex(self, printer):
+        return self.latex_name
+    def _repr_latex_(self):
+        return self.latex_name
 
-
-def VectorFunction(Name, ComponentFunctions, DerivativeFunction=None):
+_Vector_count = 0
+def Vector(Name, LatexName, ComponentFunctions):
     """Create a new vector function
 
     This function creates a class that is a subclass of
-    `_VectorFunction`, which is itself a subclass of
+    `VectorFunction`, which is itself a subclass of
     `sympy.Function`.  Thus, the resulting quantity should be
     differentiable.  The class is created, and a class variable set to
     store the input components.  Then, if no derivative has been
@@ -112,15 +168,22 @@ def VectorFunction(Name, ComponentFunctions, DerivativeFunction=None):
     that information.  Finally, the class is renamed to carry the
     input name, so that sympy output looks nice, etc.
     """
-    class Vector(_VectorFunction):
-        components = ComponentFunctions
-    if(DerivativeFunction):
-        Vector.fdiff = DerivativeFunction
-    Vector.__name__ = Name
-    return Vector
-
-def VectorConstant(Name, Components):
-    return VectorFunction(Name, Components, lambda self, argindex=1: 0)
+    if(ComponentFunctions == [0,]*len(ComponentFunctions)):
+        return 0
+    ## Now, create the object and set its data.  Because of sympy's
+    ## caching, vectors with different data need to be created as
+    ## classes with different names.  So we just create a lighweight
+    ## subclass with a unique name (the number at the end gets
+    ## incremented every time we construct a vector).
+    # global _Vector_count
+    # ThisVectorFunction = type('VectorFunction_'+str(_Vector_count),
+    #                           (VectorFunction,), {})
+    # _Vector_count += 1
+    ThisVectorFunction = type(Name, (VectorFunction,), {})
+    ThisVectorFunction.name = Name
+    ThisVectorFunction.latex_name = LatexName
+    ThisVectorFunction.components = list(ComponentFunctions)
+    return ThisVectorFunction
 
 
 
@@ -211,7 +274,6 @@ class TensorProductFunction(Function):
         """
         # print('TensorProductFunction.__mul__')
         # print(type(B), type(self))
-        if(simplify(B)==0): return 0
         if(hasattr(B, '_is_tensor') and B._is_tensor):
             # Fall back to Tensor.__rmul__ by doing this:
             return NotImplemented
@@ -221,12 +283,16 @@ class TensorProductFunction(Function):
             return TensorProduct(self.vectors + B.vectors,
                                  coefficient=simplify( self.coefficient * B.coefficient ),
                                  symmetric = self.symmetric)
-        elif(isinstance(B, _VectorFunction)):
+        elif(isinstance(B, VectorFunction)):
             # print('TensorProductFunction.__mul__ return 2')
             return TensorProduct(self.vectors + [B,],
                                  coefficient=self.coefficient,
                                  symmetric = self.symmetric)
         else:
+            try:
+                if(simplify(B)==0): return 0
+            except:
+                pass
             # Otherwise, try scalar multiplication
             # print('TensorProductFunction.__mul__ return 3')
             return TensorProduct(self.vectors,
@@ -239,7 +305,6 @@ class TensorProductFunction(Function):
         """
         # print('TensorProductFunction.__rmul__')
         # print(type(B), type(self))
-        if(simplify(B)==0): return 0
         if(hasattr(B, '_is_tensor') and B._is_tensor):
             # Fall back to Tensor.__rmul__ by doing this:
             return NotImplemented
@@ -249,12 +314,16 @@ class TensorProductFunction(Function):
             return TensorProduct(B.vectors+self.vectors,
                                  coefficient=simplify( B.coefficient * self.coefficient ),
                                  symmetric = self.symmetric)
-        elif(isinstance(B, _VectorFunction)):
+        elif(isinstance(B, VectorFunction)):
             # print('TensorProductFunction.__rmul__ return 2')
             return TensorProduct([B,] + self.vectors,
                                  coefficient=self.coefficient,
                                  symmetric = self.symmetric)
         else:
+            try:
+                if(simplify(B)==0): return 0
+            except:
+                pass
             # Otherwise, try scalar multiplication
             # print('TensorProductFunction.__rmul__ return 3')
             return TensorProduct(self.vectors,
@@ -272,6 +341,9 @@ class TensorProductFunction(Function):
         Note that we must take the chain rule into account in this
         function, but not in `fdiff`.
 
+        Note that `diff` is the general function for evaluating
+        derivatives; `Derivative` results in unevaluated derivatives.
+
         """
         return self.fdiff(1) * self.args[0].diff(s)
 
@@ -282,21 +354,35 @@ class TensorProductFunction(Function):
         the function's argument, whatever that argument may be.  And
         in particular, we don't need to account for the chain rule.
 
+        Note that `diff` is the general function for evaluating
+        derivatives; `Derivative` results in unevaluated derivatives.
+
         """
         from sympy.core.function import ArgumentIndexError
         if (argindex != 1):
             raise ArgumentIndexError(self, argindex)
-        return VectorFunction(DifferentiateString(self.name, self.args[0]),
-                              [Derivative(c, self.args[0], evaluate=False)
-                               for c in self])(self.args[0])
-
-    def fdiff(self, argindex=1):
-        return TensorProduct(list(self.vectors),
-                             coefficient = Derivative(self.coefficient, self.args[0], evaluate=False),
-                             symmetric = self.symmetric) \
-            + sum( [ TensorProduct([t.fdiff(argindex) if i==j else t for j,t in enumerate(self)],
+        TP = TensorProduct(list(self.vectors),
+                           coefficient = diff(self.coefficient, self.args[0]),
+                           symmetric = self.symmetric) \
+            + sum( [ TensorProduct([diff(t, self.args[0]) if i==j else t for j,t in enumerate(self)],
                                    coefficient = self.coefficient, symmetric=self.symmetric)
                      for i in range(self.rank) ] )
+        try:
+            return TP.compress()
+        except AttributeError:
+            return TP
+
+    def subs(self, *args, **kwargs):
+        TP = TensorProduct([c.subs(*args, **kwargs) for c in self],
+                           coefficient = self.coefficient, symmetric=self.symmetric)
+        try:
+            return TP.compress()
+        except:
+            try:
+                if TP==0: return 0
+            except:
+                pass
+            return TP
 
     def __str__(self):
         if(self.coefficient==1):
@@ -344,9 +430,14 @@ def TensorProduct(*input_vectors, **kwargs):
         coefficient = deepcopy(kwargs.get('coefficient', 1))
         symmetric = bool(kwargs.get('symmetric', False))
 
-    ## Now, create the object and set its data.  Because of sympy's
-    ## caching, tensor products with different data need to be created
-    ## as classes with different names.  So we just create a
+    ## Now, make sure none of the input vectors are zero
+    for v in vectors:
+        if v==0:
+            return 0
+
+    ## Finally, create the object and set its data.  Because of
+    ## sympy's caching, tensor products with different data need to be
+    ## created as classes with different names.  So we just create a
     ## lighweight subclass with a unique name (the number at the end
     ## gets incremented every time we construct a tensor product).
     global _TensorProduct_count
@@ -482,8 +573,48 @@ class TensorFunction(Function):
             # print('TensorFunction.__rmul__ return 2')
             return Tensor(list(B*t_p for t_p in self))
 
+    def _eval_derivative(self, s):
+        """Return derivative of the function with respect to `s`.
+
+        Note that we must take the chain rule into account in this
+        function, but not in `fdiff`.
+
+        Note that `diff` is the general function for evaluating
+        derivatives; `Derivative` results in unevaluated derivatives.
+
+        """
+        return self.fdiff(1) * self.args[0].diff(s)
+
     def fdiff(self, argindex=1):
-        return Tensor(list(t_p.fdiff(argindex) for t_p in self))
+        """Returns the first derivative of the function.
+
+        To be precise, this is the first derivative with respect to
+        the function's argument, whatever that argument may be.  And
+        in particular, we don't need to account for the chain rule.
+
+        Note that `diff` is the general function for evaluating
+        derivatives; `Derivative` results in unevaluated derivatives.
+
+        """
+        from sympy.core.function import ArgumentIndexError
+        if (argindex != 1):
+            raise ArgumentIndexError(self, argindex)
+        T = sum(diff(t_p, self.args[0]) for t_p in self)
+        try:
+            return T.compress()
+        except AttributeError:
+            return T
+
+    def subs(self, *args, **kwargs):
+        T = Tensor([c.subs(*args, **kwargs) for c in self])
+        try:
+            return T.compress()
+        except:
+            try:
+                if T==0: return 0
+            except:
+                pass
+            return T
 
     def __str__(self):
         return DelimitString( '\n'.join([str(t_p) for t_p in self]), latex=False)
