@@ -20,7 +20,10 @@ from simpletensors import Vector, xHat, yHat, zHat
 from simpletensors import TensorProduct, SymmetricTensorProduct, Tensor
 init_printing()
 
-var('vartheta, varphi')
+# We can just use the sympy variable `t`, even if it's also defined in
+# whatever calls this module, because sympy caches its objects, so
+# they will be the same t.
+var('vartheta, varphi, t')
 
 DefaultOrthogonalRightHandedBasis=[xHat(t), yHat(t), zHat(t)]
 
@@ -63,9 +66,7 @@ def YlmTensorConjugate(ell, m, OrthogonalRightHandedBasis=DefaultOrthogonalRight
 def alphalmTensor(ell, m, OrthogonalRightHandedBasis=DefaultOrthogonalRightHandedBasis):
     return YlmTensor(ell, -m, OrthogonalRightHandedBasis) * ( (-1)**abs(m) * (4*pi*factorial(ell)) / factorial2(2*ell+1) )
 
-NVec = Vecto
-
-r('NVec', r'\hat{N}', [sympy.sin(vartheta)*sympy.cos(varphi),
+NVec = Vector('NVec', r'\hat{N}', [sympy.sin(vartheta)*sympy.cos(varphi),
                                    sympy.sin(vartheta)*sympy.sin(varphi),
                                    sympy.cos(vartheta)])(t)
 
