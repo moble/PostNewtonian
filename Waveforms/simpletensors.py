@@ -64,13 +64,17 @@ def LatexSubs(S, subsargs, subskwargs):
 
 
 def ReduceExpr(expr):
-    if isinstance(expr, TensorFunction):
+    if isinstance(expr, (TensorFunction, TensorProductFunction,)):
         return expr
     if isinstance(expr, Mul):
-        # Look for a Tensor here, and multiply everything else by it
-        args = (o if o.is_Atom else ReduceExpr(o) for o in expr.args)
-        tensors = prod(t for t in args if isinstance(t, TensorFunction))
-        others = prod(o for o in args if not isinstance(o, TensorFunction))
+        # Look for a Tensor here, and multiply everything else by it.
+        # First, try to ReduceExpr on everything that will be going
+        # into this calculation in hopes of getting some tensors.
+        args = list(o if o.is_Atom or isinstance(o, (TensorFunction, TensorProductFunction,))
+                    else ReduceExpr(o)
+                    for o in expr.args)
+        tensors = prod(t for t in args if isinstance(t, (TensorFunction, TensorProductFunction,)))
+        others = prod(o for o in args if not isinstance(o, (TensorFunction, TensorProductFunction,)))
         if tensors==1:
             return others
         else:
@@ -603,14 +607,15 @@ class TensorFunction(Function):
         if not hasattr(T, 'rank'):
             try:
                 T = ReduceExpr(T)
-                T = simplify(T)
-                T = T.doit()
-                T = ReduceExpr(T)
-            except:
+                # T = simplify(T)
+                # T = T.doit()
+                # T = ReduceExpr(T)
+            except Exception as e:
+                print('Failed to ReduceExpr({0})\n"{1}"\n\n'.format(T, e))
                 pass
             if not hasattr(T, 'rank'):
-                print("This is bad!!!  You probably should never be trying to add something without a rank to a tensor!!!")
-                print("{2}({3}) T={0}; self={1}".format(T,self, T.func, T.args))
+                print("You probably should never be trying to add something without a rank to a tensor!!!")
+                print("Trying with {2}({3}) T={0}; self={1}".format(T,self, T.func, T.args))
                 return NotImplemented
         if(T.rank==0):
             return self
@@ -633,8 +638,9 @@ class TensorFunction(Function):
             return -T
         if not hasattr(T, 'rank'):
             try:
-                T = simplify(T)
-                T = T.doit()
+                T = ReduceExpr(T)
+                # T = simplify(T)
+                # T = T.doit()
             except:
                 pass
             if not hasattr(T, 'rank'):
@@ -748,7 +754,7 @@ class TensorFunction(Function):
 
     def _latex_str_(self):
         return '&' + DelimitString( r' \right. \nonumber \\&\quad \left. + '.join(
-            [t_p._latex_str_() for t_p in self]) )
+            [t_p._latex_str_() for t_p in self]) ) + r'\\'
 
     def _latex(self, printer):
         printer._settings['mode'] = 'align*'
