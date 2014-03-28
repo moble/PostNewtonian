@@ -3,6 +3,9 @@ from __future__ import division
 from sympy import simplify, Function, latex, prod, Symbol, flatten, factorial, Derivative, diff, sympify
 from sympy import Rational as frac
 from copy import deepcopy
+from string import maketrans
+
+TranslationTable = maketrans(r'[]{}',r'()()')
 
 def DifferentiateString(s, param='t'):
     "Add latex to string indicating differentiation by time."
@@ -74,6 +77,7 @@ class VectorFunction(Function):
     few methods, to clarify what's going on in the factory.
 
     """
+    _op_priority = 1000000.0
     components = None
     coefficient = 1
     @property
@@ -100,6 +104,8 @@ class VectorFunction(Function):
         return self.coefficient*other.coefficient * sum( s*o for s,o in zip(self, other) )
     def __iter__(self):
         for c in self.__class__.components: yield c
+    def __div__(self, other):
+        return self.__mul__(sympify(1)/other)
     def __mul__(self, other):
         if(other==1):
             return self
@@ -172,7 +178,7 @@ class VectorFunction(Function):
     def __str__(self):
         return self.name
     def __repr__(self):
-        return self.name
+        return self.name.translate(TranslationTable)
     def _latex(self, printer):
         return self.latex_name
     def _repr_latex_(self):
@@ -221,6 +227,7 @@ zHat = Vector('zHat', r'\hat{z}', [0,0,1])
 ### Now, the tensor products ###
 ################################
 class TensorProductFunction(Function):
+    _op_priority = 1000001.0
     @property
     def LaTeXProductString(self):
         if(self.symmetric):
@@ -298,12 +305,14 @@ class TensorProductFunction(Function):
         return TensorProduct(list(v for i,v in enumerate(self) if (i!=j and i!=k)),
                              coefficient=coefficient, symmetric=False)
 
+    def __div__(self, other):
+        return self.__mul__(sympify(1)/other)
+
     def __mul__(self, B):
         """
         Return the scalar or tensor product
         """
-        # print('TensorProductFunction.__mul__')
-        # print(type(B), type(self))
+        print('TensorProductFunction.__mul__<{0},{1}>({2},{3})'.format(type(self), type(B), self,B))
         if(hasattr(B, '_is_tensor') and B._is_tensor):
             # Fall back to Tensor.__rmul__ by doing this:
             return NotImplemented
@@ -333,8 +342,7 @@ class TensorProductFunction(Function):
         """
         Return the scalar or tensor product
         """
-        # print('TensorProductFunction.__rmul__')
-        # print(type(B), type(self))
+        print('TensorProductFunction.__rmul__<{0},{1}>({2},{3})'.format(type(self), type(B), self, B))
         if(hasattr(B, '_is_tensor') and B._is_tensor):
             # Fall back to Tensor.__rmul__ by doing this:
             return NotImplemented
@@ -422,9 +430,9 @@ class TensorProductFunction(Function):
 
     def __repr__(self):
         if(self.coefficient==1):
-            return DelimitString('*'.join([repr(v) for v in self]), latex=False)
+            return DelimitString('*'.join([repr(v) for v in self]), latex=False).translate(TranslationTable)
         return DelimitString( DelimitString(str(self.coefficient), latex=False)
-                              + '*' + '*'.join([repr(v) for v in self]), latex=False )
+                              + '*' + '*'.join([repr(v) for v in self]), latex=False ).translate(TranslationTable)
 
     def _latex_str_(self):
         if(self.coefficient==1):
@@ -475,6 +483,7 @@ def TensorProduct(*input_vectors, **kwargs):
     ThisTensorProductFunction = type('TensorProductFunction_'+str(_TensorProduct_count),
                                      (TensorProductFunction,), {})
     _TensorProduct_count += 1
+    print('About to construct a tensor with args ', tuple( set( flatten( [v.args for v in vectors] ) ) ), input_vectors, kwargs, vectors, [v.args for v in vectors] )
     TP = ThisTensorProductFunction( *tuple( set( flatten( [v.args for v in vectors] ) ) ) )
     TP.vectors = vectors
     TP.coefficient = coefficient
@@ -496,6 +505,7 @@ class TensorFunction(Function):
     You probably won't need to use this class directly; it is just the
     base class for the class created in Tensor below.
     """
+    _op_priority = 1000002.0
 
     @property
     def _is_tensor(self):
@@ -564,6 +574,15 @@ class TensorFunction(Function):
             return self
         if(self.rank==0):
             return T
+        if not hasattr(T, 'rank'):
+            try:
+                T = simplify(T)
+                T = T.doit()
+            except:
+                pass
+            if not hasattr(T, 'rank'):
+                print("This is bad!!!  You probably should never be trying to add something without a rank to a tensor!!!\nT={0}; self={1}".format(T,self))
+                return NotImplemented
         if(T.rank==0):
             return self
         if(T.rank!=self.rank):
@@ -577,6 +596,29 @@ class TensorFunction(Function):
         """Addition is commutative, but python might get here when T is a
         TensorProduct or something"""
         return self+T
+
+    def __sub__(self, T):
+        if(T==0):
+            return self
+        if(self.rank==0):
+            return -T
+        if not hasattr(T, 'rank'):
+            try:
+                T = simplify(T)
+                T = T.doit()
+            except:
+                pass
+            if not hasattr(T, 'rank'):
+                print("This is bad!!!  You probably should never be trying to subtract something without a rank from a tensor!!!\nT={0}; self={1}".format(T,self))
+                return NotImplemented
+        if(T.rank==0):
+            return self
+        if(T.rank!=self.rank):
+            raise ValueError("Cannot add rank-{0} tensor to rank-{1} tensor.".format(T.rank, self.rank))
+        if(isinstance(T, TensorFunction)) :
+            return Tensor(self.tensor_products + simplify(-1*T).tensor_products)
+        elif(isinstance(T, TensorProductFunction)) :
+            return Tensor(self.tensor_products + [simplify(-1*T),])
 
     def __or__(self, B):
         if(B.rank != self.rank):
@@ -602,23 +644,27 @@ class TensorFunction(Function):
             # print("Failed to compress the Tensor trace")
             return t
 
-    def __mul__(self, B):
-        # print('Tensor.__mul__')
-        if(isinstance(B, TensorFunction)):
+    def __div__(self, other):
+        print('TensorFunction.__div__<{0},{1}>({2},{3})'.format(type(self), type(B), self, other))
+        return Tensor(list(t_p/other for t_p in self))
+
+    def __mul__(self, other):
+        print('TensorFunction.__rmul__<{0},{1}>({2},{3})'.format(type(self), type(other), self, other))
+        if(isinstance(other, TensorFunction)):
             # print('TensorFunction.__mul__ return 1')
-            return Tensor(list(t_pA*t_pB for t_pA in self for t_pB in B))
+            return Tensor(list(t_pA*t_pB for t_pA in self for t_pB in other))
         else:
             # print('TensorFunction.__mul__ return 2')
-            return Tensor(list(t_p*B for t_p in self))
+            return Tensor(list(t_p*other for t_p in self))
 
-    def __rmul__(self, B):
-        # print('TensorFunction.__rmul__')
-        if(isinstance(B, TensorFunction)):
+    def __rmul__(self, other):
+        print('TensorFunction.__rmul__<{0},{1}>({2},{3})'.format(type(self), type(other), self, other))
+        if(isinstance(other, TensorFunction)):
             # print('TensorFunction.__rmul__ return 1')
-            return Tensor(list(t_pB*t_pA for t_pA in self for t_pB in B))
+            return Tensor(list(t_pB*t_pA for t_pA in self for t_pB in other))
         else:
             # print('TensorFunction.__rmul__ return 2')
-            return Tensor(list(B*t_p for t_p in self))
+            return Tensor(list(t_p*other for t_p in self))
 
     def _eval_derivative(self, s):
         """Return derivative of the function with respect to `s`.
@@ -667,7 +713,7 @@ class TensorFunction(Function):
         return DelimitString( '\n +'.join([str(t_p) for t_p in self]), latex=False)
 
     def __repr__(self):
-        return DelimitString( '\n +'.join([repr(t_p) for t_p in self]), latex=False)
+        return DelimitString( '\n +'.join([repr(t_p) for t_p in self]), latex=False).translate(TranslationTable)
 
     def _latex_str_(self):
         return '&' + DelimitString( r' \right. \nonumber \\&\quad \left. + '.join(
