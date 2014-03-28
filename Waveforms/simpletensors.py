@@ -1,6 +1,6 @@
 from __future__ import division
 # import sympy
-from sympy import simplify, Function, latex, prod, Symbol, flatten, factorial, Derivative, diff, sympify
+from sympy import simplify, Function, latex, prod, Symbol, Mul, Add, flatten, factorial, Derivative, diff, sympify
 from sympy import Rational as frac
 from copy import deepcopy
 from string import maketrans
@@ -62,6 +62,23 @@ def LatexSubs(S, subsargs, subskwargs):
                           for a,b in (subsargs.items() if isinstance(subsargs,dict) else subsargs))
     return r'\left.' + S + r'\right|_{{{0}}}'.format(subsstring)
 
+
+def ReduceExpr(expr):
+    if isinstance(expr, TensorFunction):
+        return expr
+    if isinstance(expr, Mul):
+        # Look for a Tensor here, and multiply everything else by it
+        args = (o if o.is_Atom else ReduceExpr(o) for o in expr.args)
+        tensors = prod(t for t in args if isinstance(t, TensorFunction))
+        others = prod(o for o in args if not isinstance(o, TensorFunction))
+        if tensors==1:
+            return others
+        else:
+            return tensors*others
+    if isinstance(expr, Add):
+        return sum(ReduceExpr(arg) for arg in expr.args)
+    return expr
+
 ####################################
 ### First, a few vector thingies ###
 ####################################
@@ -93,6 +110,8 @@ class VectorFunction(Function):
         except:
             return False
         return True
+    def __ror__(self,other):
+        return self.__or__(other)
     def __or__(self,other):
         """
         In keeping with the notation of various other packages
@@ -256,6 +275,8 @@ class TensorProductFunction(Function):
         for i in index_set:
             yield self.vectors[i]
 
+    def __ror__(self,other):
+        return self.__or__(other)
     def __or__(self,B):
         if(B.rank != self.rank):
             raise ValueError("Cannot contract rank-{0} tensor with rank-{1} tensor.".format(self.rank, B.rank))
@@ -312,7 +333,7 @@ class TensorProductFunction(Function):
         """
         Return the scalar or tensor product
         """
-        print('TensorProductFunction.__mul__<{0},{1}>({2},{3})'.format(type(self), type(B), self,B))
+        # print('TensorProductFunction.__mul__<{0},{1}>({2},{3})'.format(type(self), type(B), self,B))
         if(hasattr(B, '_is_tensor') and B._is_tensor):
             # Fall back to Tensor.__rmul__ by doing this:
             return NotImplemented
@@ -342,7 +363,7 @@ class TensorProductFunction(Function):
         """
         Return the scalar or tensor product
         """
-        print('TensorProductFunction.__rmul__<{0},{1}>({2},{3})'.format(type(self), type(B), self, B))
+        # print('TensorProductFunction.__rmul__<{0},{1}>({2},{3})'.format(type(self), type(B), self, B))
         if(hasattr(B, '_is_tensor') and B._is_tensor):
             # Fall back to Tensor.__rmul__ by doing this:
             return NotImplemented
@@ -483,7 +504,12 @@ def TensorProduct(*input_vectors, **kwargs):
     ThisTensorProductFunction = type('TensorProductFunction_'+str(_TensorProduct_count),
                                      (TensorProductFunction,), {})
     _TensorProduct_count += 1
-    print('About to construct a tensor with args ', tuple( set( flatten( [v.args for v in vectors] ) ) ), input_vectors, kwargs, vectors, [v.args for v in vectors] )
+    # print('About to construct a tensor with args ',
+    #       tuple( set( flatten( [v.args for v in vectors] ) ) ),
+    #       input_vectors,
+    #       kwargs,
+    #       vectors,
+    #       [v.args for v in vectors] )
     TP = ThisTensorProductFunction( *tuple( set( flatten( [v.args for v in vectors] ) ) ) )
     TP.vectors = vectors
     TP.coefficient = coefficient
@@ -576,12 +602,15 @@ class TensorFunction(Function):
             return T
         if not hasattr(T, 'rank'):
             try:
+                T = ReduceExpr(T)
                 T = simplify(T)
                 T = T.doit()
+                T = ReduceExpr(T)
             except:
                 pass
             if not hasattr(T, 'rank'):
-                print("This is bad!!!  You probably should never be trying to add something without a rank to a tensor!!!\nT={0}; self={1}".format(T,self))
+                print("This is bad!!!  You probably should never be trying to add something without a rank to a tensor!!!")
+                print("{2}({3}) T={0}; self={1}".format(T,self, T.func, T.args))
                 return NotImplemented
         if(T.rank==0):
             return self
@@ -620,6 +649,8 @@ class TensorFunction(Function):
         elif(isinstance(T, TensorProductFunction)) :
             return Tensor(self.tensor_products + [simplify(-1*T),])
 
+    def __ror__(self,other):
+        return self.__or__(other)
     def __or__(self, B):
         if(B.rank != self.rank):
             raise ValueError("Cannot contract rank-{0} tensor with rank-{1} tensor.".format(self.rank, B.rank))
@@ -649,7 +680,7 @@ class TensorFunction(Function):
         return Tensor(list(t_p/other for t_p in self))
 
     def __mul__(self, other):
-        print('TensorFunction.__rmul__<{0},{1}>({2},{3})'.format(type(self), type(other), self, other))
+        # print('TensorFunction.__rmul__<{0},{1}>({2},{3})'.format(type(self), type(other), self, other))
         if(isinstance(other, TensorFunction)):
             # print('TensorFunction.__mul__ return 1')
             return Tensor(list(t_pA*t_pB for t_pA in self for t_pB in other))
@@ -658,7 +689,7 @@ class TensorFunction(Function):
             return Tensor(list(t_p*other for t_p in self))
 
     def __rmul__(self, other):
-        print('TensorFunction.__rmul__<{0},{1}>({2},{3})'.format(type(self), type(other), self, other))
+        # print('TensorFunction.__rmul__<{0},{1}>({2},{3})'.format(type(self), type(other), self, other))
         if(isinstance(other, TensorFunction)):
             # print('TensorFunction.__rmul__ return 1')
             return Tensor(list(t_pB*t_pA for t_pA in self for t_pB in other))
@@ -766,3 +797,9 @@ def Tensor(*tensor_products):
 # had to wait until we got here to define these methods:
 TensorProductFunction.__add__ = lambda self, T: Tensor(self)+T
 TensorProductFunction.__radd__ = TensorProductFunction.__add__
+
+
+
+
+def contract(Expr):
+    pass
