@@ -100,7 +100,7 @@ class VectorFunction(Function):
     """
     _op_priority = 1000000.0
     components = None
-    coefficient = 1
+    coefficient = sympify(1)
     @property
     def _is_vector(self):
         return True
@@ -127,32 +127,30 @@ class VectorFunction(Function):
         return self.coefficient*other.coefficient * sum( s*o for s,o in zip(self, other) )
     def __iter__(self):
         for c in self.__class__.components: yield c
+    def __len__(self):
+        return len(self.components)
     def __div__(self, other):
         return self.__mul__(sympify(1)/other)
     def __mul__(self, other):
         if(other==1):
             return self
         if(other==0):
-            return 0
+            return sympify(0)
         if(hasattr(other, '_is_tensor_product') or hasattr(other, '_is_tensor')):
             return NotImplemented
         if(hasattr(other, '_is_vector')):
-            return TensorProduct(self, other)
-        return Vector(str(other)+'*'+self.name,
-                      latex(other)+r'\,'+self.latex_name,
-                      [other*c for c in self])
+            return TensorProduct([self, other], coefficient=1, symmetric=True)
+        return TensorProduct([self,], coefficient=1, symmetric=True)*other
     def __rmul__(self, other):
         if(other==1):
             return self
         if(other==0):
-            return 0
+            return sympify(0)
         if(hasattr(other, '_is_tensor_product') or hasattr(other, '_is_tensor')):
             return NotImplemented
         if(hasattr(other, '_is_vector')):
-            return TensorProduct(other, self)
-        return Vector(self.name+'*'+str(other),
-                      self.latex_name+r'\,'+latex(other),
-                      [c*other for c in self])
+            return TensorProduct([other, self], coefficient=1, symmetric=True)
+        return TensorProduct([self,], coefficient=1, symmetric=True)*other
     def _eval_derivative(self, s):
         """Return derivative of the function with respect to `s`.
 
@@ -186,17 +184,64 @@ class VectorFunction(Function):
                    DifferentiateString(self.latex_name, self.args[0]),
                    [diff(c, self.args[0]) for c in self])
         if V==0:
-            return 0
+            return sympify(0)
+        return V(self.args[0])
+    def xreplace(self, rule):
+        print("Vector.xreplace {0}.({1})".format(self,rule))
+        for query,value in rule.items():
+            if isinstance(query, VectorFunction):
+                print(1)
+                if self==query:
+                    return value
+        newComponents = list(self)
+        replacements = {}
+        for i,c in enumerate(self):
+            for query,value in rule.items():
+                try:
+                    newComponent = newComponents[i].xreplace({query:value})
+                    if newComponent!=newComponents[i]:
+                        print(2)
+                        newComponents[i] = newComponent
+                        replacements.update({query:value})
+                except:
+                    pass
+        if(not replacements):
+            print(3)
+            return self
+        print(4)
+        V = Vector(self.name+'.subs({0})'.format(replacements),
+                   LatexSubs(self.latex_name, (replacements,)),
+                   newComponents)
+        if V==0: return sympify(0)
         return V(self.args[0])
     def subs(self, *args, **kwargs):
+        # print("subs({0}, {1}, {2})".format(self, args, kwargs))
+        # First, dispense with some trivial cases
         if(len(args)==0):
             return self
-        if(len(args)==1 and isinstance(args[0], list) and not args[0]):
+        if(len(args)==1 and not args[0]):
             return self
-        V = Vector(self.name+'.subs({0}, {1})'.format(args, kwargs),
-                   LatexSubs(self.latex_name, args, kwargs),
-                   [sympify(c).subs(*args, **kwargs) for c in self])
-        if V==0: return 0
+        if(len(args)==2):
+            args = ((args[0],args[1],),)
+        # Find this list of all args that actually match anything in
+        # this vector's components
+        NewComponents = list(self)
+        replacements = {}
+        for i,c in enumerate(self):
+            for query,value in (args[0].items() if isinstance(args[0],dict) else args):
+                try:
+                    NewComponent = NewComponents[i].subs(query, value)
+                    if NewComponent!=NewComponents[i]:
+                        NewComponents[i] = NewComponent
+                        replacements.update({query:value})
+                except:
+                    pass
+        if(not replacements):
+            return self
+        V = Vector(self.name+'.subs({0})'.format(replacements),
+                   LatexSubs(self.latex_name, (replacements,), kwargs),
+                   NewComponents)
+        if V==0: return sympify(0)
         return V(self.args[0])
     def __str__(self):
         return self.name
@@ -224,7 +269,7 @@ def Vector(Name, LatexName, ComponentFunctions):
     input name, so that sympy output looks nice, etc.
     """
     if(ComponentFunctions == [0,]*len(ComponentFunctions)):
-        return 0
+        return sympify(0)
     ## Now, create the object and set its data.  Because of sympy's
     ## caching, vectors with different data need to be created as
     ## classes with different names.  So we just create a lighweight
@@ -289,7 +334,7 @@ class TensorProductFunction(Function):
                 from itertools import permutations
                 # It suffices to just iterate over rearrangements of `self`.
                 coefficient = simplify(self.coefficient*B.coefficient*frac(1,factorial(self.rank)))
-                if(coefficient==0): return 0
+                if(coefficient==0): return sympify(0)
                 return simplify( coefficient * sum([prod([v|w for v,w in zip(self.ordered_as(index_set), B)])
                                                     for index_set in permutations(range(self.rank))]) )
             return (self.coefficient*B.coefficient)*prod([v|w for v,w in zip(self, B)])
@@ -325,7 +370,7 @@ class TensorProductFunction(Function):
                 return T
         elif(coefficient==0):
             # print("Finished TP.trace 3\n")
-            return 0
+            return sympify(0)
         # print("Finished TP.trace 4\n")
         return TensorProduct(list(v for i,v in enumerate(self) if (i!=j and i!=k)),
                              coefficient=coefficient, symmetric=False)
@@ -354,7 +399,7 @@ class TensorProductFunction(Function):
                                  symmetric = self.symmetric)
         else:
             try:
-                if(simplify(B)==0): return 0
+                if(simplify(B)==0): return sympify(0)
             except:
                 pass
             # Otherwise, try scalar multiplication
@@ -384,7 +429,7 @@ class TensorProductFunction(Function):
                                  symmetric = self.symmetric)
         else:
             try:
-                if(simplify(B)==0): return 0
+                if(simplify(B)==0): return sympify(0)
             except:
                 pass
             # Otherwise, try scalar multiplication
@@ -435,14 +480,53 @@ class TensorProductFunction(Function):
         except AttributeError:
             return TP
 
-    def subs(self, *args, **kwargs):
-        TP = TensorProduct([c.subs(*args, **kwargs) for c in self],
-                           coefficient = self.coefficient.subs(*args, **kwargs), symmetric=self.symmetric)
+    def xreplace(self, rule):
+        for query,value in rule.items():
+            if isinstance(query, TensorProductFunction):
+                if self==query:
+                    return value
+        newVectors = list(self.vectors)
+        newCoefficient = self.coefficient
+        for query,value in rule.items():
+            if isinstance(query, VectorFunction):
+                for i,vec in enumerate(newVectors):
+                    if vec==query:
+                        if isinstance(value, TensorProductFunction):
+                            newVectors.pop(i)
+                            value.vectors.reverse()
+                            for vec in value.vectors:
+                                newVectors.insert(i, vec)
+                            value.vectors.reverse()
+                            newCoefficient *= value.coefficient
+                        else: # Assume it's a vector
+                            newVectors[i] = value
+            else:
+                newCoefficient = newCoefficient.xreplace({query:value})
+        TP = TensorProduct(newVectors,
+                           coefficient=newCoefficient,
+                           symmetric=self.symmetric)
         try:
             return TP.compress()
         except:
             try:
-                if TP==0: return 0
+                if TP==0: return sympify(0)
+            except:
+                pass
+            return TP
+
+    def subs(self, *args, **kwargs):
+        # print("{0}.subs({1})".format(self, args))
+        try:
+            coefficient = self.coefficient.subs(*args, **kwargs)
+        except AttributeError:
+            coefficient = self.coefficient
+        TP = TensorProduct([c.subs(*args, **kwargs) for c in self],
+                           coefficient=coefficient, symmetric=self.symmetric)
+        try:
+            return TP.compress()
+        except:
+            try:
+                if TP==0: return sympify(0)
             except:
                 pass
             return TP
@@ -476,13 +560,13 @@ class TensorProductFunction(Function):
 _TensorProduct_count = 0
 def TensorProduct(*input_vectors, **kwargs):
     if('coefficient' in kwargs and kwargs['coefficient']==0):
-        return 0
+        return sympify(0)
 
     ## First, go through and make the data nice
     if(len(input_vectors)==0):
         # Since TensorProducts are multiplicative, the empty object
         # should be 1 (or whatever coefficient was passed, if any)
-        return kwargs.get('coefficient', 1)
+        return kwargs.get('coefficient', sympify(1))
     if(len(input_vectors)==1 and isinstance(input_vectors[0], TensorProductFunction)) :
         vectors = list(input_vectors[0].vectors)
         coefficient = deepcopy(input_vectors[0].coefficient)
@@ -492,12 +576,12 @@ def TensorProduct(*input_vectors, **kwargs):
             input_vectors = input_vectors[0]
         vectors = list(input_vectors)
         coefficient = deepcopy(kwargs.get('coefficient', 1))
-        symmetric = bool(kwargs.get('symmetric', False))
+        symmetric = bool(kwargs.get('symmetric', True))
 
     ## Now, make sure none of the input vectors are zero
     for v in vectors:
         if v==0:
-            return 0
+            return sympify(0)
 
     ## Finally, create the object and set its data.  Because of
     ## sympy's caching, tensor products with different data need to be
@@ -547,7 +631,7 @@ class TensorFunction(Function):
     @property
     def rank(self):
         if(len(self.tensor_products)==0):
-            return 0
+            return sympify(0)
         return self.tensor_products[0].rank
 
     def __iter__(self):
@@ -595,7 +679,7 @@ class TensorFunction(Function):
         # debugcompress("compression results in {0} elements:\n{1}\n.\n".format(len(self.tensor_products), self.tensor_products))
         if not self.tensor_products:
             # debugcompress("compressed to 0")
-            return 0
+            return sympify(0)
         # debugcompress("compressed to {0}\n".format(self))
         return self
 
@@ -735,13 +819,28 @@ class TensorFunction(Function):
         except AttributeError:
             return T
 
+    def xreplace(self, rule):
+        for query, value in rule.items():
+            if isinstance(query, TensorFunction) and self==query:
+                    return value
+        T = Tensor([c.xreplace(rule) for c in self])
+        try:
+            return T.compress()
+        except:
+            try:
+                if T==0: return sympify(0)
+            except:
+                pass
+            return T
+
     def subs(self, *args, **kwargs):
+        # print("{0}.subs({1})".format(self, args))
         T = Tensor([c.subs(*args, **kwargs) for c in self])
         try:
             return T.compress()
         except:
             try:
-                if T==0: return 0
+                if T==0: return sympify(0)
             except:
                 pass
             return T
@@ -770,7 +869,7 @@ def Tensor(*tensor_products):
     ## First, go through and make the data nice
     if(len(tensor_products)==0):
         # Since Tensor objects are additive, the empty object should be zero
-        return 0
+        return sympify(0)
     if(len(tensor_products)==1 and isinstance(tensor_products[0], TensorFunction)) :
         tensor_products = list(t_p for t_p in tensor_products[0].tensor_products if t_p!=0)
     elif(len(tensor_products)==1 and isinstance(tensor_products[0], TensorProductFunction)) :
@@ -803,9 +902,3 @@ def Tensor(*tensor_products):
 # had to wait until we got here to define these methods:
 TensorProductFunction.__add__ = lambda self, T: Tensor(self)+T
 TensorProductFunction.__radd__ = TensorProductFunction.__add__
-
-
-
-
-def contract(Expr):
-    pass
