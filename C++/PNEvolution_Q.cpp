@@ -221,7 +221,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   double endtime =
     ForwardInTime
     ? -3*time // Happily run far into positive times just for a comfy margin of error
-    : 2*(-5.0/(256.0*nu*std::pow(v_0,8))); // We expect this to be a pretty good estimate, considering that it should be very early...
+    : 2*(-5.0/(256.0*nu*std::pow(v_0,8))); // This should be a pretty good estimate, considering that it should be very early...
   const unsigned int MinSteps = 100000; // This is only a very rough lower limit
   const unsigned int MaxSteps = 10000000; // This is a hard upper limit
   double h = ForwardInTime ? 1.0 : -1.0;
@@ -230,6 +230,8 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   const double hmin = ForwardInTime ? 1.0e-7 : -1.0e-7;
   const double hmin_storage = ForwardInTime ? 1.0e-5 : -1.0e-5;
   const double hmax = (endtime-time) / (2.0*MinSteps); // Time-direction is taken care of
+  double hnext = hmax;
+  const unsigned int MinStepsPerOrbit = 20;
 
   // We will be using `push_back`, so we first reserve the rough lower
   // limit we will need (after clearing out any content the input
@@ -284,7 +286,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   while ((ForwardInTime && time < endtime) ||
          (!ForwardInTime && y[0]>v_0)) {
     // Take a step
-    int status = gsl_odeiv2_evolve_apply(e, c, s, sys, &time, time+hmax, &h, &y[0]);
+    int status = gsl_odeiv2_evolve_apply(e, c, s, sys, &time, time+hnext, &h, &y[0]);
     ++NSteps;
     ++nSteps;
 
@@ -336,6 +338,14 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     // disruption.  [This is the condition that we expect to stop us
     // near merger.]
     if(nSteps>500 && std::abs(h)<std::abs(hmin)) { break; }
+
+    // Set the next time-step size (actually just an upper limit)
+    if(MinStepsPerOrbit!=0) {
+      const double OrbitalPeriod = 2*M_PI/(y[0]*y[0]*y[0]);
+      hnext = (ForwardInTime
+               ? std::min(h, std::min(hmax,  OrbitalPeriod/(MinStepsPerOrbit+1.)))
+               : std::max(h, std::max(hmax, -OrbitalPeriod/(MinStepsPerOrbit+1.))) );
+    }
 
     // Reset values of quaternion logarithms to smaller sizes, if
     // necessary.  If this resets, we reset nSteps to zero, because
