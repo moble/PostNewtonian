@@ -531,6 +531,22 @@ class TensorProductFunction(Function):
                 pass
             return TP
 
+    def series(self, *args, **kwargs):
+        try:
+            coefficient = self.coefficient.series(*args, **kwargs).removeO()
+        except AttributeError:
+            coefficient = self.coefficient
+        TP = TensorProduct([c for c in self],
+                           coefficient=coefficient, symmetric=self.symmetric)
+        try:
+            return TP.compress()
+        except:
+            try:
+                if TP==0: return sympify(0)
+            except:
+                pass
+            return TP
+
     def __str__(self):
         if(self.coefficient==1):
             return DelimitString('*'.join([str(v) for v in self]), latex=False)
@@ -836,6 +852,17 @@ class TensorFunction(Function):
     def subs(self, *args, **kwargs):
         # print("{0}.subs({1})".format(self, args))
         T = Tensor([c.subs(*args, **kwargs) for c in self])
+        try:
+            return T.compress()
+        except:
+            try:
+                if T==0: return sympify(0)
+            except:
+                pass
+            return T
+
+    def series(self, *args, **kwargs):
+        T = Tensor([c.series(*args, **kwargs) for c in self])
         try:
             return T.compress()
         except:
