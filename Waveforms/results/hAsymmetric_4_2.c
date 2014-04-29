@@ -1,0 +1,1 @@
+-0.450147009753782*nu*(S_lambda*delta + 2.0*I*S_n*delta - 3.0*Sigma_lambda*nu + Sigma_lambda - 6.0*I*Sigma_n*nu + 2.0*I*Sigma_n)*pow(r(0), 3)*pow(v(0), 12)/c

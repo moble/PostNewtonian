@@ -1,0 +1,1 @@
+-3*sqrt(10)*I*sqrt(pi)*nu*(77*S_n*delta*r(0)**2*v(0)**4 - 74*S_n*delta*r(0)*v(0)**2 + 12*S_n*delta - 231*Sigma_n*nu*r(0)**2*v(0)**4 + 222*Sigma_n*nu*r(0)*v(0)**2 - 36*Sigma_n*nu + 77*Sigma_n*r(0)**2*v(0)**4 - 74*Sigma_n*r(0)*v(0)**2 + 12*Sigma_n)*v(0)**26/(350000*c)

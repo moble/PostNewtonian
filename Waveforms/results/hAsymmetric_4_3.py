@@ -1,0 +1,1 @@
+-9*sqrt(14)*sqrt(pi)*nu*(18*I*S_lambda*nu - 6*I*S_lambda - 24*S_n*nu + 8*S_n + 12*I*Sigma_lambda*delta*nu - 6*I*Sigma_lambda*delta - 21*Sigma_n*delta*nu + 8*Sigma_n*delta)*r(0)**3*v(0)**13/(70*c**3)
