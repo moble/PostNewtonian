@@ -1,1 +1,1 @@
--9*sqrt(14)*sqrt(pi)*nu*(18*I*S_lambda*nu - 6*I*S_lambda - 24*S_n*nu + 8*S_n + 12*I*Sigma_lambda*delta*nu - 6*I*Sigma_lambda*delta - 21*Sigma_n*delta*nu + 8*Sigma_n*delta)*r(0)**3*v(0)**13/(70*c**3)
+4*sqrt(14)*sqrt(pi)*nu*(54*I*S_lambda*nu - 18*I*S_lambda + 138*S_n*nu - 46*S_n + 111*I*Sigma_lambda*delta*nu - 18*I*Sigma_lambda*delta + 177*Sigma_n*delta*nu - 46*Sigma_n*delta)*r(0)**3*v(0)**13/(315*c**3)

@@ -12,4 +12,4 @@
  +( ( -Gm*nu*(S_ell*delta*(262*nu + 139) + 3*Sigma_ell*(45*nu**2 - 205*nu + 53))*r(t)*v(t)/(60*c**5) )*nHat*nHat*nHat )
  +( ( -Gm*delta*nu*(479*nu + 68)*r(t)*Derivative(r(t), t)/(60*c**5) )*nHat*nHat*nHattimesSVec )
  +( ( Gm*nu*(1040*nu**2 - 5*nu - 68)*r(t)*Derivative(r(t), t)/(60*c**5) )*nHat*nHat*nHattimesSigmaVec )
- +( ( 3*Gm*nu*(-S_n*delta*(2*nu - 3) + Sigma_n*(3*nu**2 - 11*nu + 3))*r(t)*v(t)/(4*c**5) )*nHat*nHat*ellHat ) )
+ +( ( 3*Gm*nu*(-delta*(2*nu - 3)*(S_lambda*sin(t*v(t)**3) + S_n*cos(t*v(t)**3)) + (Sigma_lambda*sin(t*v(t)**3) + Sigma_n*cos(t*v(t)**3))*(3*nu**2 - 11*nu + 3))*r(t)*v(t)/(4*c**5) )*nHat*nHat*ellHat ) )

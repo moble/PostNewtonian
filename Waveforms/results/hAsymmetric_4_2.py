@@ -1,1 +1,1 @@
--16*sqrt(pi)*nu*(S_lambda*delta + 2*I*S_n*delta - 3*Sigma_lambda*nu + Sigma_lambda - 6*I*Sigma_n*nu + 2*I*Sigma_n)*r(0)**3*v(0)**12/(63*c)
+sqrt(pi)*nu*(13*S_lambda*delta - 14*I*S_n*delta - 39*Sigma_lambda*nu + 13*Sigma_lambda + 42*I*Sigma_n*nu - 14*I*Sigma_n)*r(0)**3*v(0)**12/(21*c)

@@ -1,1 +1,1 @@
--4.80427818548394e-5*I*nu*(77.0*S_n*delta*pow(r(0), 2)*pow(v(0), 4) - 74.0*S_n*delta*r(0)*pow(v(0), 2) + 12.0*S_n*delta - 231.0*Sigma_n*nu*pow(r(0), 2)*pow(v(0), 4) + 222.0*Sigma_n*nu*r(0)*pow(v(0), 2) - 36.0*Sigma_n*nu + 77.0*Sigma_n*pow(r(0), 2)*pow(v(0), 4) - 74.0*Sigma_n*r(0)*pow(v(0), 2) + 12.0*Sigma_n)*pow(v(0), 26)/c
+0.0533808687275993*I*nu*(S_n*delta - 3.0*Sigma_n*nu + Sigma_n)*pow(r(0), 3)*pow(v(0), 12)/c
