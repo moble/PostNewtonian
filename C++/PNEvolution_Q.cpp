@@ -14,6 +14,9 @@ using Quaternions::zHat;
 using Quaternions::FrameFromAngularVelocity_Integrand;
 using Quaternions::FrameFromAngularVelocity_2D_Integrand;
 
+// This macro is useful for debugging
+#define INFOTOCERR std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << std::endl
+
 #define QuatLogDiscontinuity 1.4142135623730951
 inline Quaternion Unflipped(const Quaternion& R0, const Quaternion& R1) {
   if((R1-R0).abs() > QuatLogDiscontinuity) {
@@ -223,10 +226,10 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     ? -3*time // Happily run far into positive times just for a comfy margin of error
     : 2*(-5.0/(256.0*nu*std::pow(v_0,8))); // This should be a pretty good estimate, considering that it should be very early...
   const unsigned int MinSteps = 100000; // This is only a very rough lower limit
-  const unsigned int MaxSteps = 10000000; // This is a hard upper limit
+  const unsigned int MaxSteps = 200000; // This is a hard upper limit; much bigger than this and Mike's laptop has been known to crash
   double h = ForwardInTime ? 1.0 : -1.0;
-  const double eps_abs = 1.e-13;
-  const double eps_rel = 1.e-13;
+  const double eps_abs = 1.e-6;
+  const double eps_rel = 1.e-6;
   const double hmin = ForwardInTime ? 1.0e-7 : -1.0e-7;
   const double hmin_storage = ForwardInTime ? 1.0e-5 : -1.0e-5;
   const double hmax = (endtime-time) / (2.0*MinSteps); // Time-direction is taken care of
@@ -337,7 +340,10 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     // but make sure we at least take 500 steps since the last
     // disruption.  [This is the condition that we expect to stop us
     // near merger.]
-    if(nSteps>500 && std::abs(h)<std::abs(hmin)) { break; }
+    if(nSteps>500 && std::abs(h)<std::abs(hmin)) {
+      INFOTOCERR << "The step size " << h << " has become smaller than the lower limit of " << hmin << std::endl;
+      break;
+    }
 
     // Set the next time-step size (actually just an upper limit)
     if(MinStepsPerOrbit!=0) {
@@ -345,7 +351,10 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
       hnext = (ForwardInTime
                ? std::min(h, std::min(hmax,  OrbitalPeriod/(MinStepsPerOrbit+1.)))
                : std::max(h, std::max(hmax, -OrbitalPeriod/(MinStepsPerOrbit+1.))) );
+      // INFOTOCERR << time << " " << h << " " << hnext << " " << y[0] << " " << NSteps << " " << nSteps << std::endl;
     }
+
+    // INFOTOCERR << time << " " << h << " " << hnext << " " << y[0] << std::endl;
 
     // Reset values of quaternion logarithms to smaller sizes, if
     // necessary.  If this resets, we reset nSteps to zero, because
@@ -369,6 +378,11 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
       y[7] = (rfrakMag_ellHat-M_PI)*y[7]/rfrakMag_ellHat;
       nSteps=0; // This may make the integrator take a few small steps at first
     }
+  }
+
+  if( ! ((ForwardInTime && time < endtime) || (!ForwardInTime && y[0]>v_0)) ) {
+    INFOTOCERR << "Stepping ended because the time " << time << " has exceeded the endtime of " << endtime
+               << ", or because backwards evolution has reached v=" << y[0] << ", which is less than the target v_0=" << v_0 << std::endl;
   }
 
   // Free the gsl storage
