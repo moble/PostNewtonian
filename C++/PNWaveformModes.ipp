@@ -254,7 +254,7 @@ private:
   std::complex<double> rhOverM_coeff;
   const std::complex<double> rhOverM_2_0_0, rhOverM_2_1_1, rhOverM_2_2_0, rhOverM_2_2_2, rhOverM_3_1_1, rhOverM_3_2_2,
                              rhOverM_3_3_1, rhOverM_4_0_0, rhOverM_4_2_2, rhOverM_4_4_2;
-  std::complex<double> rhOverM_2_1_SO_2, rhOverM_2_0_SO_Asymm_2, rhOverM_2_2_SO_Asymm_2;
+  std::complex<double> rhOverM_2_1_SO_2, rhOverM_2_2_SO_Asymm_2;
 
 public:
   WaveformModes_1p0PN(const double m1_i, const double m2_i, const double v_i, const double chi1_x_i, const double
@@ -275,8 +275,7 @@ public:
     2.54761904761905), rhOverM_3_1_1(0.0222717701593687*I*delta), rhOverM_3_2_2(-0.845154254728516*nu +
     0.281718084909506), rhOverM_3_3_1(-0.776323754260148*I*delta), rhOverM_4_0_0(-0.00140298964521140),
     rhOverM_4_2_2(-0.10647942749999*nu + 0.0354931424999967), rhOverM_4_4_2(2.25374467927604*nu - 0.751248226425348),
-    rhOverM_2_1_SO_2(0.5*I*(chi_a_l + chi_s_l*delta)), rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n),
-    rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n)
+    rhOverM_2_1_SO_2(0.5*I*(chi_a_l + chi_s_l*delta)), rhOverM_2_2_SO_Asymm_2(-2.0*Sigma_la - 2.0*I*Sigma_n)
   { }
 
   using WaveformModes::operator();
@@ -312,17 +311,16 @@ public:
     chi_a_l = 0.5*chi1_l - 0.5*chi2_l;
     rhOverM_coeff = 6.34132367616962*nu*pow(v, 2);
     rhOverM_2_1_SO_2 = 0.5*I*(chi_a_l + chi_s_l*delta);
-    rhOverM_2_0_SO_Asymm_2 = 0.408248290463863*I*Sigma_n;
-    rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
+    rhOverM_2_2_SO_Asymm_2 = -2.0*Sigma_la - 2.0*I*Sigma_n;
 
     unsigned int i=0;
     std::vector<std::complex<double> > Modes(77);
-    Modes[i++] = -pow(v, 2)*conjugate(rhOverM_2_2_SO_Asymm_2)*conjugate(rhOverM_coeff) + (pow(v,
+    Modes[i++] = pow(v, 2)*conjugate(rhOverM_2_2_SO_Asymm_2)*conjugate(rhOverM_coeff) + (pow(v,
       2)*conjugate(rhOverM_2_2_2) + conjugate(rhOverM_2_2_0))*conjugate(rhOverM_coeff);
     Modes[i++] = v*(v*conjugate(rhOverM_2_1_SO_2) + conjugate(rhOverM_2_1_1))*conjugate(rhOverM_coeff);
-    Modes[i++] = rhOverM_2_0_0*rhOverM_coeff + rhOverM_2_0_SO_Asymm_2*rhOverM_coeff*pow(v, 2);
+    Modes[i++] = rhOverM_2_0_0*rhOverM_coeff;
     Modes[i++] = rhOverM_coeff*v*(rhOverM_2_1_1 + rhOverM_2_1_SO_2*v);
-    Modes[i++] = rhOverM_2_2_SO_Asymm_2*rhOverM_coeff*pow(v, 2) + rhOverM_coeff*(rhOverM_2_2_0 + rhOverM_2_2_2*pow(v,
+    Modes[i++] = -rhOverM_2_2_SO_Asymm_2*rhOverM_coeff*pow(v, 2) + rhOverM_coeff*(rhOverM_2_2_0 + rhOverM_2_2_2*pow(v,
       2));
     Modes[i++] = -v*conjugate(rhOverM_3_3_1)*conjugate(rhOverM_coeff);
     Modes[i++] = -pow(v, 2)*conjugate(rhOverM_3_2_2)*conjugate(rhOverM_coeff);
@@ -414,8 +412,8 @@ private:
                              rhOverM_3_1_1, rhOverM_3_1_3, rhOverM_3_2_2, rhOverM_3_3_1, rhOverM_3_3_3, rhOverM_4_0_0,
                              rhOverM_4_1_3, rhOverM_4_2_2, rhOverM_4_3_3, rhOverM_4_4_2, rhOverM_5_1_3, rhOverM_5_3_3,
                              rhOverM_5_5_3;
-  std::complex<double> rhOverM_2_1_SO_2, rhOverM_2_2_SO_3, rhOverM_3_2_SO_3, rhOverM_2_0_SO_Asymm_2,
-                       rhOverM_2_1_SO_Asymm_3, rhOverM_2_2_SO_Asymm_2, rhOverM_3_1_SO_Asymm_3, rhOverM_3_3_SO_Asymm_3;
+  std::complex<double> rhOverM_2_1_SO_2, rhOverM_2_2_SO_3, rhOverM_3_2_SO_3, rhOverM_2_1_SO_Asymm_3,
+                       rhOverM_2_2_SO_Asymm_2, rhOverM_3_1_SO_Asymm_3, rhOverM_3_3_SO_Asymm_3;
 
 public:
   WaveformModes_1p5PN(const double m1_i, const double m2_i, const double v_i, const double chi1_x_i, const double
@@ -444,12 +442,11 @@ public:
     rhOverM_5_3_3(0.0464469088412683*I*delta*(2.0*nu - 1.0)), rhOverM_5_5_3(-0.801376894396698*I*delta*(2.0*nu - 1.0)),
     rhOverM_2_1_SO_2(0.5*I*(chi_a_l + chi_s_l*delta)), rhOverM_2_2_SO_3(-1.33333333333333*chi_a_l*delta -
     1.33333333333333*chi_s_l*(-nu + 1.0)), rhOverM_3_2_SO_3(1.12687233963802*chi_s_l*nu),
-    rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n), rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la +
-    0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta + 0.666666666666667*Sigma_n*delta),
-    rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_3_1_SO_Asymm_3(0.17817416127495*I*S_la +
-    0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta + 0.17817416127495*Sigma_n*delta),
-    rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-    0.690065559342354*Sigma_n*delta)
+    rhOverM_2_1_SO_Asymm_3(-0.333333333333333*I*S_la + 0.666666666666667*S_n - 0.333333333333333*I*Sigma_la*delta +
+    0.666666666666667*Sigma_n*delta), rhOverM_2_2_SO_Asymm_2(-2.0*Sigma_la - 2.0*I*Sigma_n),
+    rhOverM_3_1_SO_Asymm_3(-0.0222717701593687*I*S_la + 0.0668153104781061*S_n - 0.0222717701593687*I*Sigma_la*delta +
+    0.0668153104781061*Sigma_n*delta), rhOverM_3_3_SO_Asymm_3(2.32897126278045*I*S_la - 2.32897126278045*S_n +
+    2.32897126278045*I*Sigma_la*delta - 2.32897126278045*Sigma_n*delta)
   { }
 
   using WaveformModes::operator();
@@ -489,38 +486,36 @@ public:
     rhOverM_2_1_SO_2 = 0.5*I*(chi_a_l + chi_s_l*delta);
     rhOverM_2_2_SO_3 = -1.33333333333333*chi_a_l*delta - 1.33333333333333*chi_s_l*(-nu + 1.0);
     rhOverM_3_2_SO_3 = 1.12687233963802*chi_s_l*nu;
-    rhOverM_2_0_SO_Asymm_2 = 0.408248290463863*I*Sigma_n;
-    rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta +
+    rhOverM_2_1_SO_Asymm_3 = -0.333333333333333*I*S_la + 0.666666666666667*S_n - 0.333333333333333*I*Sigma_la*delta +
       0.666666666666667*Sigma_n*delta;
-    rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
-    rhOverM_3_1_SO_Asymm_3 = 0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta +
-      0.17817416127495*Sigma_n*delta;
-    rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-      0.690065559342354*Sigma_n*delta;
+    rhOverM_2_2_SO_Asymm_2 = -2.0*Sigma_la - 2.0*I*Sigma_n;
+    rhOverM_3_1_SO_Asymm_3 = -0.0222717701593687*I*S_la + 0.0668153104781061*S_n - 0.0222717701593687*I*Sigma_la*delta +
+      0.0668153104781061*Sigma_n*delta;
+    rhOverM_3_3_SO_Asymm_3 = 2.32897126278045*I*S_la - 2.32897126278045*S_n + 2.32897126278045*I*Sigma_la*delta -
+      2.32897126278045*Sigma_n*delta;
 
     unsigned int i=0;
     std::vector<std::complex<double> > Modes(77);
-    Modes[i++] = -pow(v, 2)*conjugate(rhOverM_2_2_SO_Asymm_2)*conjugate(rhOverM_coeff) + (pow(v,
+    Modes[i++] = pow(v, 2)*conjugate(rhOverM_2_2_SO_Asymm_2)*conjugate(rhOverM_coeff) + (pow(v,
       2)*(v*(conjugate(rhOverM_2_2_3) + conjugate(rhOverM_2_2_SO_3)) + conjugate(rhOverM_2_2_2)) +
       conjugate(rhOverM_2_2_0))*conjugate(rhOverM_coeff);
-    Modes[i++] = -pow(v, 3)*conjugate(rhOverM_2_1_SO_Asymm_3)*conjugate(rhOverM_coeff) +
-      v*(v*(v*conjugate(rhOverM_2_1_3) + conjugate(rhOverM_2_1_SO_2)) +
-      conjugate(rhOverM_2_1_1))*conjugate(rhOverM_coeff);
-    Modes[i++] = rhOverM_2_0_0*rhOverM_coeff + rhOverM_2_0_SO_Asymm_2*rhOverM_coeff*pow(v, 2);
-    Modes[i++] = rhOverM_2_1_SO_Asymm_3*rhOverM_coeff*pow(v, 3) + rhOverM_coeff*v*(rhOverM_2_1_1 + v*(rhOverM_2_1_3*v +
+    Modes[i++] = pow(v, 3)*conjugate(rhOverM_2_1_SO_Asymm_3)*conjugate(rhOverM_coeff) + v*(v*(v*conjugate(rhOverM_2_1_3)
+      + conjugate(rhOverM_2_1_SO_2)) + conjugate(rhOverM_2_1_1))*conjugate(rhOverM_coeff);
+    Modes[i++] = rhOverM_2_0_0*rhOverM_coeff;
+    Modes[i++] = -rhOverM_2_1_SO_Asymm_3*rhOverM_coeff*pow(v, 3) + rhOverM_coeff*v*(rhOverM_2_1_1 + v*(rhOverM_2_1_3*v +
       rhOverM_2_1_SO_2));
-    Modes[i++] = rhOverM_2_2_SO_Asymm_2*rhOverM_coeff*pow(v, 2) + rhOverM_coeff*(rhOverM_2_2_0 + pow(v,
+    Modes[i++] = -rhOverM_2_2_SO_Asymm_2*rhOverM_coeff*pow(v, 2) + rhOverM_coeff*(rhOverM_2_2_0 + pow(v,
       2)*(rhOverM_2_2_2 + v*(rhOverM_2_2_3 + rhOverM_2_2_SO_3)));
-    Modes[i++] = pow(v, 3)*conjugate(rhOverM_3_3_SO_Asymm_3)*conjugate(rhOverM_coeff) - v*(pow(v,
+    Modes[i++] = -pow(v, 3)*conjugate(rhOverM_3_3_SO_Asymm_3)*conjugate(rhOverM_coeff) - v*(pow(v,
       2)*conjugate(rhOverM_3_3_3) + conjugate(rhOverM_3_3_1))*conjugate(rhOverM_coeff);
     Modes[i++] = -pow(v, 2)*(v*conjugate(rhOverM_3_2_SO_3) + conjugate(rhOverM_3_2_2))*conjugate(rhOverM_coeff);
-    Modes[i++] = pow(v, 3)*conjugate(rhOverM_3_1_SO_Asymm_3)*conjugate(rhOverM_coeff) - v*(pow(v,
+    Modes[i++] = -pow(v, 3)*conjugate(rhOverM_3_1_SO_Asymm_3)*conjugate(rhOverM_coeff) - v*(pow(v,
       2)*conjugate(rhOverM_3_1_3) + conjugate(rhOverM_3_1_1))*conjugate(rhOverM_coeff);
     Modes[i++] = 0;
-    Modes[i++] = rhOverM_3_1_SO_Asymm_3*rhOverM_coeff*pow(v, 3) + rhOverM_coeff*v*(rhOverM_3_1_1 + rhOverM_3_1_3*pow(v,
+    Modes[i++] = -rhOverM_3_1_SO_Asymm_3*rhOverM_coeff*pow(v, 3) + rhOverM_coeff*v*(rhOverM_3_1_1 + rhOverM_3_1_3*pow(v,
       2));
     Modes[i++] = rhOverM_coeff*pow(v, 2)*(rhOverM_3_2_2 + rhOverM_3_2_SO_3*v);
-    Modes[i++] = rhOverM_3_3_SO_Asymm_3*rhOverM_coeff*pow(v, 3) + rhOverM_coeff*v*(rhOverM_3_3_1 + rhOverM_3_3_3*pow(v,
+    Modes[i++] = -rhOverM_3_3_SO_Asymm_3*rhOverM_coeff*pow(v, 3) + rhOverM_coeff*v*(rhOverM_3_3_1 + rhOverM_3_3_3*pow(v,
       2));
     Modes[i++] = pow(v, 2)*conjugate(rhOverM_4_4_2)*conjugate(rhOverM_coeff);
     Modes[i++] = pow(v, 3)*conjugate(rhOverM_4_3_3)*conjugate(rhOverM_coeff);
@@ -608,10 +603,9 @@ private:
                              rhOverM_5_2_4, rhOverM_5_3_3, rhOverM_5_4_4, rhOverM_5_5_3, rhOverM_6_2_4, rhOverM_6_4_4,
                              rhOverM_6_6_4;
   std::complex<double> rhOverM_2_1_SO_2, rhOverM_2_1_SO_4, rhOverM_2_2_SO_3, rhOverM_3_1_SO_4, rhOverM_3_2_SO_3,
-                       rhOverM_3_3_SO_4, rhOverM_4_1_SO_4, rhOverM_4_3_SO_4, rhOverM_2_2_SQ_4, rhOverM_2_0_SO_Asymm_2,
-                       rhOverM_2_0_SO_Asymm_4, rhOverM_2_1_SO_Asymm_3, rhOverM_2_2_SO_Asymm_2, rhOverM_2_2_SO_Asymm_4,
-                       rhOverM_3_0_SO_Asymm_4, rhOverM_3_1_SO_Asymm_3, rhOverM_3_2_SO_Asymm_4, rhOverM_3_3_SO_Asymm_3,
-                       rhOverM_4_0_SO_Asymm_4, rhOverM_4_2_SO_Asymm_4, rhOverM_4_4_SO_Asymm_4;
+                       rhOverM_3_3_SO_4, rhOverM_4_1_SO_4, rhOverM_4_3_SO_4, rhOverM_2_2_SQ_4, rhOverM_2_1_SO_Asymm_3,
+                       rhOverM_2_2_SO_Asymm_2, rhOverM_2_2_SO_Asymm_4, rhOverM_3_1_SO_Asymm_3, rhOverM_3_2_SO_Asymm_4,
+                       rhOverM_3_3_SO_Asymm_3, rhOverM_4_2_SO_Asymm_4, rhOverM_4_4_SO_Asymm_4;
 
 public:
   WaveformModes_2p0PN(const double m1_i, const double m2_i, const double v_i, const double chi1_x_i, const double
@@ -654,22 +648,20 @@ public:
     0.0111358850796843*chi_s_l*delta*(-13.0*nu + 4.0)), rhOverM_3_2_SO_3(1.12687233963802*chi_s_l*nu),
     rhOverM_3_3_SO_4(-0.388161877130074*chi_a_l*(19.0*nu - 4.0) - 0.388161877130074*chi_s_l*delta*(5.0*nu - 4.0)),
     rhOverM_4_1_SO_4(0.00941154065526303*nu*(chi_a_l - chi_s_l*delta)), rhOverM_4_3_SO_4(0.672316092750596*nu*(chi_a_l -
-    chi_s_l*delta)), rhOverM_2_2_SQ_4(2.0*chi1chi2*nu), rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n),
-    rhOverM_2_0_SO_Asymm_4(0.0583211843519804*I*(8.0*S_n*delta - 38.0*Sigma_n*nu + Sigma_n)),
-    rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la + 0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta +
-    0.666666666666667*Sigma_n*delta), rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n),
-    rhOverM_2_2_SO_Asymm_4(4.05952380952381*S_la*delta - 3.33333333333333*I*S_n*delta +
-    0.0119047619047619*Sigma_la*(-575.0*nu + 173.0) - 0.0119047619047619*I*Sigma_n*(-532.0*nu + 70.0)),
-    rhOverM_3_0_SO_Asymm_4(-0.115727512471569*S_la*delta + 0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la),
-    rhOverM_3_1_SO_Asymm_3(0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta +
-    0.17817416127495*Sigma_n*delta), rhOverM_3_2_SO_Asymm_4(0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta
-    - 2.0776708762076*Sigma_la*nu + 0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I)),
-    rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-    0.690065559342354*Sigma_n*delta), rhOverM_4_0_SO_Asymm_4(0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu +
-    1.0))), rhOverM_4_2_SO_Asymm_4(0.173029069687484*S_la*delta - 0.186338998124982*I*S_n*delta -
-    0.519087209062451*Sigma_la*nu + 0.173029069687484*Sigma_la + 0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I)),
-    rhOverM_4_4_SO_Asymm_4(0.950798536569581*S_la*delta + 0.950798536569581*I*S_n*delta +
-    0.950798536569581*Sigma_la*(-3.0*nu + 1.0) + 0.950798536569581*Sigma_n*(-3.0*I*nu + I))
+    chi_s_l*delta)), rhOverM_2_2_SQ_4(2.0*chi1chi2*nu), rhOverM_2_1_SO_Asymm_3(-0.333333333333333*I*S_la +
+    0.666666666666667*S_n - 0.333333333333333*I*Sigma_la*delta + 0.666666666666667*Sigma_n*delta),
+    rhOverM_2_2_SO_Asymm_2(-2.0*Sigma_la - 2.0*I*Sigma_n), rhOverM_2_2_SO_Asymm_4(3.0952380952381*S_la*delta -
+    0.19047619047619*I*S_n*delta - 3.95238095238095*Sigma_la*nu + 3.0952380952381*Sigma_la +
+    1.9047619047619*I*Sigma_n*nu + 1.80952380952381*I*Sigma_n), rhOverM_3_1_SO_Asymm_3(-0.0222717701593687*I*S_la +
+    0.0668153104781061*S_n - 0.0222717701593687*I*Sigma_la*delta + 0.0668153104781061*Sigma_n*delta),
+    rhOverM_3_2_SO_Asymm_4(-0.563436169819011*S_la*delta - 0.845154254728517*I*S_n*delta + 1.69030850945703*Sigma_la*nu
+    - 0.563436169819011*Sigma_la + 0.0062604018868779*Sigma_n*(495.0*I*nu - 135.0*I)),
+    rhOverM_3_3_SO_Asymm_3(2.32897126278045*I*S_la - 2.32897126278045*S_n + 2.32897126278045*I*Sigma_la*delta -
+    2.32897126278045*Sigma_n*delta), rhOverM_4_2_SO_Asymm_4(-0.0709862849999933*S_la*delta -
+    0.141972569999987*I*S_n*delta + 0.21295885499998*Sigma_la*nu - 0.0709862849999933*Sigma_la +
+    0.0709862849999933*Sigma_n*(6.0*I*nu - 2.0*I)), rhOverM_4_4_SO_Asymm_4(3.00499290570139*S_la*delta +
+    3.00499290570139*I*S_n*delta - 9.01497871710418*Sigma_la*nu + 3.00499290570139*Sigma_la +
+    3.00499290570139*Sigma_n*(-3.0*I*nu + I))
   { }
 
   using WaveformModes::operator();
@@ -716,70 +708,65 @@ public:
     rhOverM_4_1_SO_4 = 0.00941154065526303*nu*(chi_a_l - chi_s_l*delta);
     rhOverM_4_3_SO_4 = 0.672316092750596*nu*(chi_a_l - chi_s_l*delta);
     rhOverM_2_2_SQ_4 = 2.0*chi1chi2*nu;
-    rhOverM_2_0_SO_Asymm_2 = 0.408248290463863*I*Sigma_n;
-    rhOverM_2_0_SO_Asymm_4 = 0.0583211843519804*I*(8.0*S_n*delta - 38.0*Sigma_n*nu + Sigma_n);
-    rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta +
+    rhOverM_2_1_SO_Asymm_3 = -0.333333333333333*I*S_la + 0.666666666666667*S_n - 0.333333333333333*I*Sigma_la*delta +
       0.666666666666667*Sigma_n*delta;
-    rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
-    rhOverM_2_2_SO_Asymm_4 = 4.05952380952381*S_la*delta - 3.33333333333333*I*S_n*delta +
-      0.0119047619047619*Sigma_la*(-575.0*nu + 173.0) - 0.0119047619047619*I*Sigma_n*(-532.0*nu + 70.0);
-    rhOverM_3_0_SO_Asymm_4 = -0.115727512471569*S_la*delta + 0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la;
-    rhOverM_3_1_SO_Asymm_3 = 0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta +
-      0.17817416127495*Sigma_n*delta;
-    rhOverM_3_2_SO_Asymm_4 = 0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta - 2.0776708762076*Sigma_la*nu +
-      0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I);
-    rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-      0.690065559342354*Sigma_n*delta;
-    rhOverM_4_0_SO_Asymm_4 = 0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu + 1.0));
-    rhOverM_4_2_SO_Asymm_4 = 0.173029069687484*S_la*delta - 0.186338998124982*I*S_n*delta -
-      0.519087209062451*Sigma_la*nu + 0.173029069687484*Sigma_la + 0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I);
-    rhOverM_4_4_SO_Asymm_4 = 0.950798536569581*S_la*delta + 0.950798536569581*I*S_n*delta +
-      0.950798536569581*Sigma_la*(-3.0*nu + 1.0) + 0.950798536569581*Sigma_n*(-3.0*I*nu + I);
+    rhOverM_2_2_SO_Asymm_2 = -2.0*Sigma_la - 2.0*I*Sigma_n;
+    rhOverM_2_2_SO_Asymm_4 = 3.0952380952381*S_la*delta - 0.19047619047619*I*S_n*delta - 3.95238095238095*Sigma_la*nu +
+      3.0952380952381*Sigma_la + 1.9047619047619*I*Sigma_n*nu + 1.80952380952381*I*Sigma_n;
+    rhOverM_3_1_SO_Asymm_3 = -0.0222717701593687*I*S_la + 0.0668153104781061*S_n - 0.0222717701593687*I*Sigma_la*delta +
+      0.0668153104781061*Sigma_n*delta;
+    rhOverM_3_2_SO_Asymm_4 = -0.563436169819011*S_la*delta - 0.845154254728517*I*S_n*delta +
+      1.69030850945703*Sigma_la*nu - 0.563436169819011*Sigma_la + 0.0062604018868779*Sigma_n*(495.0*I*nu - 135.0*I);
+    rhOverM_3_3_SO_Asymm_3 = 2.32897126278045*I*S_la - 2.32897126278045*S_n + 2.32897126278045*I*Sigma_la*delta -
+      2.32897126278045*Sigma_n*delta;
+    rhOverM_4_2_SO_Asymm_4 = -0.0709862849999933*S_la*delta - 0.141972569999987*I*S_n*delta +
+      0.21295885499998*Sigma_la*nu - 0.0709862849999933*Sigma_la + 0.0709862849999933*Sigma_n*(6.0*I*nu - 2.0*I);
+    rhOverM_4_4_SO_Asymm_4 = 3.00499290570139*S_la*delta + 3.00499290570139*I*S_n*delta - 9.01497871710418*Sigma_la*nu +
+      3.00499290570139*Sigma_la + 3.00499290570139*Sigma_n*(-3.0*I*nu + I);
 
     unsigned int i=0;
     std::vector<std::complex<double> > Modes(77);
-    Modes[i++] = -pow(v, 2)*(pow(v, 2)*conjugate(rhOverM_2_2_SO_Asymm_4) +
+    Modes[i++] = pow(v, 2)*(pow(v, 2)*conjugate(rhOverM_2_2_SO_Asymm_4) +
       conjugate(rhOverM_2_2_SO_Asymm_2))*conjugate(rhOverM_coeff) + (pow(v, 2)*(v*(v*(conjugate(rhOverM_2_2_4) +
       conjugate(rhOverM_2_2_SQ_4)) + conjugate(rhOverM_2_2_3) + conjugate(rhOverM_2_2_SO_3)) + conjugate(rhOverM_2_2_2))
       + conjugate(rhOverM_2_2_0))*conjugate(rhOverM_coeff);
-    Modes[i++] = -pow(v, 3)*conjugate(rhOverM_2_1_SO_Asymm_3)*conjugate(rhOverM_coeff) +
+    Modes[i++] = pow(v, 3)*conjugate(rhOverM_2_1_SO_Asymm_3)*conjugate(rhOverM_coeff) +
       v*(v*(v*(v*(conjugate(rhOverM_2_1_4) + conjugate(rhOverM_2_1_SO_4)) + conjugate(rhOverM_2_1_3)) +
       conjugate(rhOverM_2_1_SO_2)) + conjugate(rhOverM_2_1_1))*conjugate(rhOverM_coeff);
-    Modes[i++] = rhOverM_2_0_0*rhOverM_coeff + rhOverM_coeff*pow(v, 2)*(rhOverM_2_0_SO_Asymm_2 +
-      rhOverM_2_0_SO_Asymm_4*pow(v, 2));
-    Modes[i++] = rhOverM_2_1_SO_Asymm_3*rhOverM_coeff*pow(v, 3) + rhOverM_coeff*v*(rhOverM_2_1_1 + v*(rhOverM_2_1_SO_2 +
-      v*(rhOverM_2_1_3 + v*(rhOverM_2_1_4 + rhOverM_2_1_SO_4))));
-    Modes[i++] = rhOverM_coeff*pow(v, 2)*(rhOverM_2_2_SO_Asymm_2 + rhOverM_2_2_SO_Asymm_4*pow(v, 2)) +
+    Modes[i++] = rhOverM_2_0_0*rhOverM_coeff;
+    Modes[i++] = -rhOverM_2_1_SO_Asymm_3*rhOverM_coeff*pow(v, 3) + rhOverM_coeff*v*(rhOverM_2_1_1 + v*(rhOverM_2_1_SO_2
+      + v*(rhOverM_2_1_3 + v*(rhOverM_2_1_4 + rhOverM_2_1_SO_4))));
+    Modes[i++] = -rhOverM_coeff*pow(v, 2)*(rhOverM_2_2_SO_Asymm_2 + rhOverM_2_2_SO_Asymm_4*pow(v, 2)) +
       rhOverM_coeff*(rhOverM_2_2_0 + pow(v, 2)*(rhOverM_2_2_2 + v*(rhOverM_2_2_3 + rhOverM_2_2_SO_3 + v*(rhOverM_2_2_4 +
       rhOverM_2_2_SQ_4))));
-    Modes[i++] = pow(v, 3)*conjugate(rhOverM_3_3_SO_Asymm_3)*conjugate(rhOverM_coeff) - v*(pow(v,
+    Modes[i++] = -pow(v, 3)*conjugate(rhOverM_3_3_SO_Asymm_3)*conjugate(rhOverM_coeff) - v*(pow(v,
       2)*(v*(conjugate(rhOverM_3_3_4) + conjugate(rhOverM_3_3_SO_4)) + conjugate(rhOverM_3_3_3)) +
       conjugate(rhOverM_3_3_1))*conjugate(rhOverM_coeff);
-    Modes[i++] = pow(v, 4)*conjugate(rhOverM_3_2_SO_Asymm_4)*conjugate(rhOverM_coeff) - pow(v,
+    Modes[i++] = -pow(v, 4)*conjugate(rhOverM_3_2_SO_Asymm_4)*conjugate(rhOverM_coeff) - pow(v,
       2)*(v*(v*conjugate(rhOverM_3_2_4) + conjugate(rhOverM_3_2_SO_3)) +
       conjugate(rhOverM_3_2_2))*conjugate(rhOverM_coeff);
-    Modes[i++] = pow(v, 3)*conjugate(rhOverM_3_1_SO_Asymm_3)*conjugate(rhOverM_coeff) - v*(pow(v,
+    Modes[i++] = -pow(v, 3)*conjugate(rhOverM_3_1_SO_Asymm_3)*conjugate(rhOverM_coeff) - v*(pow(v,
       2)*(v*(conjugate(rhOverM_3_1_4) + conjugate(rhOverM_3_1_SO_4)) + conjugate(rhOverM_3_1_3)) +
       conjugate(rhOverM_3_1_1))*conjugate(rhOverM_coeff);
-    Modes[i++] = rhOverM_3_0_SO_Asymm_4*rhOverM_coeff*pow(v, 4);
-    Modes[i++] = rhOverM_3_1_SO_Asymm_3*rhOverM_coeff*pow(v, 3) + rhOverM_coeff*v*(rhOverM_3_1_1 + pow(v,
+    Modes[i++] = 0;
+    Modes[i++] = -rhOverM_3_1_SO_Asymm_3*rhOverM_coeff*pow(v, 3) + rhOverM_coeff*v*(rhOverM_3_1_1 + pow(v,
       2)*(rhOverM_3_1_3 + v*(rhOverM_3_1_4 + rhOverM_3_1_SO_4)));
-    Modes[i++] = rhOverM_3_2_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_3_2_2 +
+    Modes[i++] = -rhOverM_3_2_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_3_2_2 +
       v*(rhOverM_3_2_4*v + rhOverM_3_2_SO_3));
-    Modes[i++] = rhOverM_3_3_SO_Asymm_3*rhOverM_coeff*pow(v, 3) + rhOverM_coeff*v*(rhOverM_3_3_1 + pow(v,
+    Modes[i++] = -rhOverM_3_3_SO_Asymm_3*rhOverM_coeff*pow(v, 3) + rhOverM_coeff*v*(rhOverM_3_3_1 + pow(v,
       2)*(rhOverM_3_3_3 + v*(rhOverM_3_3_4 + rhOverM_3_3_SO_4)));
-    Modes[i++] = -pow(v, 4)*conjugate(rhOverM_4_4_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
+    Modes[i++] = pow(v, 4)*conjugate(rhOverM_4_4_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
       2)*conjugate(rhOverM_4_4_4) + conjugate(rhOverM_4_4_2))*conjugate(rhOverM_coeff);
     Modes[i++] = pow(v, 3)*(v*conjugate(rhOverM_4_3_SO_4) + conjugate(rhOverM_4_3_3))*conjugate(rhOverM_coeff);
-    Modes[i++] = -pow(v, 4)*conjugate(rhOverM_4_2_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
+    Modes[i++] = pow(v, 4)*conjugate(rhOverM_4_2_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
       2)*conjugate(rhOverM_4_2_4) + conjugate(rhOverM_4_2_2))*conjugate(rhOverM_coeff);
     Modes[i++] = pow(v, 3)*(v*conjugate(rhOverM_4_1_SO_4) + conjugate(rhOverM_4_1_3))*conjugate(rhOverM_coeff);
-    Modes[i++] = rhOverM_4_0_0*rhOverM_coeff + rhOverM_4_0_SO_Asymm_4*rhOverM_coeff*pow(v, 4);
+    Modes[i++] = rhOverM_4_0_0*rhOverM_coeff;
     Modes[i++] = rhOverM_coeff*pow(v, 3)*(rhOverM_4_1_3 + rhOverM_4_1_SO_4*v);
-    Modes[i++] = rhOverM_4_2_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_2_2 +
+    Modes[i++] = -rhOverM_4_2_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_2_2 +
       rhOverM_4_2_4*pow(v, 2));
     Modes[i++] = rhOverM_coeff*pow(v, 3)*(rhOverM_4_3_3 + rhOverM_4_3_SO_4*v);
-    Modes[i++] = rhOverM_4_4_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_4_2 +
+    Modes[i++] = -rhOverM_4_4_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_4_2 +
       rhOverM_4_4_4*pow(v, 2));
     Modes[i++] = -pow(v, 3)*conjugate(rhOverM_5_5_3)*conjugate(rhOverM_coeff);
     Modes[i++] = -pow(v, 4)*conjugate(rhOverM_5_4_4)*conjugate(rhOverM_coeff);
@@ -861,10 +848,9 @@ private:
                              rhOverM_6_2_4, rhOverM_6_3_5, rhOverM_6_4_4, rhOverM_6_5_5, rhOverM_6_6_4, rhOverM_7_1_5,
                              rhOverM_7_3_5, rhOverM_7_5_5, rhOverM_7_7_5;
   std::complex<double> rhOverM_2_1_SO_2, rhOverM_2_1_SO_4, rhOverM_2_2_SO_3, rhOverM_3_1_SO_4, rhOverM_3_2_SO_3,
-                       rhOverM_3_3_SO_4, rhOverM_4_1_SO_4, rhOverM_4_3_SO_4, rhOverM_2_2_SQ_4, rhOverM_2_0_SO_Asymm_2,
-                       rhOverM_2_0_SO_Asymm_4, rhOverM_2_1_SO_Asymm_3, rhOverM_2_1_SO_Asymm_5, rhOverM_2_2_SO_Asymm_2,
-                       rhOverM_2_2_SO_Asymm_4, rhOverM_3_0_SO_Asymm_4, rhOverM_3_1_SO_Asymm_3, rhOverM_3_1_SO_Asymm_5,
-                       rhOverM_3_2_SO_Asymm_4, rhOverM_3_3_SO_Asymm_3, rhOverM_3_3_SO_Asymm_5, rhOverM_4_0_SO_Asymm_4,
+                       rhOverM_3_3_SO_4, rhOverM_4_1_SO_4, rhOverM_4_3_SO_4, rhOverM_2_2_SQ_4, rhOverM_2_1_SO_Asymm_3,
+                       rhOverM_2_1_SO_Asymm_5, rhOverM_2_2_SO_Asymm_2, rhOverM_2_2_SO_Asymm_4, rhOverM_3_1_SO_Asymm_3,
+                       rhOverM_3_1_SO_Asymm_5, rhOverM_3_2_SO_Asymm_4, rhOverM_3_3_SO_Asymm_3, rhOverM_3_3_SO_Asymm_5,
                        rhOverM_4_1_SO_Asymm_5, rhOverM_4_2_SO_Asymm_4, rhOverM_4_3_SO_Asymm_5, rhOverM_4_4_SO_Asymm_4;
 
 public:
@@ -924,35 +910,34 @@ public:
     0.0111358850796843*chi_s_l*delta*(-13.0*nu + 4.0)), rhOverM_3_2_SO_3(1.12687233963802*chi_s_l*nu),
     rhOverM_3_3_SO_4(-0.388161877130074*chi_a_l*(19.0*nu - 4.0) - 0.388161877130074*chi_s_l*delta*(5.0*nu - 4.0)),
     rhOverM_4_1_SO_4(0.00941154065526303*nu*(chi_a_l - chi_s_l*delta)), rhOverM_4_3_SO_4(0.672316092750596*nu*(chi_a_l -
-    chi_s_l*delta)), rhOverM_2_2_SQ_4(2.0*chi1chi2*nu), rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n),
-    rhOverM_2_0_SO_Asymm_4(0.0583211843519804*I*(8.0*S_n*delta - 38.0*Sigma_n*nu + Sigma_n)),
-    rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la + 0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta +
-    0.666666666666667*Sigma_n*delta), rhOverM_2_1_SO_Asymm_5(-27.0*I*S_la*nu - 1.35714285714286*I*S_la - 27.0*S_n*nu -
-    19.0*S_n - 10.0*I*Sigma_la*delta*nu + 5.0*I*Sigma_la*delta - 10.0*Sigma_n*delta*nu + 5.0*Sigma_n*delta),
-    rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_2_2_SO_Asymm_4(4.05952380952381*S_la*delta -
-    3.33333333333333*I*S_n*delta + 0.0119047619047619*Sigma_la*(-575.0*nu + 173.0) -
-    0.0119047619047619*I*Sigma_n*(-532.0*nu + 70.0)), rhOverM_3_0_SO_Asymm_4(-0.115727512471569*S_la*delta +
-    0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la), rhOverM_3_1_SO_Asymm_3(0.17817416127495*I*S_la +
-    0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta + 0.17817416127495*Sigma_n*delta),
-    rhOverM_3_1_SO_Asymm_5(-0.84632726605601*I*S_la*nu + 0.163326314502037*I*S_la - 0.84632726605601*S_n*nu +
-    0.163326314502037*S_n - 0.950262193466398*I*Sigma_la*delta*nu - 0.0148478467729125*I*Sigma_la*delta -
-    0.950262193466398*Sigma_n*delta*nu - 0.0148478467729125*Sigma_n*delta),
-    rhOverM_3_2_SO_Asymm_4(0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta - 2.0776708762076*Sigma_la*nu +
-    0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I)),
-    rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-    0.690065559342354*Sigma_n*delta), rhOverM_3_3_SO_Asymm_5(10.4084888534138*I*S_la*nu - 3.92953999069952*I*S_la +
-    7.07317198325913*S_n*nu - 1.89768028819147*S_n + 4.52376311124432*I*Sigma_la*delta*nu -
-    2.31938701890069*I*Sigma_la*delta + 3.45032779671177*Sigma_n*delta*nu + 0.172516389835589*Sigma_n*delta),
-    rhOverM_4_0_SO_Asymm_4(0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu + 1.0))),
-    rhOverM_4_1_SO_Asymm_5(-0.271052370871575*I*S_la*nu + 0.0903507902905251*I*S_la + 0.0150584650484209*S_n*(-18.0*nu +
-    6.0) - 0.255993905823155*I*Sigma_la*delta*nu + 0.0903507902905251*I*Sigma_la*delta +
-    0.0150584650484209*Sigma_n*(-17.0*delta*nu + 6.0*delta)), rhOverM_4_2_SO_Asymm_4(0.173029069687484*S_la*delta -
-    0.186338998124982*I*S_n*delta - 0.519087209062451*Sigma_la*nu + 0.173029069687484*Sigma_la +
-    0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I)), rhOverM_4_3_SO_Asymm_5(0.717137165600636*I*S_la*nu -
-    0.239045721866879*I*S_la + 0.0132803178814933*S_n*(138.0*nu - 46.0) + 1.47411528484575*I*Sigma_la*delta*nu -
-    0.239045721866879*I*Sigma_la*delta + 0.0132803178814933*Sigma_n*(177.0*delta*nu - 46.0*delta)),
-    rhOverM_4_4_SO_Asymm_4(0.950798536569581*S_la*delta + 0.950798536569581*I*S_n*delta +
-    0.950798536569581*Sigma_la*(-3.0*nu + 1.0) + 0.950798536569581*Sigma_n*(-3.0*I*nu + I))
+    chi_s_l*delta)), rhOverM_2_2_SQ_4(2.0*chi1chi2*nu), rhOverM_2_1_SO_Asymm_3(-0.333333333333333*I*S_la +
+    0.666666666666667*S_n - 0.333333333333333*I*Sigma_la*delta + 0.666666666666667*Sigma_n*delta),
+    rhOverM_2_1_SO_Asymm_5(-0.69047619047619*I*S_la*nu - 1.88095238095238*I*S_la - 0.273809523809524*S_n*nu +
+    1.20238095238095*S_n + 0.0238095238095238*I*Sigma_la*delta*nu - 0.714285714285714*I*Sigma_la*delta -
+    0.380952380952381*Sigma_n*delta*nu + 0.892857142857143*Sigma_n*delta), rhOverM_2_2_SO_Asymm_2(-2.0*Sigma_la -
+    2.0*I*Sigma_n), rhOverM_2_2_SO_Asymm_4(3.0952380952381*S_la*delta - 0.19047619047619*I*S_n*delta -
+    3.95238095238095*Sigma_la*nu + 3.0952380952381*Sigma_la + 1.9047619047619*I*Sigma_n*nu +
+    1.80952380952381*I*Sigma_n), rhOverM_3_1_SO_Asymm_3(-0.0222717701593687*I*S_la + 0.0668153104781061*S_n -
+    0.0222717701593687*I*Sigma_la*delta + 0.0668153104781061*Sigma_n*delta),
+    rhOverM_3_1_SO_Asymm_5(0.0148478467729125*I*S_la - 0.211581816514003*S_n*nu + 0.0259837318525968*S_n +
+    0.0259837318525968*I*Sigma_la*delta*nu + 0.0148478467729125*I*Sigma_la*delta - 0.263549280219196*Sigma_n*delta*nu -
+    0.0185598084661406*Sigma_n*delta), rhOverM_3_2_SO_Asymm_4(-0.563436169819011*S_la*delta -
+    0.845154254728517*I*S_n*delta + 1.69030850945703*Sigma_la*nu - 0.563436169819011*Sigma_la +
+    0.0062604018868779*Sigma_n*(495.0*I*nu - 135.0*I)), rhOverM_3_3_SO_Asymm_3(2.32897126278045*I*S_la -
+    2.32897126278045*S_n + 2.32897126278045*I*Sigma_la*delta - 2.32897126278045*Sigma_n*delta),
+    rhOverM_3_3_SO_Asymm_5(9.31588505112178*I*S_la*nu - 4.65794252556089*I*S_la - 1.94080938565037*S_n*nu +
+    2.19958397040375*S_n + 3.49345689417067*I*Sigma_la*delta*nu - 4.65794252556089*I*Sigma_la*delta -
+    0.129387292376691*Sigma_n*delta*nu + 3.75223147892405*Sigma_n*delta),
+    rhOverM_4_1_SO_Asymm_5(0.0112938487863156*I*S_la*nu - 0.00376461626210521*I*S_la +
+    3.16227766016838*S_n*(-0.0142857142857143*nu + 0.00476190476190476) + 0.00752923252421043*I*Sigma_la*delta*nu -
+    0.00376461626210521*I*Sigma_la*delta + 3.16227766016838*Sigma_n*(-0.0125*delta*nu + 0.00476190476190476*delta)),
+    rhOverM_4_2_SO_Asymm_4(-0.0709862849999933*S_la*delta - 0.141972569999987*I*S_n*delta + 0.21295885499998*Sigma_la*nu
+    - 0.0709862849999933*Sigma_la + 0.0709862849999933*Sigma_n*(6.0*I*nu - 2.0*I)),
+    rhOverM_4_3_SO_Asymm_5(-2.42033793390215*I*S_la*nu + 0.806779311300716*I*S_la + 0.134463218550119*S_n*(24.0*nu -
+    8.0) - 1.61355862260143*I*Sigma_la*delta*nu + 0.806779311300716*I*Sigma_la*delta +
+    0.134463218550119*Sigma_n*(21.0*delta*nu - 8.0*delta)), rhOverM_4_4_SO_Asymm_4(3.00499290570139*S_la*delta +
+    3.00499290570139*I*S_n*delta - 9.01497871710418*Sigma_la*nu + 3.00499290570139*Sigma_la +
+    3.00499290570139*Sigma_n*(-3.0*I*nu + I))
   { }
 
   using WaveformModes::operator();
@@ -999,96 +984,92 @@ public:
     rhOverM_4_1_SO_4 = 0.00941154065526303*nu*(chi_a_l - chi_s_l*delta);
     rhOverM_4_3_SO_4 = 0.672316092750596*nu*(chi_a_l - chi_s_l*delta);
     rhOverM_2_2_SQ_4 = 2.0*chi1chi2*nu;
-    rhOverM_2_0_SO_Asymm_2 = 0.408248290463863*I*Sigma_n;
-    rhOverM_2_0_SO_Asymm_4 = 0.0583211843519804*I*(8.0*S_n*delta - 38.0*Sigma_n*nu + Sigma_n);
-    rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta +
+    rhOverM_2_1_SO_Asymm_3 = -0.333333333333333*I*S_la + 0.666666666666667*S_n - 0.333333333333333*I*Sigma_la*delta +
       0.666666666666667*Sigma_n*delta;
-    rhOverM_2_1_SO_Asymm_5 = -27.0*I*S_la*nu - 1.35714285714286*I*S_la - 27.0*S_n*nu - 19.0*S_n -
-      10.0*I*Sigma_la*delta*nu + 5.0*I*Sigma_la*delta - 10.0*Sigma_n*delta*nu + 5.0*Sigma_n*delta;
-    rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
-    rhOverM_2_2_SO_Asymm_4 = 4.05952380952381*S_la*delta - 3.33333333333333*I*S_n*delta +
-      0.0119047619047619*Sigma_la*(-575.0*nu + 173.0) - 0.0119047619047619*I*Sigma_n*(-532.0*nu + 70.0);
-    rhOverM_3_0_SO_Asymm_4 = -0.115727512471569*S_la*delta + 0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la;
-    rhOverM_3_1_SO_Asymm_3 = 0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta +
-      0.17817416127495*Sigma_n*delta;
-    rhOverM_3_1_SO_Asymm_5 = -0.84632726605601*I*S_la*nu + 0.163326314502037*I*S_la - 0.84632726605601*S_n*nu +
-      0.163326314502037*S_n - 0.950262193466398*I*Sigma_la*delta*nu - 0.0148478467729125*I*Sigma_la*delta -
-      0.950262193466398*Sigma_n*delta*nu - 0.0148478467729125*Sigma_n*delta;
-    rhOverM_3_2_SO_Asymm_4 = 0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta - 2.0776708762076*Sigma_la*nu +
-      0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I);
-    rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-      0.690065559342354*Sigma_n*delta;
-    rhOverM_3_3_SO_Asymm_5 = 10.4084888534138*I*S_la*nu - 3.92953999069952*I*S_la + 7.07317198325913*S_n*nu -
-      1.89768028819147*S_n + 4.52376311124432*I*Sigma_la*delta*nu - 2.31938701890069*I*Sigma_la*delta +
-      3.45032779671177*Sigma_n*delta*nu + 0.172516389835589*Sigma_n*delta;
-    rhOverM_4_0_SO_Asymm_4 = 0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu + 1.0));
-    rhOverM_4_1_SO_Asymm_5 = -0.271052370871575*I*S_la*nu + 0.0903507902905251*I*S_la + 0.0150584650484209*S_n*(-18.0*nu
-      + 6.0) - 0.255993905823155*I*Sigma_la*delta*nu + 0.0903507902905251*I*Sigma_la*delta +
-      0.0150584650484209*Sigma_n*(-17.0*delta*nu + 6.0*delta);
-    rhOverM_4_2_SO_Asymm_4 = 0.173029069687484*S_la*delta - 0.186338998124982*I*S_n*delta -
-      0.519087209062451*Sigma_la*nu + 0.173029069687484*Sigma_la + 0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I);
-    rhOverM_4_3_SO_Asymm_5 = 0.717137165600636*I*S_la*nu - 0.239045721866879*I*S_la + 0.0132803178814933*S_n*(138.0*nu -
-      46.0) + 1.47411528484575*I*Sigma_la*delta*nu - 0.239045721866879*I*Sigma_la*delta +
-      0.0132803178814933*Sigma_n*(177.0*delta*nu - 46.0*delta);
-    rhOverM_4_4_SO_Asymm_4 = 0.950798536569581*S_la*delta + 0.950798536569581*I*S_n*delta +
-      0.950798536569581*Sigma_la*(-3.0*nu + 1.0) + 0.950798536569581*Sigma_n*(-3.0*I*nu + I);
+    rhOverM_2_1_SO_Asymm_5 = -0.69047619047619*I*S_la*nu - 1.88095238095238*I*S_la - 0.273809523809524*S_n*nu +
+      1.20238095238095*S_n + 0.0238095238095238*I*Sigma_la*delta*nu - 0.714285714285714*I*Sigma_la*delta -
+      0.380952380952381*Sigma_n*delta*nu + 0.892857142857143*Sigma_n*delta;
+    rhOverM_2_2_SO_Asymm_2 = -2.0*Sigma_la - 2.0*I*Sigma_n;
+    rhOverM_2_2_SO_Asymm_4 = 3.0952380952381*S_la*delta - 0.19047619047619*I*S_n*delta - 3.95238095238095*Sigma_la*nu +
+      3.0952380952381*Sigma_la + 1.9047619047619*I*Sigma_n*nu + 1.80952380952381*I*Sigma_n;
+    rhOverM_3_1_SO_Asymm_3 = -0.0222717701593687*I*S_la + 0.0668153104781061*S_n - 0.0222717701593687*I*Sigma_la*delta +
+      0.0668153104781061*Sigma_n*delta;
+    rhOverM_3_1_SO_Asymm_5 = 0.0148478467729125*I*S_la - 0.211581816514003*S_n*nu + 0.0259837318525968*S_n +
+      0.0259837318525968*I*Sigma_la*delta*nu + 0.0148478467729125*I*Sigma_la*delta - 0.263549280219196*Sigma_n*delta*nu
+      - 0.0185598084661406*Sigma_n*delta;
+    rhOverM_3_2_SO_Asymm_4 = -0.563436169819011*S_la*delta - 0.845154254728517*I*S_n*delta +
+      1.69030850945703*Sigma_la*nu - 0.563436169819011*Sigma_la + 0.0062604018868779*Sigma_n*(495.0*I*nu - 135.0*I);
+    rhOverM_3_3_SO_Asymm_3 = 2.32897126278045*I*S_la - 2.32897126278045*S_n + 2.32897126278045*I*Sigma_la*delta -
+      2.32897126278045*Sigma_n*delta;
+    rhOverM_3_3_SO_Asymm_5 = 9.31588505112178*I*S_la*nu - 4.65794252556089*I*S_la - 1.94080938565037*S_n*nu +
+      2.19958397040375*S_n + 3.49345689417067*I*Sigma_la*delta*nu - 4.65794252556089*I*Sigma_la*delta -
+      0.129387292376691*Sigma_n*delta*nu + 3.75223147892405*Sigma_n*delta;
+    rhOverM_4_1_SO_Asymm_5 = 0.0112938487863156*I*S_la*nu - 0.00376461626210521*I*S_la +
+      3.16227766016838*S_n*(-0.0142857142857143*nu + 0.00476190476190476) + 0.00752923252421043*I*Sigma_la*delta*nu -
+      0.00376461626210521*I*Sigma_la*delta + 3.16227766016838*Sigma_n*(-0.0125*delta*nu + 0.00476190476190476*delta);
+    rhOverM_4_2_SO_Asymm_4 = -0.0709862849999933*S_la*delta - 0.141972569999987*I*S_n*delta +
+      0.21295885499998*Sigma_la*nu - 0.0709862849999933*Sigma_la + 0.0709862849999933*Sigma_n*(6.0*I*nu - 2.0*I);
+    rhOverM_4_3_SO_Asymm_5 = -2.42033793390215*I*S_la*nu + 0.806779311300716*I*S_la + 0.134463218550119*S_n*(24.0*nu -
+      8.0) - 1.61355862260143*I*Sigma_la*delta*nu + 0.806779311300716*I*Sigma_la*delta +
+      0.134463218550119*Sigma_n*(21.0*delta*nu - 8.0*delta);
+    rhOverM_4_4_SO_Asymm_4 = 3.00499290570139*S_la*delta + 3.00499290570139*I*S_n*delta - 9.01497871710418*Sigma_la*nu +
+      3.00499290570139*Sigma_la + 3.00499290570139*Sigma_n*(-3.0*I*nu + I);
 
     unsigned int i=0;
     std::vector<std::complex<double> > Modes(77);
-    Modes[i++] = -pow(v, 2)*(pow(v, 2)*conjugate(rhOverM_2_2_SO_Asymm_4) +
+    Modes[i++] = pow(v, 2)*(pow(v, 2)*conjugate(rhOverM_2_2_SO_Asymm_4) +
       conjugate(rhOverM_2_2_SO_Asymm_2))*conjugate(rhOverM_coeff) + (pow(v, 2)*(v*(v*(v*conjugate(rhOverM_2_2_5) +
       conjugate(rhOverM_2_2_4) + conjugate(rhOverM_2_2_SQ_4)) + conjugate(rhOverM_2_2_3) + conjugate(rhOverM_2_2_SO_3))
       + conjugate(rhOverM_2_2_2)) + conjugate(rhOverM_2_2_0))*conjugate(rhOverM_coeff);
-    Modes[i++] = -pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_2_1_SO_Asymm_5) +
+    Modes[i++] = pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_2_1_SO_Asymm_5) +
       conjugate(rhOverM_2_1_SO_Asymm_3))*conjugate(rhOverM_coeff) + v*(v*(v*(v*(v*conjugate(rhOverM_2_1_5) +
       conjugate(rhOverM_2_1_4) + conjugate(rhOverM_2_1_SO_4)) + conjugate(rhOverM_2_1_3)) + conjugate(rhOverM_2_1_SO_2))
       + conjugate(rhOverM_2_1_1))*conjugate(rhOverM_coeff);
-    Modes[i++] = rhOverM_2_0_0*rhOverM_coeff + rhOverM_coeff*pow(v, 2)*(rhOverM_2_0_SO_Asymm_2 +
-      rhOverM_2_0_SO_Asymm_4*pow(v, 2));
-    Modes[i++] = rhOverM_coeff*pow(v, 3)*(rhOverM_2_1_SO_Asymm_3 + rhOverM_2_1_SO_Asymm_5*pow(v, 2)) +
+    Modes[i++] = rhOverM_2_0_0*rhOverM_coeff;
+    Modes[i++] = -rhOverM_coeff*pow(v, 3)*(rhOverM_2_1_SO_Asymm_3 + rhOverM_2_1_SO_Asymm_5*pow(v, 2)) +
       rhOverM_coeff*v*(rhOverM_2_1_1 + v*(rhOverM_2_1_SO_2 + v*(rhOverM_2_1_3 + v*(rhOverM_2_1_4 + rhOverM_2_1_5*v +
       rhOverM_2_1_SO_4))));
-    Modes[i++] = rhOverM_coeff*pow(v, 2)*(rhOverM_2_2_SO_Asymm_2 + rhOverM_2_2_SO_Asymm_4*pow(v, 2)) +
+    Modes[i++] = -rhOverM_coeff*pow(v, 2)*(rhOverM_2_2_SO_Asymm_2 + rhOverM_2_2_SO_Asymm_4*pow(v, 2)) +
       rhOverM_coeff*(rhOverM_2_2_0 + pow(v, 2)*(rhOverM_2_2_2 + v*(rhOverM_2_2_3 + rhOverM_2_2_SO_3 + v*(rhOverM_2_2_4 +
       rhOverM_2_2_5*v + rhOverM_2_2_SQ_4))));
-    Modes[i++] = pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_3_3_SO_Asymm_5) +
+    Modes[i++] = -pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_3_3_SO_Asymm_5) +
       conjugate(rhOverM_3_3_SO_Asymm_3))*conjugate(rhOverM_coeff) - v*(pow(v, 2)*(v*(v*conjugate(rhOverM_3_3_5) +
       conjugate(rhOverM_3_3_4) + conjugate(rhOverM_3_3_SO_4)) + conjugate(rhOverM_3_3_3)) +
       conjugate(rhOverM_3_3_1))*conjugate(rhOverM_coeff);
-    Modes[i++] = pow(v, 4)*conjugate(rhOverM_3_2_SO_Asymm_4)*conjugate(rhOverM_coeff) - pow(v,
+    Modes[i++] = -pow(v, 4)*conjugate(rhOverM_3_2_SO_Asymm_4)*conjugate(rhOverM_coeff) - pow(v,
       2)*(v*(v*(v*conjugate(rhOverM_3_2_5) + conjugate(rhOverM_3_2_4)) + conjugate(rhOverM_3_2_SO_3)) +
       conjugate(rhOverM_3_2_2))*conjugate(rhOverM_coeff);
-    Modes[i++] = pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_3_1_SO_Asymm_5) +
+    Modes[i++] = -pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_3_1_SO_Asymm_5) +
       conjugate(rhOverM_3_1_SO_Asymm_3))*conjugate(rhOverM_coeff) - v*(pow(v, 2)*(v*(v*conjugate(rhOverM_3_1_5) +
       conjugate(rhOverM_3_1_4) + conjugate(rhOverM_3_1_SO_4)) + conjugate(rhOverM_3_1_3)) +
       conjugate(rhOverM_3_1_1))*conjugate(rhOverM_coeff);
-    Modes[i++] = rhOverM_3_0_5*rhOverM_coeff*pow(v, 5) + rhOverM_3_0_SO_Asymm_4*rhOverM_coeff*pow(v, 4);
-    Modes[i++] = rhOverM_coeff*pow(v, 3)*(rhOverM_3_1_SO_Asymm_3 + rhOverM_3_1_SO_Asymm_5*pow(v, 2)) +
+    Modes[i++] = rhOverM_3_0_5*rhOverM_coeff*pow(v, 5);
+    Modes[i++] = -rhOverM_coeff*pow(v, 3)*(rhOverM_3_1_SO_Asymm_3 + rhOverM_3_1_SO_Asymm_5*pow(v, 2)) +
       rhOverM_coeff*v*(rhOverM_3_1_1 + pow(v, 2)*(rhOverM_3_1_3 + v*(rhOverM_3_1_4 + rhOverM_3_1_5*v +
       rhOverM_3_1_SO_4)));
-    Modes[i++] = rhOverM_3_2_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_3_2_2 +
+    Modes[i++] = -rhOverM_3_2_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_3_2_2 +
       v*(rhOverM_3_2_SO_3 + v*(rhOverM_3_2_4 + rhOverM_3_2_5*v)));
-    Modes[i++] = rhOverM_coeff*pow(v, 3)*(rhOverM_3_3_SO_Asymm_3 + rhOverM_3_3_SO_Asymm_5*pow(v, 2)) +
+    Modes[i++] = -rhOverM_coeff*pow(v, 3)*(rhOverM_3_3_SO_Asymm_3 + rhOverM_3_3_SO_Asymm_5*pow(v, 2)) +
       rhOverM_coeff*v*(rhOverM_3_3_1 + pow(v, 2)*(rhOverM_3_3_3 + v*(rhOverM_3_3_4 + rhOverM_3_3_5*v +
       rhOverM_3_3_SO_4)));
-    Modes[i++] = -pow(v, 4)*conjugate(rhOverM_4_4_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
+    Modes[i++] = pow(v, 4)*conjugate(rhOverM_4_4_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
       2)*(v*conjugate(rhOverM_4_4_5) + conjugate(rhOverM_4_4_4)) + conjugate(rhOverM_4_4_2))*conjugate(rhOverM_coeff);
-    Modes[i++] = -pow(v, 5)*conjugate(rhOverM_4_3_SO_Asymm_5)*conjugate(rhOverM_coeff) + pow(v,
+    Modes[i++] = pow(v, 5)*conjugate(rhOverM_4_3_SO_Asymm_5)*conjugate(rhOverM_coeff) + pow(v,
       3)*(v*(v*conjugate(rhOverM_4_3_5) + conjugate(rhOverM_4_3_SO_4)) +
       conjugate(rhOverM_4_3_3))*conjugate(rhOverM_coeff);
-    Modes[i++] = -pow(v, 4)*conjugate(rhOverM_4_2_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
+    Modes[i++] = pow(v, 4)*conjugate(rhOverM_4_2_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
       2)*(v*conjugate(rhOverM_4_2_5) + conjugate(rhOverM_4_2_4)) + conjugate(rhOverM_4_2_2))*conjugate(rhOverM_coeff);
-    Modes[i++] = -pow(v, 5)*conjugate(rhOverM_4_1_SO_Asymm_5)*conjugate(rhOverM_coeff) + pow(v,
+    Modes[i++] = pow(v, 5)*conjugate(rhOverM_4_1_SO_Asymm_5)*conjugate(rhOverM_coeff) + pow(v,
       3)*(v*(v*conjugate(rhOverM_4_1_5) + conjugate(rhOverM_4_1_SO_4)) +
       conjugate(rhOverM_4_1_3))*conjugate(rhOverM_coeff);
-    Modes[i++] = rhOverM_4_0_0*rhOverM_coeff + rhOverM_4_0_SO_Asymm_4*rhOverM_coeff*pow(v, 4);
-    Modes[i++] = rhOverM_4_1_SO_Asymm_5*rhOverM_coeff*pow(v, 5) + rhOverM_coeff*pow(v, 3)*(rhOverM_4_1_3 +
+    Modes[i++] = rhOverM_4_0_0*rhOverM_coeff;
+    Modes[i++] = -rhOverM_4_1_SO_Asymm_5*rhOverM_coeff*pow(v, 5) + rhOverM_coeff*pow(v, 3)*(rhOverM_4_1_3 +
       v*(rhOverM_4_1_5*v + rhOverM_4_1_SO_4));
-    Modes[i++] = rhOverM_4_2_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_2_2 + pow(v,
+    Modes[i++] = -rhOverM_4_2_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_2_2 + pow(v,
       2)*(rhOverM_4_2_4 + rhOverM_4_2_5*v));
-    Modes[i++] = rhOverM_4_3_SO_Asymm_5*rhOverM_coeff*pow(v, 5) + rhOverM_coeff*pow(v, 3)*(rhOverM_4_3_3 +
+    Modes[i++] = -rhOverM_4_3_SO_Asymm_5*rhOverM_coeff*pow(v, 5) + rhOverM_coeff*pow(v, 3)*(rhOverM_4_3_3 +
       v*(rhOverM_4_3_5*v + rhOverM_4_3_SO_4));
-    Modes[i++] = rhOverM_4_4_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_4_2 + pow(v,
+    Modes[i++] = -rhOverM_4_4_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_4_2 + pow(v,
       2)*(rhOverM_4_4_4 + rhOverM_4_4_5*v));
     Modes[i++] = -pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_5_5_5) + conjugate(rhOverM_5_5_3))*conjugate(rhOverM_coeff);
     Modes[i++] = -pow(v, 4)*conjugate(rhOverM_5_4_4)*conjugate(rhOverM_coeff);
@@ -1175,12 +1156,11 @@ private:
                              rhOverM_7_1_5, rhOverM_7_2_6, rhOverM_7_3_5, rhOverM_7_4_6, rhOverM_7_5_5, rhOverM_7_6_6,
                              rhOverM_7_7_5, rhOverM_8_2_6, rhOverM_8_4_6, rhOverM_8_6_6, rhOverM_8_8_6;
   std::complex<double> rhOverM_2_1_SO_2, rhOverM_2_1_SO_4, rhOverM_2_2_SO_3, rhOverM_3_1_SO_4, rhOverM_3_2_SO_3,
-                       rhOverM_3_3_SO_4, rhOverM_4_1_SO_4, rhOverM_4_3_SO_4, rhOverM_2_2_SQ_4, rhOverM_2_0_SO_Asymm_2,
-                       rhOverM_2_0_SO_Asymm_4, rhOverM_2_1_SO_Asymm_3, rhOverM_2_1_SO_Asymm_5, rhOverM_2_2_SO_Asymm_2,
-                       rhOverM_2_2_SO_Asymm_4, rhOverM_3_0_SO_Asymm_4, rhOverM_3_0_SO_Asymm_6, rhOverM_3_1_SO_Asymm_3,
+                       rhOverM_3_3_SO_4, rhOverM_4_1_SO_4, rhOverM_4_3_SO_4, rhOverM_2_2_SQ_4, rhOverM_2_1_SO_Asymm_3,
+                       rhOverM_2_1_SO_Asymm_5, rhOverM_2_2_SO_Asymm_2, rhOverM_2_2_SO_Asymm_4, rhOverM_3_1_SO_Asymm_3,
                        rhOverM_3_1_SO_Asymm_5, rhOverM_3_2_SO_Asymm_4, rhOverM_3_2_SO_Asymm_6, rhOverM_3_3_SO_Asymm_3,
-                       rhOverM_3_3_SO_Asymm_5, rhOverM_4_0_SO_Asymm_4, rhOverM_4_1_SO_Asymm_5, rhOverM_4_2_SO_Asymm_4,
-                       rhOverM_4_3_SO_Asymm_5, rhOverM_4_4_SO_Asymm_4;
+                       rhOverM_3_3_SO_Asymm_5, rhOverM_4_1_SO_Asymm_5, rhOverM_4_2_SO_Asymm_4, rhOverM_4_3_SO_Asymm_5,
+                       rhOverM_4_4_SO_Asymm_4;
 
 public:
   WaveformModes_3p0PN(const double m1_i, const double m2_i, const double v_i, const double chi1_x_i, const double
@@ -1265,40 +1245,36 @@ public:
     rhOverM_3_2_SO_3(1.12687233963802*chi_s_l*nu), rhOverM_3_3_SO_4(-0.388161877130074*chi_a_l*(19.0*nu - 4.0) -
     0.388161877130074*chi_s_l*delta*(5.0*nu - 4.0)), rhOverM_4_1_SO_4(0.00941154065526303*nu*(chi_a_l - chi_s_l*delta)),
     rhOverM_4_3_SO_4(0.672316092750596*nu*(chi_a_l - chi_s_l*delta)), rhOverM_2_2_SQ_4(2.0*chi1chi2*nu),
-    rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n), rhOverM_2_0_SO_Asymm_4(0.0583211843519804*I*(8.0*S_n*delta -
-    38.0*Sigma_n*nu + Sigma_n)), rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la + 0.666666666666667*S_n +
-    0.666666666666667*I*Sigma_la*delta + 0.666666666666667*Sigma_n*delta), rhOverM_2_1_SO_Asymm_5(-27.0*I*S_la*nu -
-    1.35714285714286*I*S_la - 27.0*S_n*nu - 19.0*S_n - 10.0*I*Sigma_la*delta*nu + 5.0*I*Sigma_la*delta -
-    10.0*Sigma_n*delta*nu + 5.0*Sigma_n*delta), rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n),
-    rhOverM_2_2_SO_Asymm_4(4.05952380952381*S_la*delta - 3.33333333333333*I*S_n*delta +
-    0.0119047619047619*Sigma_la*(-575.0*nu + 173.0) - 0.0119047619047619*I*Sigma_n*(-532.0*nu + 70.0)),
-    rhOverM_3_0_SO_Asymm_4(-0.115727512471569*S_la*delta + 0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la),
-    rhOverM_3_0_SO_Asymm_6(0.0985826958091143*S_la*delta*nu - 0.158589554127706*S_la*delta -
-    0.445765233223821*Sigma_la*pow(nu, 2) + 0.612927195682754*Sigma_la*nu - 0.132872329134024*Sigma_la),
-    rhOverM_3_1_SO_Asymm_3(0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta +
-    0.17817416127495*Sigma_n*delta), rhOverM_3_1_SO_Asymm_5(-0.84632726605601*I*S_la*nu + 0.163326314502037*I*S_la -
-    0.84632726605601*S_n*nu + 0.163326314502037*S_n - 0.950262193466398*I*Sigma_la*delta*nu -
-    0.0148478467729125*I*Sigma_la*delta - 0.950262193466398*Sigma_n*delta*nu - 0.0148478467729125*Sigma_n*delta),
-    rhOverM_3_2_SO_Asymm_4(0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta - 2.0776708762076*Sigma_la*nu +
-    0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I)),
-    rhOverM_3_2_SO_Asymm_6(-1.52049510827547*S_la*delta*nu - 1.55805751959674*S_la*delta +
-    1.45867363964255*I*S_n*delta*nu + 1.23095152100737*I*S_n*delta + 1.37728841511314*Sigma_la*pow(nu, 2) -
-    0.637778442225686*Sigma_la*nu + 0.108774482784504*Sigma_la - 1.47510719459561*I*Sigma_n*pow(nu, 2) +
-    1.26381863091348*I*Sigma_n*nu - 0.271544931843329*I*Sigma_n), rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la -
-    0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta - 0.690065559342354*Sigma_n*delta),
-    rhOverM_3_3_SO_Asymm_5(10.4084888534138*I*S_la*nu - 3.92953999069952*I*S_la + 7.07317198325913*S_n*nu -
-    1.89768028819147*S_n + 4.52376311124432*I*Sigma_la*delta*nu - 2.31938701890069*I*Sigma_la*delta +
-    3.45032779671177*Sigma_n*delta*nu + 0.172516389835589*Sigma_n*delta),
-    rhOverM_4_0_SO_Asymm_4(0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu + 1.0))),
-    rhOverM_4_1_SO_Asymm_5(-0.271052370871575*I*S_la*nu + 0.0903507902905251*I*S_la + 0.0150584650484209*S_n*(-18.0*nu +
-    6.0) - 0.255993905823155*I*Sigma_la*delta*nu + 0.0903507902905251*I*Sigma_la*delta +
-    0.0150584650484209*Sigma_n*(-17.0*delta*nu + 6.0*delta)), rhOverM_4_2_SO_Asymm_4(0.173029069687484*S_la*delta -
-    0.186338998124982*I*S_n*delta - 0.519087209062451*Sigma_la*nu + 0.173029069687484*Sigma_la +
-    0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I)), rhOverM_4_3_SO_Asymm_5(0.717137165600636*I*S_la*nu -
-    0.239045721866879*I*S_la + 0.0132803178814933*S_n*(138.0*nu - 46.0) + 1.47411528484575*I*Sigma_la*delta*nu -
-    0.239045721866879*I*Sigma_la*delta + 0.0132803178814933*Sigma_n*(177.0*delta*nu - 46.0*delta)),
-    rhOverM_4_4_SO_Asymm_4(0.950798536569581*S_la*delta + 0.950798536569581*I*S_n*delta +
-    0.950798536569581*Sigma_la*(-3.0*nu + 1.0) + 0.950798536569581*Sigma_n*(-3.0*I*nu + I))
+    rhOverM_2_1_SO_Asymm_3(-0.333333333333333*I*S_la + 0.666666666666667*S_n - 0.333333333333333*I*Sigma_la*delta +
+    0.666666666666667*Sigma_n*delta), rhOverM_2_1_SO_Asymm_5(-0.69047619047619*I*S_la*nu - 1.88095238095238*I*S_la -
+    0.273809523809524*S_n*nu + 1.20238095238095*S_n + 0.0238095238095238*I*Sigma_la*delta*nu -
+    0.714285714285714*I*Sigma_la*delta - 0.380952380952381*Sigma_n*delta*nu + 0.892857142857143*Sigma_n*delta),
+    rhOverM_2_2_SO_Asymm_2(-2.0*Sigma_la - 2.0*I*Sigma_n), rhOverM_2_2_SO_Asymm_4(3.0952380952381*S_la*delta -
+    0.19047619047619*I*S_n*delta - 3.95238095238095*Sigma_la*nu + 3.0952380952381*Sigma_la +
+    1.9047619047619*I*Sigma_n*nu + 1.80952380952381*I*Sigma_n), rhOverM_3_1_SO_Asymm_3(-0.0222717701593687*I*S_la +
+    0.0668153104781061*S_n - 0.0222717701593687*I*Sigma_la*delta + 0.0668153104781061*Sigma_n*delta),
+    rhOverM_3_1_SO_Asymm_5(0.0148478467729125*I*S_la - 0.211581816514003*S_n*nu + 0.0259837318525968*S_n +
+    0.0259837318525968*I*Sigma_la*delta*nu + 0.0148478467729125*I*Sigma_la*delta - 0.263549280219196*Sigma_n*delta*nu -
+    0.0185598084661406*Sigma_n*delta), rhOverM_3_2_SO_Asymm_4(-0.563436169819011*S_la*delta -
+    0.845154254728517*I*S_n*delta + 1.69030850945703*Sigma_la*nu - 0.563436169819011*Sigma_la +
+    0.0062604018868779*Sigma_n*(495.0*I*nu - 135.0*I)), rhOverM_3_2_SO_Asymm_6(-0.688644207556569*S_la*delta*nu -
+    1.72161051889142*S_la*delta + 0.194072458493215*I*S_n*delta*nu - 0.89523746982354*I*S_n*delta +
+    0.0313020094343895*Sigma_la*pow(nu, 2) + 2.22244266984166*Sigma_la*nu - 0.594738179253401*Sigma_la -
+    0.813852245294127*I*Sigma_n*pow(nu, 2) + 2.78587883966067*I*Sigma_n*nu - 0.707425413217203*I*Sigma_n),
+    rhOverM_3_3_SO_Asymm_3(2.32897126278045*I*S_la - 2.32897126278045*S_n + 2.32897126278045*I*Sigma_la*delta -
+    2.32897126278045*Sigma_n*delta), rhOverM_3_3_SO_Asymm_5(9.31588505112178*I*S_la*nu - 4.65794252556089*I*S_la -
+    1.94080938565037*S_n*nu + 2.19958397040375*S_n + 3.49345689417067*I*Sigma_la*delta*nu -
+    4.65794252556089*I*Sigma_la*delta - 0.129387292376691*Sigma_n*delta*nu + 3.75223147892405*Sigma_n*delta),
+    rhOverM_4_1_SO_Asymm_5(0.0112938487863156*I*S_la*nu - 0.00376461626210521*I*S_la +
+    3.16227766016838*S_n*(-0.0142857142857143*nu + 0.00476190476190476) + 0.00752923252421043*I*Sigma_la*delta*nu -
+    0.00376461626210521*I*Sigma_la*delta + 3.16227766016838*Sigma_n*(-0.0125*delta*nu + 0.00476190476190476*delta)),
+    rhOverM_4_2_SO_Asymm_4(-0.0709862849999933*S_la*delta - 0.141972569999987*I*S_n*delta + 0.21295885499998*Sigma_la*nu
+    - 0.0709862849999933*Sigma_la + 0.0709862849999933*Sigma_n*(6.0*I*nu - 2.0*I)),
+    rhOverM_4_3_SO_Asymm_5(-2.42033793390215*I*S_la*nu + 0.806779311300716*I*S_la + 0.134463218550119*S_n*(24.0*nu -
+    8.0) - 1.61355862260143*I*Sigma_la*delta*nu + 0.806779311300716*I*Sigma_la*delta +
+    0.134463218550119*Sigma_n*(21.0*delta*nu - 8.0*delta)), rhOverM_4_4_SO_Asymm_4(3.00499290570139*S_la*delta +
+    3.00499290570139*I*S_n*delta - 9.01497871710418*Sigma_la*nu + 3.00499290570139*Sigma_la +
+    3.00499290570139*Sigma_n*(-3.0*I*nu + I))
   { }
 
   using WaveformModes::operator();
@@ -1346,108 +1322,101 @@ public:
     rhOverM_4_1_SO_4 = 0.00941154065526303*nu*(chi_a_l - chi_s_l*delta);
     rhOverM_4_3_SO_4 = 0.672316092750596*nu*(chi_a_l - chi_s_l*delta);
     rhOverM_2_2_SQ_4 = 2.0*chi1chi2*nu;
-    rhOverM_2_0_SO_Asymm_2 = 0.408248290463863*I*Sigma_n;
-    rhOverM_2_0_SO_Asymm_4 = 0.0583211843519804*I*(8.0*S_n*delta - 38.0*Sigma_n*nu + Sigma_n);
-    rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta +
+    rhOverM_2_1_SO_Asymm_3 = -0.333333333333333*I*S_la + 0.666666666666667*S_n - 0.333333333333333*I*Sigma_la*delta +
       0.666666666666667*Sigma_n*delta;
-    rhOverM_2_1_SO_Asymm_5 = -27.0*I*S_la*nu - 1.35714285714286*I*S_la - 27.0*S_n*nu - 19.0*S_n -
-      10.0*I*Sigma_la*delta*nu + 5.0*I*Sigma_la*delta - 10.0*Sigma_n*delta*nu + 5.0*Sigma_n*delta;
-    rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
-    rhOverM_2_2_SO_Asymm_4 = 4.05952380952381*S_la*delta - 3.33333333333333*I*S_n*delta +
-      0.0119047619047619*Sigma_la*(-575.0*nu + 173.0) - 0.0119047619047619*I*Sigma_n*(-532.0*nu + 70.0);
-    rhOverM_3_0_SO_Asymm_4 = -0.115727512471569*S_la*delta + 0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la;
-    rhOverM_3_0_SO_Asymm_6 = 0.0985826958091143*S_la*delta*nu - 0.158589554127706*S_la*delta -
-      0.445765233223821*Sigma_la*pow(nu, 2) + 0.612927195682754*Sigma_la*nu - 0.132872329134024*Sigma_la;
-    rhOverM_3_1_SO_Asymm_3 = 0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta +
-      0.17817416127495*Sigma_n*delta;
-    rhOverM_3_1_SO_Asymm_5 = -0.84632726605601*I*S_la*nu + 0.163326314502037*I*S_la - 0.84632726605601*S_n*nu +
-      0.163326314502037*S_n - 0.950262193466398*I*Sigma_la*delta*nu - 0.0148478467729125*I*Sigma_la*delta -
-      0.950262193466398*Sigma_n*delta*nu - 0.0148478467729125*Sigma_n*delta;
-    rhOverM_3_2_SO_Asymm_4 = 0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta - 2.0776708762076*Sigma_la*nu +
-      0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I);
-    rhOverM_3_2_SO_Asymm_6 = -1.52049510827547*S_la*delta*nu - 1.55805751959674*S_la*delta +
-      1.45867363964255*I*S_n*delta*nu + 1.23095152100737*I*S_n*delta + 1.37728841511314*Sigma_la*pow(nu, 2) -
-      0.637778442225686*Sigma_la*nu + 0.108774482784504*Sigma_la - 1.47510719459561*I*Sigma_n*pow(nu, 2) +
-      1.26381863091348*I*Sigma_n*nu - 0.271544931843329*I*Sigma_n;
-    rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-      0.690065559342354*Sigma_n*delta;
-    rhOverM_3_3_SO_Asymm_5 = 10.4084888534138*I*S_la*nu - 3.92953999069952*I*S_la + 7.07317198325913*S_n*nu -
-      1.89768028819147*S_n + 4.52376311124432*I*Sigma_la*delta*nu - 2.31938701890069*I*Sigma_la*delta +
-      3.45032779671177*Sigma_n*delta*nu + 0.172516389835589*Sigma_n*delta;
-    rhOverM_4_0_SO_Asymm_4 = 0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu + 1.0));
-    rhOverM_4_1_SO_Asymm_5 = -0.271052370871575*I*S_la*nu + 0.0903507902905251*I*S_la + 0.0150584650484209*S_n*(-18.0*nu
-      + 6.0) - 0.255993905823155*I*Sigma_la*delta*nu + 0.0903507902905251*I*Sigma_la*delta +
-      0.0150584650484209*Sigma_n*(-17.0*delta*nu + 6.0*delta);
-    rhOverM_4_2_SO_Asymm_4 = 0.173029069687484*S_la*delta - 0.186338998124982*I*S_n*delta -
-      0.519087209062451*Sigma_la*nu + 0.173029069687484*Sigma_la + 0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I);
-    rhOverM_4_3_SO_Asymm_5 = 0.717137165600636*I*S_la*nu - 0.239045721866879*I*S_la + 0.0132803178814933*S_n*(138.0*nu -
-      46.0) + 1.47411528484575*I*Sigma_la*delta*nu - 0.239045721866879*I*Sigma_la*delta +
-      0.0132803178814933*Sigma_n*(177.0*delta*nu - 46.0*delta);
-    rhOverM_4_4_SO_Asymm_4 = 0.950798536569581*S_la*delta + 0.950798536569581*I*S_n*delta +
-      0.950798536569581*Sigma_la*(-3.0*nu + 1.0) + 0.950798536569581*Sigma_n*(-3.0*I*nu + I);
+    rhOverM_2_1_SO_Asymm_5 = -0.69047619047619*I*S_la*nu - 1.88095238095238*I*S_la - 0.273809523809524*S_n*nu +
+      1.20238095238095*S_n + 0.0238095238095238*I*Sigma_la*delta*nu - 0.714285714285714*I*Sigma_la*delta -
+      0.380952380952381*Sigma_n*delta*nu + 0.892857142857143*Sigma_n*delta;
+    rhOverM_2_2_SO_Asymm_2 = -2.0*Sigma_la - 2.0*I*Sigma_n;
+    rhOverM_2_2_SO_Asymm_4 = 3.0952380952381*S_la*delta - 0.19047619047619*I*S_n*delta - 3.95238095238095*Sigma_la*nu +
+      3.0952380952381*Sigma_la + 1.9047619047619*I*Sigma_n*nu + 1.80952380952381*I*Sigma_n;
+    rhOverM_3_1_SO_Asymm_3 = -0.0222717701593687*I*S_la + 0.0668153104781061*S_n - 0.0222717701593687*I*Sigma_la*delta +
+      0.0668153104781061*Sigma_n*delta;
+    rhOverM_3_1_SO_Asymm_5 = 0.0148478467729125*I*S_la - 0.211581816514003*S_n*nu + 0.0259837318525968*S_n +
+      0.0259837318525968*I*Sigma_la*delta*nu + 0.0148478467729125*I*Sigma_la*delta - 0.263549280219196*Sigma_n*delta*nu
+      - 0.0185598084661406*Sigma_n*delta;
+    rhOverM_3_2_SO_Asymm_4 = -0.563436169819011*S_la*delta - 0.845154254728517*I*S_n*delta +
+      1.69030850945703*Sigma_la*nu - 0.563436169819011*Sigma_la + 0.0062604018868779*Sigma_n*(495.0*I*nu - 135.0*I);
+    rhOverM_3_2_SO_Asymm_6 = -0.688644207556569*S_la*delta*nu - 1.72161051889142*S_la*delta +
+      0.194072458493215*I*S_n*delta*nu - 0.89523746982354*I*S_n*delta + 0.0313020094343895*Sigma_la*pow(nu, 2) +
+      2.22244266984166*Sigma_la*nu - 0.594738179253401*Sigma_la - 0.813852245294127*I*Sigma_n*pow(nu, 2) +
+      2.78587883966067*I*Sigma_n*nu - 0.707425413217203*I*Sigma_n;
+    rhOverM_3_3_SO_Asymm_3 = 2.32897126278045*I*S_la - 2.32897126278045*S_n + 2.32897126278045*I*Sigma_la*delta -
+      2.32897126278045*Sigma_n*delta;
+    rhOverM_3_3_SO_Asymm_5 = 9.31588505112178*I*S_la*nu - 4.65794252556089*I*S_la - 1.94080938565037*S_n*nu +
+      2.19958397040375*S_n + 3.49345689417067*I*Sigma_la*delta*nu - 4.65794252556089*I*Sigma_la*delta -
+      0.129387292376691*Sigma_n*delta*nu + 3.75223147892405*Sigma_n*delta;
+    rhOverM_4_1_SO_Asymm_5 = 0.0112938487863156*I*S_la*nu - 0.00376461626210521*I*S_la +
+      3.16227766016838*S_n*(-0.0142857142857143*nu + 0.00476190476190476) + 0.00752923252421043*I*Sigma_la*delta*nu -
+      0.00376461626210521*I*Sigma_la*delta + 3.16227766016838*Sigma_n*(-0.0125*delta*nu + 0.00476190476190476*delta);
+    rhOverM_4_2_SO_Asymm_4 = -0.0709862849999933*S_la*delta - 0.141972569999987*I*S_n*delta +
+      0.21295885499998*Sigma_la*nu - 0.0709862849999933*Sigma_la + 0.0709862849999933*Sigma_n*(6.0*I*nu - 2.0*I);
+    rhOverM_4_3_SO_Asymm_5 = -2.42033793390215*I*S_la*nu + 0.806779311300716*I*S_la + 0.134463218550119*S_n*(24.0*nu -
+      8.0) - 1.61355862260143*I*Sigma_la*delta*nu + 0.806779311300716*I*Sigma_la*delta +
+      0.134463218550119*Sigma_n*(21.0*delta*nu - 8.0*delta);
+    rhOverM_4_4_SO_Asymm_4 = 3.00499290570139*S_la*delta + 3.00499290570139*I*S_n*delta - 9.01497871710418*Sigma_la*nu +
+      3.00499290570139*Sigma_la + 3.00499290570139*Sigma_n*(-3.0*I*nu + I);
 
     unsigned int i=0;
     std::vector<std::complex<double> > Modes(77);
-    Modes[i++] = -pow(v, 2)*(pow(v, 2)*conjugate(rhOverM_2_2_SO_Asymm_4) +
+    Modes[i++] = pow(v, 2)*(pow(v, 2)*conjugate(rhOverM_2_2_SO_Asymm_4) +
       conjugate(rhOverM_2_2_SO_Asymm_2))*conjugate(rhOverM_coeff) + (pow(v,
       2)*(v*(v*(v*(v*(logv*conjugate(rhOverM_2_2_lnv_6) + conjugate(rhOverM_2_2_6)) + conjugate(rhOverM_2_2_5)) +
       conjugate(rhOverM_2_2_4) + conjugate(rhOverM_2_2_SQ_4)) + conjugate(rhOverM_2_2_3) + conjugate(rhOverM_2_2_SO_3))
       + conjugate(rhOverM_2_2_2)) + conjugate(rhOverM_2_2_0))*conjugate(rhOverM_coeff);
-    Modes[i++] = -pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_2_1_SO_Asymm_5) +
+    Modes[i++] = pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_2_1_SO_Asymm_5) +
       conjugate(rhOverM_2_1_SO_Asymm_3))*conjugate(rhOverM_coeff) + v*(v*(v*(v*(v*(v*conjugate(rhOverM_2_1_6) +
       conjugate(rhOverM_2_1_5)) + conjugate(rhOverM_2_1_4) + conjugate(rhOverM_2_1_SO_4)) + conjugate(rhOverM_2_1_3)) +
       conjugate(rhOverM_2_1_SO_2)) + conjugate(rhOverM_2_1_1))*conjugate(rhOverM_coeff);
-    Modes[i++] = rhOverM_2_0_0*rhOverM_coeff + rhOverM_coeff*pow(v, 2)*(rhOverM_2_0_SO_Asymm_2 +
-      rhOverM_2_0_SO_Asymm_4*pow(v, 2));
-    Modes[i++] = rhOverM_coeff*pow(v, 3)*(rhOverM_2_1_SO_Asymm_3 + rhOverM_2_1_SO_Asymm_5*pow(v, 2)) +
+    Modes[i++] = rhOverM_2_0_0*rhOverM_coeff;
+    Modes[i++] = -rhOverM_coeff*pow(v, 3)*(rhOverM_2_1_SO_Asymm_3 + rhOverM_2_1_SO_Asymm_5*pow(v, 2)) +
       rhOverM_coeff*v*(rhOverM_2_1_1 + v*(rhOverM_2_1_SO_2 + v*(rhOverM_2_1_3 + v*(rhOverM_2_1_4 + rhOverM_2_1_SO_4 +
       v*(rhOverM_2_1_5 + rhOverM_2_1_6*v)))));
-    Modes[i++] = rhOverM_coeff*pow(v, 2)*(rhOverM_2_2_SO_Asymm_2 + rhOverM_2_2_SO_Asymm_4*pow(v, 2)) +
+    Modes[i++] = -rhOverM_coeff*pow(v, 2)*(rhOverM_2_2_SO_Asymm_2 + rhOverM_2_2_SO_Asymm_4*pow(v, 2)) +
       rhOverM_coeff*(rhOverM_2_2_0 + pow(v, 2)*(rhOverM_2_2_2 + v*(rhOverM_2_2_3 + rhOverM_2_2_SO_3 + v*(rhOverM_2_2_4 +
       rhOverM_2_2_SQ_4 + v*(rhOverM_2_2_5 + v*(logv*rhOverM_2_2_lnv_6 + rhOverM_2_2_6))))));
-    Modes[i++] = pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_3_3_SO_Asymm_5) +
+    Modes[i++] = -pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_3_3_SO_Asymm_5) +
       conjugate(rhOverM_3_3_SO_Asymm_3))*conjugate(rhOverM_coeff) - v*(pow(v, 2)*(v*(v*(v*conjugate(rhOverM_3_3_6) +
       conjugate(rhOverM_3_3_5)) + conjugate(rhOverM_3_3_4) + conjugate(rhOverM_3_3_SO_4)) + conjugate(rhOverM_3_3_3)) +
       conjugate(rhOverM_3_3_1))*conjugate(rhOverM_coeff);
-    Modes[i++] = pow(v, 4)*(pow(v, 2)*conjugate(rhOverM_3_2_SO_Asymm_6) +
+    Modes[i++] = -pow(v, 4)*(pow(v, 2)*conjugate(rhOverM_3_2_SO_Asymm_6) +
       conjugate(rhOverM_3_2_SO_Asymm_4))*conjugate(rhOverM_coeff) - pow(v, 2)*(v*(v*(v*(v*conjugate(rhOverM_3_2_6) +
       conjugate(rhOverM_3_2_5)) + conjugate(rhOverM_3_2_4)) + conjugate(rhOverM_3_2_SO_3)) +
       conjugate(rhOverM_3_2_2))*conjugate(rhOverM_coeff);
-    Modes[i++] = pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_3_1_SO_Asymm_5) +
+    Modes[i++] = -pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_3_1_SO_Asymm_5) +
       conjugate(rhOverM_3_1_SO_Asymm_3))*conjugate(rhOverM_coeff) - v*(pow(v, 2)*(v*(v*(v*conjugate(rhOverM_3_1_6) +
       conjugate(rhOverM_3_1_5)) + conjugate(rhOverM_3_1_4) + conjugate(rhOverM_3_1_SO_4)) + conjugate(rhOverM_3_1_3)) +
       conjugate(rhOverM_3_1_1))*conjugate(rhOverM_coeff);
-    Modes[i++] = rhOverM_3_0_5*rhOverM_coeff*pow(v, 5) + rhOverM_coeff*pow(v, 4)*(rhOverM_3_0_SO_Asymm_4 +
-      rhOverM_3_0_SO_Asymm_6*pow(v, 2));
-    Modes[i++] = rhOverM_coeff*pow(v, 3)*(rhOverM_3_1_SO_Asymm_3 + rhOverM_3_1_SO_Asymm_5*pow(v, 2)) +
+    Modes[i++] = rhOverM_3_0_5*rhOverM_coeff*pow(v, 5);
+    Modes[i++] = -rhOverM_coeff*pow(v, 3)*(rhOverM_3_1_SO_Asymm_3 + rhOverM_3_1_SO_Asymm_5*pow(v, 2)) +
       rhOverM_coeff*v*(rhOverM_3_1_1 + pow(v, 2)*(rhOverM_3_1_3 + v*(rhOverM_3_1_4 + rhOverM_3_1_SO_4 + v*(rhOverM_3_1_5
       + rhOverM_3_1_6*v))));
-    Modes[i++] = rhOverM_coeff*pow(v, 4)*(rhOverM_3_2_SO_Asymm_4 + rhOverM_3_2_SO_Asymm_6*pow(v, 2)) +
+    Modes[i++] = -rhOverM_coeff*pow(v, 4)*(rhOverM_3_2_SO_Asymm_4 + rhOverM_3_2_SO_Asymm_6*pow(v, 2)) +
       rhOverM_coeff*pow(v, 2)*(rhOverM_3_2_2 + v*(rhOverM_3_2_SO_3 + v*(rhOverM_3_2_4 + v*(rhOverM_3_2_5 +
       rhOverM_3_2_6*v))));
-    Modes[i++] = rhOverM_coeff*pow(v, 3)*(rhOverM_3_3_SO_Asymm_3 + rhOverM_3_3_SO_Asymm_5*pow(v, 2)) +
+    Modes[i++] = -rhOverM_coeff*pow(v, 3)*(rhOverM_3_3_SO_Asymm_3 + rhOverM_3_3_SO_Asymm_5*pow(v, 2)) +
       rhOverM_coeff*v*(rhOverM_3_3_1 + pow(v, 2)*(rhOverM_3_3_3 + v*(rhOverM_3_3_4 + rhOverM_3_3_SO_4 + v*(rhOverM_3_3_5
       + rhOverM_3_3_6*v))));
-    Modes[i++] = -pow(v, 4)*conjugate(rhOverM_4_4_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
+    Modes[i++] = pow(v, 4)*conjugate(rhOverM_4_4_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
       2)*(v*(v*conjugate(rhOverM_4_4_6) + conjugate(rhOverM_4_4_5)) + conjugate(rhOverM_4_4_4)) +
       conjugate(rhOverM_4_4_2))*conjugate(rhOverM_coeff);
-    Modes[i++] = -pow(v, 5)*conjugate(rhOverM_4_3_SO_Asymm_5)*conjugate(rhOverM_coeff) + pow(v,
+    Modes[i++] = pow(v, 5)*conjugate(rhOverM_4_3_SO_Asymm_5)*conjugate(rhOverM_coeff) + pow(v,
       3)*(v*(v*(v*conjugate(rhOverM_4_3_6) + conjugate(rhOverM_4_3_5)) + conjugate(rhOverM_4_3_SO_4)) +
       conjugate(rhOverM_4_3_3))*conjugate(rhOverM_coeff);
-    Modes[i++] = -pow(v, 4)*conjugate(rhOverM_4_2_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
+    Modes[i++] = pow(v, 4)*conjugate(rhOverM_4_2_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
       2)*(v*(v*conjugate(rhOverM_4_2_6) + conjugate(rhOverM_4_2_5)) + conjugate(rhOverM_4_2_4)) +
       conjugate(rhOverM_4_2_2))*conjugate(rhOverM_coeff);
-    Modes[i++] = -pow(v, 5)*conjugate(rhOverM_4_1_SO_Asymm_5)*conjugate(rhOverM_coeff) + pow(v,
+    Modes[i++] = pow(v, 5)*conjugate(rhOverM_4_1_SO_Asymm_5)*conjugate(rhOverM_coeff) + pow(v,
       3)*(v*(v*(v*conjugate(rhOverM_4_1_6) + conjugate(rhOverM_4_1_5)) + conjugate(rhOverM_4_1_SO_4)) +
       conjugate(rhOverM_4_1_3))*conjugate(rhOverM_coeff);
-    Modes[i++] = rhOverM_4_0_0*rhOverM_coeff + rhOverM_4_0_SO_Asymm_4*rhOverM_coeff*pow(v, 4);
-    Modes[i++] = rhOverM_4_1_SO_Asymm_5*rhOverM_coeff*pow(v, 5) + rhOverM_coeff*pow(v, 3)*(rhOverM_4_1_3 +
+    Modes[i++] = rhOverM_4_0_0*rhOverM_coeff;
+    Modes[i++] = -rhOverM_4_1_SO_Asymm_5*rhOverM_coeff*pow(v, 5) + rhOverM_coeff*pow(v, 3)*(rhOverM_4_1_3 +
       v*(rhOverM_4_1_SO_4 + v*(rhOverM_4_1_5 + rhOverM_4_1_6*v)));
-    Modes[i++] = rhOverM_4_2_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_2_2 + pow(v,
+    Modes[i++] = -rhOverM_4_2_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_2_2 + pow(v,
       2)*(rhOverM_4_2_4 + v*(rhOverM_4_2_5 + rhOverM_4_2_6*v)));
-    Modes[i++] = rhOverM_4_3_SO_Asymm_5*rhOverM_coeff*pow(v, 5) + rhOverM_coeff*pow(v, 3)*(rhOverM_4_3_3 +
+    Modes[i++] = -rhOverM_4_3_SO_Asymm_5*rhOverM_coeff*pow(v, 5) + rhOverM_coeff*pow(v, 3)*(rhOverM_4_3_3 +
       v*(rhOverM_4_3_SO_4 + v*(rhOverM_4_3_5 + rhOverM_4_3_6*v)));
-    Modes[i++] = rhOverM_4_4_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_4_2 + pow(v,
+    Modes[i++] = -rhOverM_4_4_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_4_2 + pow(v,
       2)*(rhOverM_4_4_4 + v*(rhOverM_4_4_5 + rhOverM_4_4_6*v)));
     Modes[i++] = -pow(v, 3)*(pow(v, 2)*(v*conjugate(rhOverM_5_5_6) + conjugate(rhOverM_5_5_5)) +
       conjugate(rhOverM_5_5_3))*conjugate(rhOverM_coeff);
@@ -1537,12 +1506,11 @@ private:
                              rhOverM_6_6_6, rhOverM_7_1_5, rhOverM_7_2_6, rhOverM_7_3_5, rhOverM_7_4_6, rhOverM_7_5_5,
                              rhOverM_7_6_6, rhOverM_7_7_5, rhOverM_8_2_6, rhOverM_8_4_6, rhOverM_8_6_6, rhOverM_8_8_6;
   std::complex<double> rhOverM_2_1_SO_2, rhOverM_2_1_SO_4, rhOverM_2_2_SO_3, rhOverM_3_1_SO_4, rhOverM_3_2_SO_3,
-                       rhOverM_3_3_SO_4, rhOverM_4_1_SO_4, rhOverM_4_3_SO_4, rhOverM_2_2_SQ_4, rhOverM_2_0_SO_Asymm_2,
-                       rhOverM_2_0_SO_Asymm_4, rhOverM_2_1_SO_Asymm_3, rhOverM_2_1_SO_Asymm_5, rhOverM_2_2_SO_Asymm_2,
-                       rhOverM_2_2_SO_Asymm_4, rhOverM_3_0_SO_Asymm_4, rhOverM_3_0_SO_Asymm_6, rhOverM_3_1_SO_Asymm_3,
+                       rhOverM_3_3_SO_4, rhOverM_4_1_SO_4, rhOverM_4_3_SO_4, rhOverM_2_2_SQ_4, rhOverM_2_1_SO_Asymm_3,
+                       rhOverM_2_1_SO_Asymm_5, rhOverM_2_2_SO_Asymm_2, rhOverM_2_2_SO_Asymm_4, rhOverM_3_1_SO_Asymm_3,
                        rhOverM_3_1_SO_Asymm_5, rhOverM_3_2_SO_Asymm_4, rhOverM_3_2_SO_Asymm_6, rhOverM_3_3_SO_Asymm_3,
-                       rhOverM_3_3_SO_Asymm_5, rhOverM_4_0_SO_Asymm_4, rhOverM_4_1_SO_Asymm_5, rhOverM_4_2_SO_Asymm_4,
-                       rhOverM_4_3_SO_Asymm_5, rhOverM_4_4_SO_Asymm_4;
+                       rhOverM_3_3_SO_Asymm_5, rhOverM_4_1_SO_Asymm_5, rhOverM_4_2_SO_Asymm_4, rhOverM_4_3_SO_Asymm_5,
+                       rhOverM_4_4_SO_Asymm_4;
 
 public:
   WaveformModes_3p5PN(const double m1_i, const double m2_i, const double v_i, const double chi1_x_i, const double
@@ -1628,40 +1596,36 @@ public:
     rhOverM_3_2_SO_3(1.12687233963802*chi_s_l*nu), rhOverM_3_3_SO_4(-0.388161877130074*chi_a_l*(19.0*nu - 4.0) -
     0.388161877130074*chi_s_l*delta*(5.0*nu - 4.0)), rhOverM_4_1_SO_4(0.00941154065526303*nu*(chi_a_l - chi_s_l*delta)),
     rhOverM_4_3_SO_4(0.672316092750596*nu*(chi_a_l - chi_s_l*delta)), rhOverM_2_2_SQ_4(2.0*chi1chi2*nu),
-    rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n), rhOverM_2_0_SO_Asymm_4(0.0583211843519804*I*(8.0*S_n*delta -
-    38.0*Sigma_n*nu + Sigma_n)), rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la + 0.666666666666667*S_n +
-    0.666666666666667*I*Sigma_la*delta + 0.666666666666667*Sigma_n*delta), rhOverM_2_1_SO_Asymm_5(-27.0*I*S_la*nu -
-    1.35714285714286*I*S_la - 27.0*S_n*nu - 19.0*S_n - 10.0*I*Sigma_la*delta*nu + 5.0*I*Sigma_la*delta -
-    10.0*Sigma_n*delta*nu + 5.0*Sigma_n*delta), rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n),
-    rhOverM_2_2_SO_Asymm_4(4.05952380952381*S_la*delta - 3.33333333333333*I*S_n*delta +
-    0.0119047619047619*Sigma_la*(-575.0*nu + 173.0) - 0.0119047619047619*I*Sigma_n*(-532.0*nu + 70.0)),
-    rhOverM_3_0_SO_Asymm_4(-0.115727512471569*S_la*delta + 0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la),
-    rhOverM_3_0_SO_Asymm_6(0.0985826958091143*S_la*delta*nu - 0.158589554127706*S_la*delta -
-    0.445765233223821*Sigma_la*pow(nu, 2) + 0.612927195682754*Sigma_la*nu - 0.132872329134024*Sigma_la),
-    rhOverM_3_1_SO_Asymm_3(0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta +
-    0.17817416127495*Sigma_n*delta), rhOverM_3_1_SO_Asymm_5(-0.84632726605601*I*S_la*nu + 0.163326314502037*I*S_la -
-    0.84632726605601*S_n*nu + 0.163326314502037*S_n - 0.950262193466398*I*Sigma_la*delta*nu -
-    0.0148478467729125*I*Sigma_la*delta - 0.950262193466398*Sigma_n*delta*nu - 0.0148478467729125*Sigma_n*delta),
-    rhOverM_3_2_SO_Asymm_4(0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta - 2.0776708762076*Sigma_la*nu +
-    0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I)),
-    rhOverM_3_2_SO_Asymm_6(-1.52049510827547*S_la*delta*nu - 1.55805751959674*S_la*delta +
-    1.45867363964255*I*S_n*delta*nu + 1.23095152100737*I*S_n*delta + 1.37728841511314*Sigma_la*pow(nu, 2) -
-    0.637778442225686*Sigma_la*nu + 0.108774482784504*Sigma_la - 1.47510719459561*I*Sigma_n*pow(nu, 2) +
-    1.26381863091348*I*Sigma_n*nu - 0.271544931843329*I*Sigma_n), rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la -
-    0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta - 0.690065559342354*Sigma_n*delta),
-    rhOverM_3_3_SO_Asymm_5(10.4084888534138*I*S_la*nu - 3.92953999069952*I*S_la + 7.07317198325913*S_n*nu -
-    1.89768028819147*S_n + 4.52376311124432*I*Sigma_la*delta*nu - 2.31938701890069*I*Sigma_la*delta +
-    3.45032779671177*Sigma_n*delta*nu + 0.172516389835589*Sigma_n*delta),
-    rhOverM_4_0_SO_Asymm_4(0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu + 1.0))),
-    rhOverM_4_1_SO_Asymm_5(-0.271052370871575*I*S_la*nu + 0.0903507902905251*I*S_la + 0.0150584650484209*S_n*(-18.0*nu +
-    6.0) - 0.255993905823155*I*Sigma_la*delta*nu + 0.0903507902905251*I*Sigma_la*delta +
-    0.0150584650484209*Sigma_n*(-17.0*delta*nu + 6.0*delta)), rhOverM_4_2_SO_Asymm_4(0.173029069687484*S_la*delta -
-    0.186338998124982*I*S_n*delta - 0.519087209062451*Sigma_la*nu + 0.173029069687484*Sigma_la +
-    0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I)), rhOverM_4_3_SO_Asymm_5(0.717137165600636*I*S_la*nu -
-    0.239045721866879*I*S_la + 0.0132803178814933*S_n*(138.0*nu - 46.0) + 1.47411528484575*I*Sigma_la*delta*nu -
-    0.239045721866879*I*Sigma_la*delta + 0.0132803178814933*Sigma_n*(177.0*delta*nu - 46.0*delta)),
-    rhOverM_4_4_SO_Asymm_4(0.950798536569581*S_la*delta + 0.950798536569581*I*S_n*delta +
-    0.950798536569581*Sigma_la*(-3.0*nu + 1.0) + 0.950798536569581*Sigma_n*(-3.0*I*nu + I))
+    rhOverM_2_1_SO_Asymm_3(-0.333333333333333*I*S_la + 0.666666666666667*S_n - 0.333333333333333*I*Sigma_la*delta +
+    0.666666666666667*Sigma_n*delta), rhOverM_2_1_SO_Asymm_5(-0.69047619047619*I*S_la*nu - 1.88095238095238*I*S_la -
+    0.273809523809524*S_n*nu + 1.20238095238095*S_n + 0.0238095238095238*I*Sigma_la*delta*nu -
+    0.714285714285714*I*Sigma_la*delta - 0.380952380952381*Sigma_n*delta*nu + 0.892857142857143*Sigma_n*delta),
+    rhOverM_2_2_SO_Asymm_2(-2.0*Sigma_la - 2.0*I*Sigma_n), rhOverM_2_2_SO_Asymm_4(3.0952380952381*S_la*delta -
+    0.19047619047619*I*S_n*delta - 3.95238095238095*Sigma_la*nu + 3.0952380952381*Sigma_la +
+    1.9047619047619*I*Sigma_n*nu + 1.80952380952381*I*Sigma_n), rhOverM_3_1_SO_Asymm_3(-0.0222717701593687*I*S_la +
+    0.0668153104781061*S_n - 0.0222717701593687*I*Sigma_la*delta + 0.0668153104781061*Sigma_n*delta),
+    rhOverM_3_1_SO_Asymm_5(0.0148478467729125*I*S_la - 0.211581816514003*S_n*nu + 0.0259837318525968*S_n +
+    0.0259837318525968*I*Sigma_la*delta*nu + 0.0148478467729125*I*Sigma_la*delta - 0.263549280219196*Sigma_n*delta*nu -
+    0.0185598084661406*Sigma_n*delta), rhOverM_3_2_SO_Asymm_4(-0.563436169819011*S_la*delta -
+    0.845154254728517*I*S_n*delta + 1.69030850945703*Sigma_la*nu - 0.563436169819011*Sigma_la +
+    0.0062604018868779*Sigma_n*(495.0*I*nu - 135.0*I)), rhOverM_3_2_SO_Asymm_6(-0.688644207556569*S_la*delta*nu -
+    1.72161051889142*S_la*delta + 0.194072458493215*I*S_n*delta*nu - 0.89523746982354*I*S_n*delta +
+    0.0313020094343895*Sigma_la*pow(nu, 2) + 2.22244266984166*Sigma_la*nu - 0.594738179253401*Sigma_la -
+    0.813852245294127*I*Sigma_n*pow(nu, 2) + 2.78587883966067*I*Sigma_n*nu - 0.707425413217203*I*Sigma_n),
+    rhOverM_3_3_SO_Asymm_3(2.32897126278045*I*S_la - 2.32897126278045*S_n + 2.32897126278045*I*Sigma_la*delta -
+    2.32897126278045*Sigma_n*delta), rhOverM_3_3_SO_Asymm_5(9.31588505112178*I*S_la*nu - 4.65794252556089*I*S_la -
+    1.94080938565037*S_n*nu + 2.19958397040375*S_n + 3.49345689417067*I*Sigma_la*delta*nu -
+    4.65794252556089*I*Sigma_la*delta - 0.129387292376691*Sigma_n*delta*nu + 3.75223147892405*Sigma_n*delta),
+    rhOverM_4_1_SO_Asymm_5(0.0112938487863156*I*S_la*nu - 0.00376461626210521*I*S_la +
+    3.16227766016838*S_n*(-0.0142857142857143*nu + 0.00476190476190476) + 0.00752923252421043*I*Sigma_la*delta*nu -
+    0.00376461626210521*I*Sigma_la*delta + 3.16227766016838*Sigma_n*(-0.0125*delta*nu + 0.00476190476190476*delta)),
+    rhOverM_4_2_SO_Asymm_4(-0.0709862849999933*S_la*delta - 0.141972569999987*I*S_n*delta + 0.21295885499998*Sigma_la*nu
+    - 0.0709862849999933*Sigma_la + 0.0709862849999933*Sigma_n*(6.0*I*nu - 2.0*I)),
+    rhOverM_4_3_SO_Asymm_5(-2.42033793390215*I*S_la*nu + 0.806779311300716*I*S_la + 0.134463218550119*S_n*(24.0*nu -
+    8.0) - 1.61355862260143*I*Sigma_la*delta*nu + 0.806779311300716*I*Sigma_la*delta +
+    0.134463218550119*Sigma_n*(21.0*delta*nu - 8.0*delta)), rhOverM_4_4_SO_Asymm_4(3.00499290570139*S_la*delta +
+    3.00499290570139*I*S_n*delta - 9.01497871710418*Sigma_la*nu + 3.00499290570139*Sigma_la +
+    3.00499290570139*Sigma_n*(-3.0*I*nu + I))
   { }
 
   using WaveformModes::operator();
@@ -1709,108 +1673,101 @@ public:
     rhOverM_4_1_SO_4 = 0.00941154065526303*nu*(chi_a_l - chi_s_l*delta);
     rhOverM_4_3_SO_4 = 0.672316092750596*nu*(chi_a_l - chi_s_l*delta);
     rhOverM_2_2_SQ_4 = 2.0*chi1chi2*nu;
-    rhOverM_2_0_SO_Asymm_2 = 0.408248290463863*I*Sigma_n;
-    rhOverM_2_0_SO_Asymm_4 = 0.0583211843519804*I*(8.0*S_n*delta - 38.0*Sigma_n*nu + Sigma_n);
-    rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta +
+    rhOverM_2_1_SO_Asymm_3 = -0.333333333333333*I*S_la + 0.666666666666667*S_n - 0.333333333333333*I*Sigma_la*delta +
       0.666666666666667*Sigma_n*delta;
-    rhOverM_2_1_SO_Asymm_5 = -27.0*I*S_la*nu - 1.35714285714286*I*S_la - 27.0*S_n*nu - 19.0*S_n -
-      10.0*I*Sigma_la*delta*nu + 5.0*I*Sigma_la*delta - 10.0*Sigma_n*delta*nu + 5.0*Sigma_n*delta;
-    rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
-    rhOverM_2_2_SO_Asymm_4 = 4.05952380952381*S_la*delta - 3.33333333333333*I*S_n*delta +
-      0.0119047619047619*Sigma_la*(-575.0*nu + 173.0) - 0.0119047619047619*I*Sigma_n*(-532.0*nu + 70.0);
-    rhOverM_3_0_SO_Asymm_4 = -0.115727512471569*S_la*delta + 0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la;
-    rhOverM_3_0_SO_Asymm_6 = 0.0985826958091143*S_la*delta*nu - 0.158589554127706*S_la*delta -
-      0.445765233223821*Sigma_la*pow(nu, 2) + 0.612927195682754*Sigma_la*nu - 0.132872329134024*Sigma_la;
-    rhOverM_3_1_SO_Asymm_3 = 0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta +
-      0.17817416127495*Sigma_n*delta;
-    rhOverM_3_1_SO_Asymm_5 = -0.84632726605601*I*S_la*nu + 0.163326314502037*I*S_la - 0.84632726605601*S_n*nu +
-      0.163326314502037*S_n - 0.950262193466398*I*Sigma_la*delta*nu - 0.0148478467729125*I*Sigma_la*delta -
-      0.950262193466398*Sigma_n*delta*nu - 0.0148478467729125*Sigma_n*delta;
-    rhOverM_3_2_SO_Asymm_4 = 0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta - 2.0776708762076*Sigma_la*nu +
-      0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I);
-    rhOverM_3_2_SO_Asymm_6 = -1.52049510827547*S_la*delta*nu - 1.55805751959674*S_la*delta +
-      1.45867363964255*I*S_n*delta*nu + 1.23095152100737*I*S_n*delta + 1.37728841511314*Sigma_la*pow(nu, 2) -
-      0.637778442225686*Sigma_la*nu + 0.108774482784504*Sigma_la - 1.47510719459561*I*Sigma_n*pow(nu, 2) +
-      1.26381863091348*I*Sigma_n*nu - 0.271544931843329*I*Sigma_n;
-    rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-      0.690065559342354*Sigma_n*delta;
-    rhOverM_3_3_SO_Asymm_5 = 10.4084888534138*I*S_la*nu - 3.92953999069952*I*S_la + 7.07317198325913*S_n*nu -
-      1.89768028819147*S_n + 4.52376311124432*I*Sigma_la*delta*nu - 2.31938701890069*I*Sigma_la*delta +
-      3.45032779671177*Sigma_n*delta*nu + 0.172516389835589*Sigma_n*delta;
-    rhOverM_4_0_SO_Asymm_4 = 0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu + 1.0));
-    rhOverM_4_1_SO_Asymm_5 = -0.271052370871575*I*S_la*nu + 0.0903507902905251*I*S_la + 0.0150584650484209*S_n*(-18.0*nu
-      + 6.0) - 0.255993905823155*I*Sigma_la*delta*nu + 0.0903507902905251*I*Sigma_la*delta +
-      0.0150584650484209*Sigma_n*(-17.0*delta*nu + 6.0*delta);
-    rhOverM_4_2_SO_Asymm_4 = 0.173029069687484*S_la*delta - 0.186338998124982*I*S_n*delta -
-      0.519087209062451*Sigma_la*nu + 0.173029069687484*Sigma_la + 0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I);
-    rhOverM_4_3_SO_Asymm_5 = 0.717137165600636*I*S_la*nu - 0.239045721866879*I*S_la + 0.0132803178814933*S_n*(138.0*nu -
-      46.0) + 1.47411528484575*I*Sigma_la*delta*nu - 0.239045721866879*I*Sigma_la*delta +
-      0.0132803178814933*Sigma_n*(177.0*delta*nu - 46.0*delta);
-    rhOverM_4_4_SO_Asymm_4 = 0.950798536569581*S_la*delta + 0.950798536569581*I*S_n*delta +
-      0.950798536569581*Sigma_la*(-3.0*nu + 1.0) + 0.950798536569581*Sigma_n*(-3.0*I*nu + I);
+    rhOverM_2_1_SO_Asymm_5 = -0.69047619047619*I*S_la*nu - 1.88095238095238*I*S_la - 0.273809523809524*S_n*nu +
+      1.20238095238095*S_n + 0.0238095238095238*I*Sigma_la*delta*nu - 0.714285714285714*I*Sigma_la*delta -
+      0.380952380952381*Sigma_n*delta*nu + 0.892857142857143*Sigma_n*delta;
+    rhOverM_2_2_SO_Asymm_2 = -2.0*Sigma_la - 2.0*I*Sigma_n;
+    rhOverM_2_2_SO_Asymm_4 = 3.0952380952381*S_la*delta - 0.19047619047619*I*S_n*delta - 3.95238095238095*Sigma_la*nu +
+      3.0952380952381*Sigma_la + 1.9047619047619*I*Sigma_n*nu + 1.80952380952381*I*Sigma_n;
+    rhOverM_3_1_SO_Asymm_3 = -0.0222717701593687*I*S_la + 0.0668153104781061*S_n - 0.0222717701593687*I*Sigma_la*delta +
+      0.0668153104781061*Sigma_n*delta;
+    rhOverM_3_1_SO_Asymm_5 = 0.0148478467729125*I*S_la - 0.211581816514003*S_n*nu + 0.0259837318525968*S_n +
+      0.0259837318525968*I*Sigma_la*delta*nu + 0.0148478467729125*I*Sigma_la*delta - 0.263549280219196*Sigma_n*delta*nu
+      - 0.0185598084661406*Sigma_n*delta;
+    rhOverM_3_2_SO_Asymm_4 = -0.563436169819011*S_la*delta - 0.845154254728517*I*S_n*delta +
+      1.69030850945703*Sigma_la*nu - 0.563436169819011*Sigma_la + 0.0062604018868779*Sigma_n*(495.0*I*nu - 135.0*I);
+    rhOverM_3_2_SO_Asymm_6 = -0.688644207556569*S_la*delta*nu - 1.72161051889142*S_la*delta +
+      0.194072458493215*I*S_n*delta*nu - 0.89523746982354*I*S_n*delta + 0.0313020094343895*Sigma_la*pow(nu, 2) +
+      2.22244266984166*Sigma_la*nu - 0.594738179253401*Sigma_la - 0.813852245294127*I*Sigma_n*pow(nu, 2) +
+      2.78587883966067*I*Sigma_n*nu - 0.707425413217203*I*Sigma_n;
+    rhOverM_3_3_SO_Asymm_3 = 2.32897126278045*I*S_la - 2.32897126278045*S_n + 2.32897126278045*I*Sigma_la*delta -
+      2.32897126278045*Sigma_n*delta;
+    rhOverM_3_3_SO_Asymm_5 = 9.31588505112178*I*S_la*nu - 4.65794252556089*I*S_la - 1.94080938565037*S_n*nu +
+      2.19958397040375*S_n + 3.49345689417067*I*Sigma_la*delta*nu - 4.65794252556089*I*Sigma_la*delta -
+      0.129387292376691*Sigma_n*delta*nu + 3.75223147892405*Sigma_n*delta;
+    rhOverM_4_1_SO_Asymm_5 = 0.0112938487863156*I*S_la*nu - 0.00376461626210521*I*S_la +
+      3.16227766016838*S_n*(-0.0142857142857143*nu + 0.00476190476190476) + 0.00752923252421043*I*Sigma_la*delta*nu -
+      0.00376461626210521*I*Sigma_la*delta + 3.16227766016838*Sigma_n*(-0.0125*delta*nu + 0.00476190476190476*delta);
+    rhOverM_4_2_SO_Asymm_4 = -0.0709862849999933*S_la*delta - 0.141972569999987*I*S_n*delta +
+      0.21295885499998*Sigma_la*nu - 0.0709862849999933*Sigma_la + 0.0709862849999933*Sigma_n*(6.0*I*nu - 2.0*I);
+    rhOverM_4_3_SO_Asymm_5 = -2.42033793390215*I*S_la*nu + 0.806779311300716*I*S_la + 0.134463218550119*S_n*(24.0*nu -
+      8.0) - 1.61355862260143*I*Sigma_la*delta*nu + 0.806779311300716*I*Sigma_la*delta +
+      0.134463218550119*Sigma_n*(21.0*delta*nu - 8.0*delta);
+    rhOverM_4_4_SO_Asymm_4 = 3.00499290570139*S_la*delta + 3.00499290570139*I*S_n*delta - 9.01497871710418*Sigma_la*nu +
+      3.00499290570139*Sigma_la + 3.00499290570139*Sigma_n*(-3.0*I*nu + I);
 
     unsigned int i=0;
     std::vector<std::complex<double> > Modes(77);
-    Modes[i++] = -pow(v, 2)*(pow(v, 2)*conjugate(rhOverM_2_2_SO_Asymm_4) +
+    Modes[i++] = pow(v, 2)*(pow(v, 2)*conjugate(rhOverM_2_2_SO_Asymm_4) +
       conjugate(rhOverM_2_2_SO_Asymm_2))*conjugate(rhOverM_coeff) + (pow(v,
       2)*(v*(v*(v*(v*(logv*conjugate(rhOverM_2_2_lnv_6) + v*conjugate(rhOverM_2_2_7) + conjugate(rhOverM_2_2_6)) +
       conjugate(rhOverM_2_2_5)) + conjugate(rhOverM_2_2_4) + conjugate(rhOverM_2_2_SQ_4)) + conjugate(rhOverM_2_2_3) +
       conjugate(rhOverM_2_2_SO_3)) + conjugate(rhOverM_2_2_2)) + conjugate(rhOverM_2_2_0))*conjugate(rhOverM_coeff);
-    Modes[i++] = -pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_2_1_SO_Asymm_5) +
+    Modes[i++] = pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_2_1_SO_Asymm_5) +
       conjugate(rhOverM_2_1_SO_Asymm_3))*conjugate(rhOverM_coeff) + v*(v*(v*(v*(v*(v*conjugate(rhOverM_2_1_6) +
       conjugate(rhOverM_2_1_5)) + conjugate(rhOverM_2_1_4) + conjugate(rhOverM_2_1_SO_4)) + conjugate(rhOverM_2_1_3)) +
       conjugate(rhOverM_2_1_SO_2)) + conjugate(rhOverM_2_1_1))*conjugate(rhOverM_coeff);
-    Modes[i++] = rhOverM_2_0_0*rhOverM_coeff + rhOverM_coeff*pow(v, 2)*(rhOverM_2_0_SO_Asymm_2 +
-      rhOverM_2_0_SO_Asymm_4*pow(v, 2));
-    Modes[i++] = rhOverM_coeff*pow(v, 3)*(rhOverM_2_1_SO_Asymm_3 + rhOverM_2_1_SO_Asymm_5*pow(v, 2)) +
+    Modes[i++] = rhOverM_2_0_0*rhOverM_coeff;
+    Modes[i++] = -rhOverM_coeff*pow(v, 3)*(rhOverM_2_1_SO_Asymm_3 + rhOverM_2_1_SO_Asymm_5*pow(v, 2)) +
       rhOverM_coeff*v*(rhOverM_2_1_1 + v*(rhOverM_2_1_SO_2 + v*(rhOverM_2_1_3 + v*(rhOverM_2_1_4 + rhOverM_2_1_SO_4 +
       v*(rhOverM_2_1_5 + rhOverM_2_1_6*v)))));
-    Modes[i++] = rhOverM_coeff*pow(v, 2)*(rhOverM_2_2_SO_Asymm_2 + rhOverM_2_2_SO_Asymm_4*pow(v, 2)) +
+    Modes[i++] = -rhOverM_coeff*pow(v, 2)*(rhOverM_2_2_SO_Asymm_2 + rhOverM_2_2_SO_Asymm_4*pow(v, 2)) +
       rhOverM_coeff*(rhOverM_2_2_0 + pow(v, 2)*(rhOverM_2_2_2 + v*(rhOverM_2_2_3 + rhOverM_2_2_SO_3 + v*(rhOverM_2_2_4 +
       rhOverM_2_2_SQ_4 + v*(rhOverM_2_2_5 + v*(logv*rhOverM_2_2_lnv_6 + rhOverM_2_2_6 + rhOverM_2_2_7*v))))));
-    Modes[i++] = pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_3_3_SO_Asymm_5) +
+    Modes[i++] = -pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_3_3_SO_Asymm_5) +
       conjugate(rhOverM_3_3_SO_Asymm_3))*conjugate(rhOverM_coeff) - v*(pow(v, 2)*(v*(v*(v*conjugate(rhOverM_3_3_6) +
       conjugate(rhOverM_3_3_5)) + conjugate(rhOverM_3_3_4) + conjugate(rhOverM_3_3_SO_4)) + conjugate(rhOverM_3_3_3)) +
       conjugate(rhOverM_3_3_1))*conjugate(rhOverM_coeff);
-    Modes[i++] = pow(v, 4)*(pow(v, 2)*conjugate(rhOverM_3_2_SO_Asymm_6) +
+    Modes[i++] = -pow(v, 4)*(pow(v, 2)*conjugate(rhOverM_3_2_SO_Asymm_6) +
       conjugate(rhOverM_3_2_SO_Asymm_4))*conjugate(rhOverM_coeff) - pow(v, 2)*(v*(v*(v*(v*conjugate(rhOverM_3_2_6) +
       conjugate(rhOverM_3_2_5)) + conjugate(rhOverM_3_2_4)) + conjugate(rhOverM_3_2_SO_3)) +
       conjugate(rhOverM_3_2_2))*conjugate(rhOverM_coeff);
-    Modes[i++] = pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_3_1_SO_Asymm_5) +
+    Modes[i++] = -pow(v, 3)*(pow(v, 2)*conjugate(rhOverM_3_1_SO_Asymm_5) +
       conjugate(rhOverM_3_1_SO_Asymm_3))*conjugate(rhOverM_coeff) - v*(pow(v, 2)*(v*(v*(v*conjugate(rhOverM_3_1_6) +
       conjugate(rhOverM_3_1_5)) + conjugate(rhOverM_3_1_4) + conjugate(rhOverM_3_1_SO_4)) + conjugate(rhOverM_3_1_3)) +
       conjugate(rhOverM_3_1_1))*conjugate(rhOverM_coeff);
-    Modes[i++] = rhOverM_3_0_5*rhOverM_coeff*pow(v, 5) + rhOverM_coeff*pow(v, 4)*(rhOverM_3_0_SO_Asymm_4 +
-      rhOverM_3_0_SO_Asymm_6*pow(v, 2));
-    Modes[i++] = rhOverM_coeff*pow(v, 3)*(rhOverM_3_1_SO_Asymm_3 + rhOverM_3_1_SO_Asymm_5*pow(v, 2)) +
+    Modes[i++] = rhOverM_3_0_5*rhOverM_coeff*pow(v, 5);
+    Modes[i++] = -rhOverM_coeff*pow(v, 3)*(rhOverM_3_1_SO_Asymm_3 + rhOverM_3_1_SO_Asymm_5*pow(v, 2)) +
       rhOverM_coeff*v*(rhOverM_3_1_1 + pow(v, 2)*(rhOverM_3_1_3 + v*(rhOverM_3_1_4 + rhOverM_3_1_SO_4 + v*(rhOverM_3_1_5
       + rhOverM_3_1_6*v))));
-    Modes[i++] = rhOverM_coeff*pow(v, 4)*(rhOverM_3_2_SO_Asymm_4 + rhOverM_3_2_SO_Asymm_6*pow(v, 2)) +
+    Modes[i++] = -rhOverM_coeff*pow(v, 4)*(rhOverM_3_2_SO_Asymm_4 + rhOverM_3_2_SO_Asymm_6*pow(v, 2)) +
       rhOverM_coeff*pow(v, 2)*(rhOverM_3_2_2 + v*(rhOverM_3_2_SO_3 + v*(rhOverM_3_2_4 + v*(rhOverM_3_2_5 +
       rhOverM_3_2_6*v))));
-    Modes[i++] = rhOverM_coeff*pow(v, 3)*(rhOverM_3_3_SO_Asymm_3 + rhOverM_3_3_SO_Asymm_5*pow(v, 2)) +
+    Modes[i++] = -rhOverM_coeff*pow(v, 3)*(rhOverM_3_3_SO_Asymm_3 + rhOverM_3_3_SO_Asymm_5*pow(v, 2)) +
       rhOverM_coeff*v*(rhOverM_3_3_1 + pow(v, 2)*(rhOverM_3_3_3 + v*(rhOverM_3_3_4 + rhOverM_3_3_SO_4 + v*(rhOverM_3_3_5
       + rhOverM_3_3_6*v))));
-    Modes[i++] = -pow(v, 4)*conjugate(rhOverM_4_4_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
+    Modes[i++] = pow(v, 4)*conjugate(rhOverM_4_4_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
       2)*(v*(v*conjugate(rhOverM_4_4_6) + conjugate(rhOverM_4_4_5)) + conjugate(rhOverM_4_4_4)) +
       conjugate(rhOverM_4_4_2))*conjugate(rhOverM_coeff);
-    Modes[i++] = -pow(v, 5)*conjugate(rhOverM_4_3_SO_Asymm_5)*conjugate(rhOverM_coeff) + pow(v,
+    Modes[i++] = pow(v, 5)*conjugate(rhOverM_4_3_SO_Asymm_5)*conjugate(rhOverM_coeff) + pow(v,
       3)*(v*(v*(v*conjugate(rhOverM_4_3_6) + conjugate(rhOverM_4_3_5)) + conjugate(rhOverM_4_3_SO_4)) +
       conjugate(rhOverM_4_3_3))*conjugate(rhOverM_coeff);
-    Modes[i++] = -pow(v, 4)*conjugate(rhOverM_4_2_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
+    Modes[i++] = pow(v, 4)*conjugate(rhOverM_4_2_SO_Asymm_4)*conjugate(rhOverM_coeff) + pow(v, 2)*(pow(v,
       2)*(v*(v*conjugate(rhOverM_4_2_6) + conjugate(rhOverM_4_2_5)) + conjugate(rhOverM_4_2_4)) +
       conjugate(rhOverM_4_2_2))*conjugate(rhOverM_coeff);
-    Modes[i++] = -pow(v, 5)*conjugate(rhOverM_4_1_SO_Asymm_5)*conjugate(rhOverM_coeff) + pow(v,
+    Modes[i++] = pow(v, 5)*conjugate(rhOverM_4_1_SO_Asymm_5)*conjugate(rhOverM_coeff) + pow(v,
       3)*(v*(v*(v*conjugate(rhOverM_4_1_6) + conjugate(rhOverM_4_1_5)) + conjugate(rhOverM_4_1_SO_4)) +
       conjugate(rhOverM_4_1_3))*conjugate(rhOverM_coeff);
-    Modes[i++] = rhOverM_4_0_0*rhOverM_coeff + rhOverM_4_0_SO_Asymm_4*rhOverM_coeff*pow(v, 4);
-    Modes[i++] = rhOverM_4_1_SO_Asymm_5*rhOverM_coeff*pow(v, 5) + rhOverM_coeff*pow(v, 3)*(rhOverM_4_1_3 +
+    Modes[i++] = rhOverM_4_0_0*rhOverM_coeff;
+    Modes[i++] = -rhOverM_4_1_SO_Asymm_5*rhOverM_coeff*pow(v, 5) + rhOverM_coeff*pow(v, 3)*(rhOverM_4_1_3 +
       v*(rhOverM_4_1_SO_4 + v*(rhOverM_4_1_5 + rhOverM_4_1_6*v)));
-    Modes[i++] = rhOverM_4_2_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_2_2 + pow(v,
+    Modes[i++] = -rhOverM_4_2_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_2_2 + pow(v,
       2)*(rhOverM_4_2_4 + v*(rhOverM_4_2_5 + rhOverM_4_2_6*v)));
-    Modes[i++] = rhOverM_4_3_SO_Asymm_5*rhOverM_coeff*pow(v, 5) + rhOverM_coeff*pow(v, 3)*(rhOverM_4_3_3 +
+    Modes[i++] = -rhOverM_4_3_SO_Asymm_5*rhOverM_coeff*pow(v, 5) + rhOverM_coeff*pow(v, 3)*(rhOverM_4_3_3 +
       v*(rhOverM_4_3_SO_4 + v*(rhOverM_4_3_5 + rhOverM_4_3_6*v)));
-    Modes[i++] = rhOverM_4_4_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_4_2 + pow(v,
+    Modes[i++] = -rhOverM_4_4_SO_Asymm_4*rhOverM_coeff*pow(v, 4) + rhOverM_coeff*pow(v, 2)*(rhOverM_4_4_2 + pow(v,
       2)*(rhOverM_4_4_4 + v*(rhOverM_4_4_5 + rhOverM_4_4_6*v)));
     Modes[i++] = -pow(v, 3)*(pow(v, 2)*(v*conjugate(rhOverM_5_5_6) + conjugate(rhOverM_5_5_5)) +
       conjugate(rhOverM_5_5_3))*conjugate(rhOverM_coeff);
