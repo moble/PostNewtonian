@@ -445,11 +445,11 @@ public:
     rhOverM_2_1_SO_2(0.5*I*(chi_a_l + chi_s_l*delta)), rhOverM_2_2_SO_3(-1.33333333333333*chi_a_l*delta -
     1.33333333333333*chi_s_l*(-nu + 1.0)), rhOverM_3_2_SO_3(1.12687233963802*chi_s_l*nu),
     rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n), rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la +
-    0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta + 0.666666666666667*Sigma_n*delta),
-    rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_3_1_SO_Asymm_3(0.17817416127495*I*S_la +
-    0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta + 0.17817416127495*Sigma_n*delta),
-    rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-    0.690065559342354*Sigma_n*delta)
+    4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la + 13.0*Sigma_n)),
+    rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_3_1_SO_Asymm_3(0.534522483824849*I*S_la +
+    0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la + Sigma_n)),
+    rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n - 0.690065559342354*delta*(-I*Sigma_la +
+    Sigma_n))
   { }
 
   using WaveformModes::operator();
@@ -490,13 +490,13 @@ public:
     rhOverM_2_2_SO_3 = -1.33333333333333*chi_a_l*delta - 1.33333333333333*chi_s_l*(-nu + 1.0);
     rhOverM_3_2_SO_3 = 1.12687233963802*chi_s_l*nu;
     rhOverM_2_0_SO_Asymm_2 = 0.408248290463863*I*Sigma_n;
-    rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta +
-      0.666666666666667*Sigma_n*delta;
+    rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la +
+      13.0*Sigma_n);
     rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
-    rhOverM_3_1_SO_Asymm_3 = 0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta +
-      0.17817416127495*Sigma_n*delta;
-    rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-      0.690065559342354*Sigma_n*delta;
+    rhOverM_3_1_SO_Asymm_3 = 0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+      Sigma_n);
+    rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n - 0.690065559342354*delta*(-I*Sigma_la +
+      Sigma_n);
 
     unsigned int i=0;
     std::vector<std::complex<double> > Modes(77);
@@ -655,18 +655,12 @@ public:
     rhOverM_3_3_SO_4(-0.388161877130074*chi_a_l*(19.0*nu - 4.0) - 0.388161877130074*chi_s_l*delta*(5.0*nu - 4.0)),
     rhOverM_4_1_SO_4(0.00941154065526303*nu*(chi_a_l - chi_s_l*delta)), rhOverM_4_3_SO_4(0.672316092750596*nu*(chi_a_l -
     chi_s_l*delta)), rhOverM_2_2_SQ_4(2.0*chi1chi2*nu), rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n),
-    rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la + 0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta +
-    0.666666666666667*Sigma_n*delta), rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n),
-    rhOverM_3_0_SO_Asymm_4(-0.115727512471569*S_la*delta + 0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la),
-    rhOverM_3_1_SO_Asymm_3(0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta +
-    0.17817416127495*Sigma_n*delta), rhOverM_3_2_SO_Asymm_4(0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta
-    - 2.0776708762076*Sigma_la*nu + 0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I)),
-    rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-    0.690065559342354*Sigma_n*delta), rhOverM_4_0_SO_Asymm_4(0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu +
-    1.0))), rhOverM_4_2_SO_Asymm_4(0.173029069687484*S_la*delta - 0.186338998124982*I*S_n*delta -
-    0.519087209062451*Sigma_la*nu + 0.173029069687484*Sigma_la + 0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I)),
-    rhOverM_4_4_SO_Asymm_4(0.950798536569581*S_la*delta + 0.950798536569581*I*S_n*delta - 2.85239560970874*Sigma_la*nu +
-    0.950798536569581*Sigma_la + 0.950798536569581*Sigma_n*(-3.0*I*nu + I))
+    rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la + 4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la +
+    13.0*Sigma_n)), rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_3_0_SO_Asymm_4(0),
+    rhOverM_3_1_SO_Asymm_3(0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+    Sigma_n)), rhOverM_3_2_SO_Asymm_4(0), rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n -
+    0.690065559342354*delta*(-I*Sigma_la + Sigma_n)), rhOverM_4_0_SO_Asymm_4(0), rhOverM_4_2_SO_Asymm_4(0),
+    rhOverM_4_4_SO_Asymm_4(0)
   { }
 
   using WaveformModes::operator();
@@ -714,21 +708,18 @@ public:
     rhOverM_4_3_SO_4 = 0.672316092750596*nu*(chi_a_l - chi_s_l*delta);
     rhOverM_2_2_SQ_4 = 2.0*chi1chi2*nu;
     rhOverM_2_0_SO_Asymm_2 = 0.408248290463863*I*Sigma_n;
-    rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta +
-      0.666666666666667*Sigma_n*delta;
+    rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la +
+      13.0*Sigma_n);
     rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
-    rhOverM_3_0_SO_Asymm_4 = -0.115727512471569*S_la*delta + 0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la;
-    rhOverM_3_1_SO_Asymm_3 = 0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta +
-      0.17817416127495*Sigma_n*delta;
-    rhOverM_3_2_SO_Asymm_4 = 0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta - 2.0776708762076*Sigma_la*nu +
-      0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I);
-    rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-      0.690065559342354*Sigma_n*delta;
-    rhOverM_4_0_SO_Asymm_4 = 0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu + 1.0));
-    rhOverM_4_2_SO_Asymm_4 = 0.173029069687484*S_la*delta - 0.186338998124982*I*S_n*delta -
-      0.519087209062451*Sigma_la*nu + 0.173029069687484*Sigma_la + 0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I);
-    rhOverM_4_4_SO_Asymm_4 = 0.950798536569581*S_la*delta + 0.950798536569581*I*S_n*delta - 2.85239560970874*Sigma_la*nu
-      + 0.950798536569581*Sigma_la + 0.950798536569581*Sigma_n*(-3.0*I*nu + I);
+    rhOverM_3_0_SO_Asymm_4 = 0;
+    rhOverM_3_1_SO_Asymm_3 = 0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+      Sigma_n);
+    rhOverM_3_2_SO_Asymm_4 = 0;
+    rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n - 0.690065559342354*delta*(-I*Sigma_la +
+      Sigma_n);
+    rhOverM_4_0_SO_Asymm_4 = 0;
+    rhOverM_4_2_SO_Asymm_4 = 0;
+    rhOverM_4_4_SO_Asymm_4 = 0;
 
     unsigned int i=0;
     std::vector<std::complex<double> > Modes(77);
@@ -915,24 +906,12 @@ public:
     rhOverM_3_3_SO_4(-0.388161877130074*chi_a_l*(19.0*nu - 4.0) - 0.388161877130074*chi_s_l*delta*(5.0*nu - 4.0)),
     rhOverM_4_1_SO_4(0.00941154065526303*nu*(chi_a_l - chi_s_l*delta)), rhOverM_4_3_SO_4(0.672316092750596*nu*(chi_a_l -
     chi_s_l*delta)), rhOverM_2_2_SQ_4(2.0*chi1chi2*nu), rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n),
-    rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la + 0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta +
-    0.666666666666667*Sigma_n*delta), rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n),
-    rhOverM_3_0_SO_Asymm_4(-0.115727512471569*S_la*delta + 0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la),
-    rhOverM_3_1_SO_Asymm_3(0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta +
-    0.17817416127495*Sigma_n*delta), rhOverM_3_2_SO_Asymm_4(0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta
-    - 2.0776708762076*Sigma_la*nu + 0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I)),
-    rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-    0.690065559342354*Sigma_n*delta), rhOverM_4_0_SO_Asymm_4(0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu +
-    1.0))), rhOverM_4_1_SO_Asymm_5(-0.271052370871575*I*S_la*nu + 0.0903507902905251*I*S_la +
-    0.0150584650484209*S_n*(-18.0*nu + 6.0) - 0.255993905823155*I*Sigma_la*delta*nu +
-    0.0903507902905251*I*Sigma_la*delta + 0.0150584650484209*Sigma_n*(-17.0*delta*nu + 6.0*delta)),
-    rhOverM_4_2_SO_Asymm_4(0.173029069687484*S_la*delta - 0.186338998124982*I*S_n*delta - 0.519087209062451*Sigma_la*nu
-    + 0.173029069687484*Sigma_la + 0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I)),
-    rhOverM_4_3_SO_Asymm_5(0.717137165600636*I*S_la*nu - 0.239045721866879*I*S_la + 0.0132803178814933*S_n*(138.0*nu -
-    46.0) + 1.47411528484575*I*Sigma_la*delta*nu - 0.239045721866879*I*Sigma_la*delta +
-    0.0132803178814933*Sigma_n*(177.0*delta*nu - 46.0*delta)), rhOverM_4_4_SO_Asymm_4(0.950798536569581*S_la*delta +
-    0.950798536569581*I*S_n*delta - 2.85239560970874*Sigma_la*nu + 0.950798536569581*Sigma_la +
-    0.950798536569581*Sigma_n*(-3.0*I*nu + I))
+    rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la + 4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la +
+    13.0*Sigma_n)), rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_3_0_SO_Asymm_4(0),
+    rhOverM_3_1_SO_Asymm_3(0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+    Sigma_n)), rhOverM_3_2_SO_Asymm_4(0), rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n -
+    0.690065559342354*delta*(-I*Sigma_la + Sigma_n)), rhOverM_4_0_SO_Asymm_4(0), rhOverM_4_1_SO_Asymm_5(0),
+    rhOverM_4_2_SO_Asymm_4(0), rhOverM_4_3_SO_Asymm_5(0), rhOverM_4_4_SO_Asymm_4(0)
   { }
 
   using WaveformModes::operator();
@@ -980,27 +959,20 @@ public:
     rhOverM_4_3_SO_4 = 0.672316092750596*nu*(chi_a_l - chi_s_l*delta);
     rhOverM_2_2_SQ_4 = 2.0*chi1chi2*nu;
     rhOverM_2_0_SO_Asymm_2 = 0.408248290463863*I*Sigma_n;
-    rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta +
-      0.666666666666667*Sigma_n*delta;
+    rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la +
+      13.0*Sigma_n);
     rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
-    rhOverM_3_0_SO_Asymm_4 = -0.115727512471569*S_la*delta + 0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la;
-    rhOverM_3_1_SO_Asymm_3 = 0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta +
-      0.17817416127495*Sigma_n*delta;
-    rhOverM_3_2_SO_Asymm_4 = 0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta - 2.0776708762076*Sigma_la*nu +
-      0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I);
-    rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-      0.690065559342354*Sigma_n*delta;
-    rhOverM_4_0_SO_Asymm_4 = 0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu + 1.0));
-    rhOverM_4_1_SO_Asymm_5 = -0.271052370871575*I*S_la*nu + 0.0903507902905251*I*S_la + 0.0150584650484209*S_n*(-18.0*nu
-      + 6.0) - 0.255993905823155*I*Sigma_la*delta*nu + 0.0903507902905251*I*Sigma_la*delta +
-      0.0150584650484209*Sigma_n*(-17.0*delta*nu + 6.0*delta);
-    rhOverM_4_2_SO_Asymm_4 = 0.173029069687484*S_la*delta - 0.186338998124982*I*S_n*delta -
-      0.519087209062451*Sigma_la*nu + 0.173029069687484*Sigma_la + 0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I);
-    rhOverM_4_3_SO_Asymm_5 = 0.717137165600636*I*S_la*nu - 0.239045721866879*I*S_la + 0.0132803178814933*S_n*(138.0*nu -
-      46.0) + 1.47411528484575*I*Sigma_la*delta*nu - 0.239045721866879*I*Sigma_la*delta +
-      0.0132803178814933*Sigma_n*(177.0*delta*nu - 46.0*delta);
-    rhOverM_4_4_SO_Asymm_4 = 0.950798536569581*S_la*delta + 0.950798536569581*I*S_n*delta - 2.85239560970874*Sigma_la*nu
-      + 0.950798536569581*Sigma_la + 0.950798536569581*Sigma_n*(-3.0*I*nu + I);
+    rhOverM_3_0_SO_Asymm_4 = 0;
+    rhOverM_3_1_SO_Asymm_3 = 0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+      Sigma_n);
+    rhOverM_3_2_SO_Asymm_4 = 0;
+    rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n - 0.690065559342354*delta*(-I*Sigma_la +
+      Sigma_n);
+    rhOverM_4_0_SO_Asymm_4 = 0;
+    rhOverM_4_1_SO_Asymm_5 = 0;
+    rhOverM_4_2_SO_Asymm_4 = 0;
+    rhOverM_4_3_SO_Asymm_5 = 0;
+    rhOverM_4_4_SO_Asymm_4 = 0;
 
     unsigned int i=0;
     std::vector<std::complex<double> > Modes(77);
@@ -1226,24 +1198,12 @@ public:
     0.388161877130074*chi_s_l*delta*(5.0*nu - 4.0)), rhOverM_4_1_SO_4(0.00941154065526303*nu*(chi_a_l - chi_s_l*delta)),
     rhOverM_4_3_SO_4(0.672316092750596*nu*(chi_a_l - chi_s_l*delta)), rhOverM_2_2_SQ_4(2.0*chi1chi2*nu),
     rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n), rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la +
-    0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta + 0.666666666666667*Sigma_n*delta),
-    rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_3_0_SO_Asymm_4(-0.115727512471569*S_la*delta +
-    0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la), rhOverM_3_1_SO_Asymm_3(0.17817416127495*I*S_la +
-    0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta + 0.17817416127495*Sigma_n*delta),
-    rhOverM_3_2_SO_Asymm_4(0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta - 2.0776708762076*Sigma_la*nu +
-    0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I)),
-    rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-    0.690065559342354*Sigma_n*delta), rhOverM_4_0_SO_Asymm_4(0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu +
-    1.0))), rhOverM_4_1_SO_Asymm_5(-0.271052370871575*I*S_la*nu + 0.0903507902905251*I*S_la +
-    0.0150584650484209*S_n*(-18.0*nu + 6.0) - 0.255993905823155*I*Sigma_la*delta*nu +
-    0.0903507902905251*I*Sigma_la*delta + 0.0150584650484209*Sigma_n*(-17.0*delta*nu + 6.0*delta)),
-    rhOverM_4_2_SO_Asymm_4(0.173029069687484*S_la*delta - 0.186338998124982*I*S_n*delta - 0.519087209062451*Sigma_la*nu
-    + 0.173029069687484*Sigma_la + 0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I)),
-    rhOverM_4_3_SO_Asymm_5(0.717137165600636*I*S_la*nu - 0.239045721866879*I*S_la + 0.0132803178814933*S_n*(138.0*nu -
-    46.0) + 1.47411528484575*I*Sigma_la*delta*nu - 0.239045721866879*I*Sigma_la*delta +
-    0.0132803178814933*Sigma_n*(177.0*delta*nu - 46.0*delta)), rhOverM_4_4_SO_Asymm_4(0.950798536569581*S_la*delta +
-    0.950798536569581*I*S_n*delta - 2.85239560970874*Sigma_la*nu + 0.950798536569581*Sigma_la +
-    0.950798536569581*Sigma_n*(-3.0*I*nu + I))
+    4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la + 13.0*Sigma_n)),
+    rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_3_0_SO_Asymm_4(0),
+    rhOverM_3_1_SO_Asymm_3(0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+    Sigma_n)), rhOverM_3_2_SO_Asymm_4(0), rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n -
+    0.690065559342354*delta*(-I*Sigma_la + Sigma_n)), rhOverM_4_0_SO_Asymm_4(0), rhOverM_4_1_SO_Asymm_5(0),
+    rhOverM_4_2_SO_Asymm_4(0), rhOverM_4_3_SO_Asymm_5(0), rhOverM_4_4_SO_Asymm_4(0)
   { }
 
   using WaveformModes::operator();
@@ -1292,27 +1252,20 @@ public:
     rhOverM_4_3_SO_4 = 0.672316092750596*nu*(chi_a_l - chi_s_l*delta);
     rhOverM_2_2_SQ_4 = 2.0*chi1chi2*nu;
     rhOverM_2_0_SO_Asymm_2 = 0.408248290463863*I*Sigma_n;
-    rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta +
-      0.666666666666667*Sigma_n*delta;
+    rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la +
+      13.0*Sigma_n);
     rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
-    rhOverM_3_0_SO_Asymm_4 = -0.115727512471569*S_la*delta + 0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la;
-    rhOverM_3_1_SO_Asymm_3 = 0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta +
-      0.17817416127495*Sigma_n*delta;
-    rhOverM_3_2_SO_Asymm_4 = 0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta - 2.0776708762076*Sigma_la*nu +
-      0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I);
-    rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-      0.690065559342354*Sigma_n*delta;
-    rhOverM_4_0_SO_Asymm_4 = 0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu + 1.0));
-    rhOverM_4_1_SO_Asymm_5 = -0.271052370871575*I*S_la*nu + 0.0903507902905251*I*S_la + 0.0150584650484209*S_n*(-18.0*nu
-      + 6.0) - 0.255993905823155*I*Sigma_la*delta*nu + 0.0903507902905251*I*Sigma_la*delta +
-      0.0150584650484209*Sigma_n*(-17.0*delta*nu + 6.0*delta);
-    rhOverM_4_2_SO_Asymm_4 = 0.173029069687484*S_la*delta - 0.186338998124982*I*S_n*delta -
-      0.519087209062451*Sigma_la*nu + 0.173029069687484*Sigma_la + 0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I);
-    rhOverM_4_3_SO_Asymm_5 = 0.717137165600636*I*S_la*nu - 0.239045721866879*I*S_la + 0.0132803178814933*S_n*(138.0*nu -
-      46.0) + 1.47411528484575*I*Sigma_la*delta*nu - 0.239045721866879*I*Sigma_la*delta +
-      0.0132803178814933*Sigma_n*(177.0*delta*nu - 46.0*delta);
-    rhOverM_4_4_SO_Asymm_4 = 0.950798536569581*S_la*delta + 0.950798536569581*I*S_n*delta - 2.85239560970874*Sigma_la*nu
-      + 0.950798536569581*Sigma_la + 0.950798536569581*Sigma_n*(-3.0*I*nu + I);
+    rhOverM_3_0_SO_Asymm_4 = 0;
+    rhOverM_3_1_SO_Asymm_3 = 0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+      Sigma_n);
+    rhOverM_3_2_SO_Asymm_4 = 0;
+    rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n - 0.690065559342354*delta*(-I*Sigma_la +
+      Sigma_n);
+    rhOverM_4_0_SO_Asymm_4 = 0;
+    rhOverM_4_1_SO_Asymm_5 = 0;
+    rhOverM_4_2_SO_Asymm_4 = 0;
+    rhOverM_4_3_SO_Asymm_5 = 0;
+    rhOverM_4_4_SO_Asymm_4 = 0;
 
     unsigned int i=0;
     std::vector<std::complex<double> > Modes(77);
@@ -1545,24 +1498,12 @@ public:
     0.388161877130074*chi_s_l*delta*(5.0*nu - 4.0)), rhOverM_4_1_SO_4(0.00941154065526303*nu*(chi_a_l - chi_s_l*delta)),
     rhOverM_4_3_SO_4(0.672316092750596*nu*(chi_a_l - chi_s_l*delta)), rhOverM_2_2_SQ_4(2.0*chi1chi2*nu),
     rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n), rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la +
-    0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta + 0.666666666666667*Sigma_n*delta),
-    rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_3_0_SO_Asymm_4(-0.115727512471569*S_la*delta +
-    0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la), rhOverM_3_1_SO_Asymm_3(0.17817416127495*I*S_la +
-    0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta + 0.17817416127495*Sigma_n*delta),
-    rhOverM_3_2_SO_Asymm_4(0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta - 2.0776708762076*Sigma_la*nu +
-    0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I)),
-    rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-    0.690065559342354*Sigma_n*delta), rhOverM_4_0_SO_Asymm_4(0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu +
-    1.0))), rhOverM_4_1_SO_Asymm_5(-0.271052370871575*I*S_la*nu + 0.0903507902905251*I*S_la +
-    0.0150584650484209*S_n*(-18.0*nu + 6.0) - 0.255993905823155*I*Sigma_la*delta*nu +
-    0.0903507902905251*I*Sigma_la*delta + 0.0150584650484209*Sigma_n*(-17.0*delta*nu + 6.0*delta)),
-    rhOverM_4_2_SO_Asymm_4(0.173029069687484*S_la*delta - 0.186338998124982*I*S_n*delta - 0.519087209062451*Sigma_la*nu
-    + 0.173029069687484*Sigma_la + 0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I)),
-    rhOverM_4_3_SO_Asymm_5(0.717137165600636*I*S_la*nu - 0.239045721866879*I*S_la + 0.0132803178814933*S_n*(138.0*nu -
-    46.0) + 1.47411528484575*I*Sigma_la*delta*nu - 0.239045721866879*I*Sigma_la*delta +
-    0.0132803178814933*Sigma_n*(177.0*delta*nu - 46.0*delta)), rhOverM_4_4_SO_Asymm_4(0.950798536569581*S_la*delta +
-    0.950798536569581*I*S_n*delta - 2.85239560970874*Sigma_la*nu + 0.950798536569581*Sigma_la +
-    0.950798536569581*Sigma_n*(-3.0*I*nu + I))
+    4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la + 13.0*Sigma_n)),
+    rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_3_0_SO_Asymm_4(0),
+    rhOverM_3_1_SO_Asymm_3(0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+    Sigma_n)), rhOverM_3_2_SO_Asymm_4(0), rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n -
+    0.690065559342354*delta*(-I*Sigma_la + Sigma_n)), rhOverM_4_0_SO_Asymm_4(0), rhOverM_4_1_SO_Asymm_5(0),
+    rhOverM_4_2_SO_Asymm_4(0), rhOverM_4_3_SO_Asymm_5(0), rhOverM_4_4_SO_Asymm_4(0)
   { }
 
   using WaveformModes::operator();
@@ -1611,27 +1552,20 @@ public:
     rhOverM_4_3_SO_4 = 0.672316092750596*nu*(chi_a_l - chi_s_l*delta);
     rhOverM_2_2_SQ_4 = 2.0*chi1chi2*nu;
     rhOverM_2_0_SO_Asymm_2 = 0.408248290463863*I*Sigma_n;
-    rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 0.666666666666667*S_n + 0.666666666666667*I*Sigma_la*delta +
-      0.666666666666667*Sigma_n*delta;
+    rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la +
+      13.0*Sigma_n);
     rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
-    rhOverM_3_0_SO_Asymm_4 = -0.115727512471569*S_la*delta + 0.424334212395753*Sigma_la*nu - 0.115727512471569*Sigma_la;
-    rhOverM_3_1_SO_Asymm_3 = 0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*I*Sigma_la*delta +
-      0.17817416127495*Sigma_n*delta;
-    rhOverM_3_2_SO_Asymm_4 = 0.38736236675057*S_la*delta - 0.563436169819011*I*S_n*delta - 2.0776708762076*Sigma_la*nu +
-      0.38736236675057*Sigma_la + 0.000782550235859738*Sigma_n*(3420.0*I*nu - 720.0*I);
-    rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n + 0.690065559342354*I*Sigma_la*delta -
-      0.690065559342354*Sigma_n*delta;
-    rhOverM_4_0_SO_Asymm_4 = 0.00841793787126842*I*(S_n*delta + Sigma_n*(-3.0*nu + 1.0));
-    rhOverM_4_1_SO_Asymm_5 = -0.271052370871575*I*S_la*nu + 0.0903507902905251*I*S_la + 0.0150584650484209*S_n*(-18.0*nu
-      + 6.0) - 0.255993905823155*I*Sigma_la*delta*nu + 0.0903507902905251*I*Sigma_la*delta +
-      0.0150584650484209*Sigma_n*(-17.0*delta*nu + 6.0*delta);
-    rhOverM_4_2_SO_Asymm_4 = 0.173029069687484*S_la*delta - 0.186338998124982*I*S_n*delta -
-      0.519087209062451*Sigma_la*nu + 0.173029069687484*Sigma_la + 0.0133099284374987*Sigma_n*(42.0*I*nu - 14.0*I);
-    rhOverM_4_3_SO_Asymm_5 = 0.717137165600636*I*S_la*nu - 0.239045721866879*I*S_la + 0.0132803178814933*S_n*(138.0*nu -
-      46.0) + 1.47411528484575*I*Sigma_la*delta*nu - 0.239045721866879*I*Sigma_la*delta +
-      0.0132803178814933*Sigma_n*(177.0*delta*nu - 46.0*delta);
-    rhOverM_4_4_SO_Asymm_4 = 0.950798536569581*S_la*delta + 0.950798536569581*I*S_n*delta - 2.85239560970874*Sigma_la*nu
-      + 0.950798536569581*Sigma_la + 0.950798536569581*Sigma_n*(-3.0*I*nu + I);
+    rhOverM_3_0_SO_Asymm_4 = 0;
+    rhOverM_3_1_SO_Asymm_3 = 0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+      Sigma_n);
+    rhOverM_3_2_SO_Asymm_4 = 0;
+    rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n - 0.690065559342354*delta*(-I*Sigma_la +
+      Sigma_n);
+    rhOverM_4_0_SO_Asymm_4 = 0;
+    rhOverM_4_1_SO_Asymm_5 = 0;
+    rhOverM_4_2_SO_Asymm_4 = 0;
+    rhOverM_4_3_SO_Asymm_5 = 0;
+    rhOverM_4_4_SO_Asymm_4 = 0;
 
     unsigned int i=0;
     std::vector<std::complex<double> > Modes(77);
