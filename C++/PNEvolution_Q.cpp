@@ -354,8 +354,6 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
       // INFOTOCERR << time << " " << h << " " << hnext << " " << y[0] << " " << NSteps << " " << nSteps << std::endl;
     }
 
-    // INFOTOCERR << time << " " << h << " " << hnext << " " << y[0] << std::endl;
-
     // Reset values of quaternion logarithms to smaller sizes, if
     // necessary.  If this resets, we reset nSteps to zero, because
     // this may make the time stepper take smaller steps
@@ -364,12 +362,16 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
       y[1] = (rfrakMag_chi1-M_PI)*y[1]/rfrakMag_chi1;
       y[2] = (rfrakMag_chi1-M_PI)*y[2]/rfrakMag_chi1;
       nSteps=0; // This may make the integrator take a few small steps at first
+      gsl_odeiv2_evolve_reset(e); // This should be called whenever the next use of `e` will not be a continuation of the previous step
+      // INFOTOCERR << time << std::endl;
     }
     const double rfrakMag_chi2 = std::sqrt(y[3]*y[3]+y[4]*y[4]);
     if(rfrakMag_chi2>M_PI/2.) {
       y[3] = (rfrakMag_chi2-M_PI)*y[3]/rfrakMag_chi2;
       y[4] = (rfrakMag_chi2-M_PI)*y[4]/rfrakMag_chi2;
       nSteps=0; // This may make the integrator take a few small steps at first
+      gsl_odeiv2_evolve_reset(e); // This should be called whenever the next use of `e` will not be a continuation of the previous step
+      // INFOTOCERR << time << std::endl;
     }
     const double rfrakMag_ellHat = std::sqrt(y[5]*y[5]+y[6]*y[6]+y[7]*y[7]);
     if(rfrakMag_ellHat>M_PI/2.) {
@@ -377,6 +379,8 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
       y[6] = (rfrakMag_ellHat-M_PI)*y[6]/rfrakMag_ellHat;
       y[7] = (rfrakMag_ellHat-M_PI)*y[7]/rfrakMag_ellHat;
       nSteps=0; // This may make the integrator take a few small steps at first
+      gsl_odeiv2_evolve_reset(e); // This should be called whenever the next use of `e` will not be a continuation of the previous step
+      // INFOTOCERR << time << std::endl;
     }
   }
 
