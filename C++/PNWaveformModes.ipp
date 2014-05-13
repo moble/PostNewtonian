@@ -446,8 +446,8 @@ public:
     1.33333333333333*chi_s_l*(-nu + 1.0)), rhOverM_3_2_SO_3(1.12687233963802*chi_s_l*nu),
     rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n), rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la +
     4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la + 13.0*Sigma_n)),
-    rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_3_1_SO_Asymm_3(0.534522483824849*I*S_la +
-    0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la + Sigma_n)),
+    rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_3_1_SO_Asymm_3(0.17817416127495*I*S_la +
+    0.17817416127495*S_n + 0.17817416127495*delta*(I*Sigma_la + Sigma_n)),
     rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n - 0.690065559342354*delta*(-I*Sigma_la +
     Sigma_n))
   { }
@@ -493,7 +493,7 @@ public:
     rhOverM_2_1_SO_Asymm_3 = 0.666666666666667*I*S_la + 4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la +
       13.0*Sigma_n);
     rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
-    rhOverM_3_1_SO_Asymm_3 = 0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+    rhOverM_3_1_SO_Asymm_3 = 0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*delta*(I*Sigma_la +
       Sigma_n);
     rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n - 0.690065559342354*delta*(-I*Sigma_la +
       Sigma_n);
@@ -657,7 +657,7 @@ public:
     chi_s_l*delta)), rhOverM_2_2_SQ_4(2.0*chi1chi2*nu), rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n),
     rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la + 4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la +
     13.0*Sigma_n)), rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_3_0_SO_Asymm_4(0),
-    rhOverM_3_1_SO_Asymm_3(0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+    rhOverM_3_1_SO_Asymm_3(0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*delta*(I*Sigma_la +
     Sigma_n)), rhOverM_3_2_SO_Asymm_4(0), rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n -
     0.690065559342354*delta*(-I*Sigma_la + Sigma_n)), rhOverM_4_0_SO_Asymm_4(0), rhOverM_4_2_SO_Asymm_4(0),
     rhOverM_4_4_SO_Asymm_4(0)
@@ -712,7 +712,7 @@ public:
       13.0*Sigma_n);
     rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
     rhOverM_3_0_SO_Asymm_4 = 0;
-    rhOverM_3_1_SO_Asymm_3 = 0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+    rhOverM_3_1_SO_Asymm_3 = 0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*delta*(I*Sigma_la +
       Sigma_n);
     rhOverM_3_2_SO_Asymm_4 = 0;
     rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n - 0.690065559342354*delta*(-I*Sigma_la +
@@ -908,7 +908,7 @@ public:
     chi_s_l*delta)), rhOverM_2_2_SQ_4(2.0*chi1chi2*nu), rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n),
     rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la + 4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la +
     13.0*Sigma_n)), rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_3_0_SO_Asymm_4(0),
-    rhOverM_3_1_SO_Asymm_3(0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+    rhOverM_3_1_SO_Asymm_3(0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*delta*(I*Sigma_la +
     Sigma_n)), rhOverM_3_2_SO_Asymm_4(0), rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n -
     0.690065559342354*delta*(-I*Sigma_la + Sigma_n)), rhOverM_4_0_SO_Asymm_4(0), rhOverM_4_1_SO_Asymm_5(0),
     rhOverM_4_2_SO_Asymm_4(0), rhOverM_4_3_SO_Asymm_5(0), rhOverM_4_4_SO_Asymm_4(0)
@@ -963,7 +963,7 @@ public:
       13.0*Sigma_n);
     rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
     rhOverM_3_0_SO_Asymm_4 = 0;
-    rhOverM_3_1_SO_Asymm_3 = 0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+    rhOverM_3_1_SO_Asymm_3 = 0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*delta*(I*Sigma_la +
       Sigma_n);
     rhOverM_3_2_SO_Asymm_4 = 0;
     rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n - 0.690065559342354*delta*(-I*Sigma_la +
@@ -1200,7 +1200,7 @@ public:
     rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n), rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la +
     4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la + 13.0*Sigma_n)),
     rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_3_0_SO_Asymm_4(0),
-    rhOverM_3_1_SO_Asymm_3(0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+    rhOverM_3_1_SO_Asymm_3(0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*delta*(I*Sigma_la +
     Sigma_n)), rhOverM_3_2_SO_Asymm_4(0), rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n -
     0.690065559342354*delta*(-I*Sigma_la + Sigma_n)), rhOverM_4_0_SO_Asymm_4(0), rhOverM_4_1_SO_Asymm_5(0),
     rhOverM_4_2_SO_Asymm_4(0), rhOverM_4_3_SO_Asymm_5(0), rhOverM_4_4_SO_Asymm_4(0)
@@ -1256,7 +1256,7 @@ public:
       13.0*Sigma_n);
     rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
     rhOverM_3_0_SO_Asymm_4 = 0;
-    rhOverM_3_1_SO_Asymm_3 = 0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+    rhOverM_3_1_SO_Asymm_3 = 0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*delta*(I*Sigma_la +
       Sigma_n);
     rhOverM_3_2_SO_Asymm_4 = 0;
     rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n - 0.690065559342354*delta*(-I*Sigma_la +
@@ -1500,7 +1500,7 @@ public:
     rhOverM_2_0_SO_Asymm_2(0.408248290463863*I*Sigma_n), rhOverM_2_1_SO_Asymm_3(0.666666666666667*I*S_la +
     4.16666666666667*S_n + 0.166666666666667*delta*(4.0*I*Sigma_la + 13.0*Sigma_n)),
     rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n), rhOverM_3_0_SO_Asymm_4(0),
-    rhOverM_3_1_SO_Asymm_3(0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+    rhOverM_3_1_SO_Asymm_3(0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*delta*(I*Sigma_la +
     Sigma_n)), rhOverM_3_2_SO_Asymm_4(0), rhOverM_3_3_SO_Asymm_3(0.690065559342354*I*S_la - 0.690065559342354*S_n -
     0.690065559342354*delta*(-I*Sigma_la + Sigma_n)), rhOverM_4_0_SO_Asymm_4(0), rhOverM_4_1_SO_Asymm_5(0),
     rhOverM_4_2_SO_Asymm_4(0), rhOverM_4_3_SO_Asymm_5(0), rhOverM_4_4_SO_Asymm_4(0)
@@ -1556,7 +1556,7 @@ public:
       13.0*Sigma_n);
     rhOverM_2_2_SO_Asymm_2 = -0.5*Sigma_la - 0.5*I*Sigma_n;
     rhOverM_3_0_SO_Asymm_4 = 0;
-    rhOverM_3_1_SO_Asymm_3 = 0.534522483824849*I*S_la + 0.534522483824849*S_n + 0.534522483824849*delta*(I*Sigma_la +
+    rhOverM_3_1_SO_Asymm_3 = 0.17817416127495*I*S_la + 0.17817416127495*S_n + 0.17817416127495*delta*(I*Sigma_la +
       Sigma_n);
     rhOverM_3_2_SO_Asymm_4 = 0;
     rhOverM_3_3_SO_Asymm_3 = 0.690065559342354*I*S_la - 0.690065559342354*S_n - 0.690065559342354*delta*(-I*Sigma_la +
