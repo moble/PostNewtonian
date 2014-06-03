@@ -1,0 +1,1 @@
+sqrt(70)*I*sqrt(pi)*delta*nu*r(0)**3*v(0)**9/105

@@ -125,7 +125,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   y[5] = rfrak_ell_i[0];
   y[6] = rfrak_ell_i[1];
   y[7] = rfrak_ell_i[2];
-  y[8] = 0.0;
+  y[8] = 0.0; // Phi is integrated for convenience; it is never needed
 
   // Tn encapsulates all the actual PN calculations -- especially the
   // right-hand sides of the evolution system

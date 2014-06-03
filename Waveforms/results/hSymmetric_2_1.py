@@ -1,0 +1,1 @@
+8*sqrt(5)*I*sqrt(pi)*delta*nu*r(0)**2*v(0)**7/15
