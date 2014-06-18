@@ -1,5 +1,6 @@
 #include "PNEvolution.hpp"
 #include <cmath>
+#include <iomanip>
 
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_spline.h>
@@ -384,9 +385,15 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     }
   }
 
-  if( ! ((ForwardInTime && time < endtime) || (!ForwardInTime && y[0]>v_0)) ) {
-    INFOTOCERR << "Stepping ended because the time " << time << " has exceeded the endtime of " << endtime
-               << ", or because backwards evolution has reached v=" << y[0] << ", which is less than the target v_0=" << v_0 << std::endl;
+  if( ! ((ForwardInTime && time < endtime) || (!ForwardInTime && y[0]<v_0)) ) {
+    if(ForwardInTime) {
+      INFOTOCERR << "Stepping ended because the time " << time << " has exceeded the endtime of " << endtime << ".\n"
+                 << "This could possibly indicate that the equations are not well behaved." << std::endl;
+    } else {
+      INFOTOCERR << std::setprecision(15)
+                 << "Stepping stopped even though backwards evolution has only reached v=" << y[0] << ", which is greater than the target v_0=" << v_0
+                 << ".\nThis is short of the expected stopping criterion, and may indicate a problem." << std::endl;
+    }
   }
 
   // Free the gsl storage
