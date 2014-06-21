@@ -118,7 +118,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
                                 ? std::sqrt(Quaternions::Quaternion(chi2_i).abs())
                                   *Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi2_i).normalized()*Quaternions::zHat)
                                 : Quaternions::Zero);
-  const std::vector<double> rfrak_ell_i = R_frame_i.log().vec();
+  const std::vector<double> rfrak_frame_i = R_frame_i.log().vec();
 
   // These are the basic variables to be evolved
   std::vector<double> y(9);
@@ -127,9 +127,9 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   y[2] = 0.0;
   y[3] = 0.0;
   y[4] = 0.0;
-  y[5] = rfrak_ell_i[0];
-  y[6] = rfrak_ell_i[1];
-  y[7] = rfrak_ell_i[2];
+  y[5] = rfrak_frame_i[0];
+  y[6] = rfrak_frame_i[1];
+  y[7] = rfrak_frame_i[2];
   y[8] = 0.0; // Phi is integrated as a convenient diagnostic; it is not actually needed
 
   // Tn encapsulates all the actual PN calculations -- especially the
@@ -140,79 +140,79 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     Tn = new TaylorTn_0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
                             S_chi1_i, S_chi2_i,
                             0.0, 0.0, 0.0, 0.0,
-                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                            rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 1:
     Tn = new TaylorTn_0p50PN_Q(xHat, yHat, zHat, m1, m2, v_i,
                                S_chi1_i, S_chi2_i,
                                0.0, 0.0, 0.0, 0.0,
-                               rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                               rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 2:
     Tn = new TaylorTn_1p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
                               S_chi1_i, S_chi2_i,
                               0.0, 0.0, 0.0, 0.0,
-                              rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 3:
     Tn = new TaylorTn_1p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
                               S_chi1_i, S_chi2_i,
                               0.0, 0.0, 0.0, 0.0,
-                              rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 4:
     Tn = new TaylorTn_2p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
                               S_chi1_i, S_chi2_i,
                               0.0, 0.0, 0.0, 0.0,
-                              rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 5:
     Tn = new TaylorTn_2p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
                               S_chi1_i, S_chi2_i,
                               0.0, 0.0, 0.0, 0.0,
-                              rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 6:
     Tn = new TaylorTn_3p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
                               S_chi1_i, S_chi2_i,
                               0.0, 0.0, 0.0, 0.0,
-                              rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 7:
     Tn = new TaylorTn_3p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
                               S_chi1_i, S_chi2_i,
                               0.0, 0.0, 0.0, 0.0,
-                              rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 8:
     Tn = new TaylorTn_4p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
                               S_chi1_i, S_chi2_i,
                               0.0, 0.0, 0.0, 0.0,
-                              rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 9:
     Tn = new TaylorTn_4p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
                               S_chi1_i, S_chi2_i,
                               0.0, 0.0, 0.0, 0.0,
-                              rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 10:
     Tn = new TaylorTn_5p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
                               S_chi1_i, S_chi2_i,
                               0.0, 0.0, 0.0, 0.0,
-                              rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 11:
     Tn = new TaylorTn_5p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
                               S_chi1_i, S_chi2_i,
                               0.0, 0.0, 0.0, 0.0,
-                              rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 12:
     Tn = new TaylorTn_6p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
                               S_chi1_i, S_chi2_i,
                               0.0, 0.0, 0.0, 0.0,
-                              rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   default:
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": PN order " << PNOrder << " is not yet implemented." << std::endl;

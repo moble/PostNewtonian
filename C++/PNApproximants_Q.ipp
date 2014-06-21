@@ -5,8 +5,8 @@ public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const Quaternion S_S1, S_S2;
-  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
+  const Quaternion S_chi1, S_chi2;
+  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_frame_x, rfrak_frame_y, rfrak_frame_z;
   const double m, delta, nu;
   Quaternion R, nHat, ellHat;
   double nHat_x, nHat_y, nHat_z, ellHat_x, ellHat_y, ellHat_z;
@@ -22,26 +22,27 @@ public:
 
 public:
   TaylorTn_0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
-           double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
-           const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
+           m2_i, const double v_i, const Quaternion S_chi1_i, const Quaternion S_chi2_i, const double rfrak_chi1_x_i,
+           const double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double
+           rfrak_frame_x_i, const double rfrak_frame_y_i, const double rfrak_frame_z_i) :
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_chi1(S_chi1_i), S_chi2(S_chi2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
-    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
-    m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
-    nHat(R*xHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]),
-    ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
-    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
-    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
-    2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y +
-    chi2_z*nHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
-    Sigma_l(m*(-chi1_l*m1 + chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), chi_s_l(0.5*chi1_l + 0.5*chi2_l),
+    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_frame_x(rfrak_frame_x_i), rfrak_frame_y(rfrak_frame_y_i),
+    rfrak_frame_z(rfrak_frame_z_i), m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_frame_x*xHat +
+    rfrak_frame_y*yHat + rfrak_frame_z*zHat)), nHat(R*xHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
+    nHat_y(nHat[2]), nHat_z(nHat[3]), ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]),
+    R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)), R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)),
+    chiVec1(S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1)),
+    chiVec2(S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]),
+    chi1_z(chiVec1[3]), chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) +
+    pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) +
+    pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x
+    + chi1_y*nHat_y + chi1_z*nHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x
+    + chi2_y*nHat_y + chi2_z*nHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2,
+    2)), Sigma_l(m*(-chi1_l*m1 + chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), chi_s_l(0.5*chi1_l + 0.5*chi2_l),
     chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
     E_0(1.00000000000000),
-    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -50,12 +51,12 @@ public:
     rfrak_chi1_y = y[2];
     rfrak_chi2_x = y[3];
     rfrak_chi2_y = y[4];
-    rfrak_ell_x = y[5];
-    rfrak_ell_y = y[6];
-    rfrak_ell_z = y[7];
+    rfrak_frame_x = y[5];
+    rfrak_frame_y = y[6];
+    rfrak_frame_z = y[7];
     Phi = y[8];
 
-    R = exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat);
+    R = exp(rfrak_frame_x*xHat + rfrak_frame_y*yHat + rfrak_frame_z*zHat);
     nHat = R*xHat*conjugate(R);
     ellHat = R*zHat*conjugate(R);
     nHat_x = nHat[1];
@@ -66,8 +67,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
-    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
+    chiVec1 = S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1);
+    chiVec2 = S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -136,21 +137,21 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
-    std::vector<double> rfrak_ellHat(3);
-    rfrak_ellHat[0] = y[5];
-    rfrak_ellHat[1] = y[6];
-    rfrak_ellHat[2] = y[7];
-    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
+    std::vector<double> rfrak_frame(3);
+    rfrak_frame[0] = y[5];
+    rfrak_frame[1] = y[6];
+    rfrak_frame[2] = y[7];
+    const std::vector<double> rfrakdot_frame = FrameFromAngularVelocity_Integrand(rfrak_frame, OmegaVec().vec());
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
-                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
                                                             dydt[1], dydt[2]); }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
-                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
                                                             dydt[3], dydt[4]); }
-    dydt[5] = rfrakdot_ellHat[0];
-    dydt[6] = rfrakdot_ellHat[1];
-    dydt[7] = rfrakdot_ellHat[2];
+    dydt[5] = rfrakdot_frame[0];
+    dydt[6] = rfrakdot_frame[1];
+    dydt[7] = rfrakdot_frame[2];
     dydt[8] = v*v*v/m;
 
     return GSL_SUCCESS; // GSL expects this if everything went well
@@ -163,8 +164,8 @@ public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const Quaternion S_S1, S_S2;
-  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
+  const Quaternion S_chi1, S_chi2;
+  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_frame_x, rfrak_frame_y, rfrak_frame_z;
   const double m, delta, nu;
   Quaternion R, nHat, ellHat;
   double nHat_x, nHat_y, nHat_z, ellHat_x, ellHat_y, ellHat_z;
@@ -180,26 +181,27 @@ public:
 
 public:
   TaylorTn_0p50PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
-           double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
-           const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
+           m2_i, const double v_i, const Quaternion S_chi1_i, const Quaternion S_chi2_i, const double rfrak_chi1_x_i,
+           const double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double
+           rfrak_frame_x_i, const double rfrak_frame_y_i, const double rfrak_frame_z_i) :
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_chi1(S_chi1_i), S_chi2(S_chi2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
-    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
-    m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
-    nHat(R*xHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]),
-    ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
-    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
-    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
-    2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y +
-    chi2_z*nHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
-    Sigma_l(m*(-chi1_l*m1 + chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), chi_s_l(0.5*chi1_l + 0.5*chi2_l),
+    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_frame_x(rfrak_frame_x_i), rfrak_frame_y(rfrak_frame_y_i),
+    rfrak_frame_z(rfrak_frame_z_i), m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_frame_x*xHat +
+    rfrak_frame_y*yHat + rfrak_frame_z*zHat)), nHat(R*xHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
+    nHat_y(nHat[2]), nHat_z(nHat[3]), ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]),
+    R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)), R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)),
+    chiVec1(S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1)),
+    chiVec2(S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]),
+    chi1_z(chiVec1[3]), chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) +
+    pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) +
+    pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x
+    + chi1_y*nHat_y + chi1_z*nHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x
+    + chi2_y*nHat_y + chi2_z*nHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2,
+    2)), Sigma_l(m*(-chi1_l*m1 + chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), chi_s_l(0.5*chi1_l + 0.5*chi2_l),
     chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
     E_0(1.00000000000000),
-    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -208,12 +210,12 @@ public:
     rfrak_chi1_y = y[2];
     rfrak_chi2_x = y[3];
     rfrak_chi2_y = y[4];
-    rfrak_ell_x = y[5];
-    rfrak_ell_y = y[6];
-    rfrak_ell_z = y[7];
+    rfrak_frame_x = y[5];
+    rfrak_frame_y = y[6];
+    rfrak_frame_z = y[7];
     Phi = y[8];
 
-    R = exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat);
+    R = exp(rfrak_frame_x*xHat + rfrak_frame_y*yHat + rfrak_frame_z*zHat);
     nHat = R*xHat*conjugate(R);
     ellHat = R*zHat*conjugate(R);
     nHat_x = nHat[1];
@@ -224,8 +226,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
-    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
+    chiVec1 = S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1);
+    chiVec2 = S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -296,21 +298,21 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
-    std::vector<double> rfrak_ellHat(3);
-    rfrak_ellHat[0] = y[5];
-    rfrak_ellHat[1] = y[6];
-    rfrak_ellHat[2] = y[7];
-    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
+    std::vector<double> rfrak_frame(3);
+    rfrak_frame[0] = y[5];
+    rfrak_frame[1] = y[6];
+    rfrak_frame[2] = y[7];
+    const std::vector<double> rfrakdot_frame = FrameFromAngularVelocity_Integrand(rfrak_frame, OmegaVec().vec());
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
-                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
                                                             dydt[1], dydt[2]); }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
-                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
                                                             dydt[3], dydt[4]); }
-    dydt[5] = rfrakdot_ellHat[0];
-    dydt[6] = rfrakdot_ellHat[1];
-    dydt[7] = rfrakdot_ellHat[2];
+    dydt[5] = rfrakdot_frame[0];
+    dydt[6] = rfrakdot_frame[1];
+    dydt[7] = rfrakdot_frame[2];
     dydt[8] = v*v*v/m;
 
     return GSL_SUCCESS; // GSL expects this if everything went well
@@ -323,8 +325,8 @@ public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const Quaternion S_S1, S_S2;
-  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
+  const Quaternion S_chi1, S_chi2;
+  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_frame_x, rfrak_frame_y, rfrak_frame_z;
   const double m, delta, nu;
   Quaternion R, nHat, ellHat;
   double nHat_x, nHat_y, nHat_z, ellHat_x, ellHat_y, ellHat_z;
@@ -340,26 +342,27 @@ public:
 
 public:
   TaylorTn_1p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
-           double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
-           const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
+           m2_i, const double v_i, const Quaternion S_chi1_i, const Quaternion S_chi2_i, const double rfrak_chi1_x_i,
+           const double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double
+           rfrak_frame_x_i, const double rfrak_frame_y_i, const double rfrak_frame_z_i) :
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_chi1(S_chi1_i), S_chi2(S_chi2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
-    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
-    m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
-    nHat(R*xHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]),
-    ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
-    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
-    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
-    2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y +
-    chi2_z*nHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
-    Sigma_l(m*(-chi1_l*m1 + chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), chi_s_l(0.5*chi1_l + 0.5*chi2_l),
+    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_frame_x(rfrak_frame_x_i), rfrak_frame_y(rfrak_frame_y_i),
+    rfrak_frame_z(rfrak_frame_z_i), m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_frame_x*xHat +
+    rfrak_frame_y*yHat + rfrak_frame_z*zHat)), nHat(R*xHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
+    nHat_y(nHat[2]), nHat_z(nHat[3]), ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]),
+    R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)), R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)),
+    chiVec1(S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1)),
+    chiVec2(S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]),
+    chi1_z(chiVec1[3]), chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) +
+    pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) +
+    pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x
+    + chi1_y*nHat_y + chi1_z*nHat_z), chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x
+    + chi2_y*nHat_y + chi2_z*nHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2,
+    2)), Sigma_l(m*(-chi1_l*m1 + chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), chi_s_l(0.5*chi1_l + 0.5*chi2_l),
     chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
     Fcal_2(-2.91666666666667*nu - 3.71130952380952), E_0(1.00000000000000), E_2(-0.0833333333333333*nu - 0.75),
-    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -368,12 +371,12 @@ public:
     rfrak_chi1_y = y[2];
     rfrak_chi2_x = y[3];
     rfrak_chi2_y = y[4];
-    rfrak_ell_x = y[5];
-    rfrak_ell_y = y[6];
-    rfrak_ell_z = y[7];
+    rfrak_frame_x = y[5];
+    rfrak_frame_y = y[6];
+    rfrak_frame_z = y[7];
     Phi = y[8];
 
-    R = exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat);
+    R = exp(rfrak_frame_x*xHat + rfrak_frame_y*yHat + rfrak_frame_z*zHat);
     nHat = R*xHat*conjugate(R);
     ellHat = R*zHat*conjugate(R);
     nHat_x = nHat[1];
@@ -384,8 +387,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
-    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
+    chiVec1 = S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1);
+    chiVec2 = S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -463,21 +466,21 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
-    std::vector<double> rfrak_ellHat(3);
-    rfrak_ellHat[0] = y[5];
-    rfrak_ellHat[1] = y[6];
-    rfrak_ellHat[2] = y[7];
-    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
+    std::vector<double> rfrak_frame(3);
+    rfrak_frame[0] = y[5];
+    rfrak_frame[1] = y[6];
+    rfrak_frame[2] = y[7];
+    const std::vector<double> rfrakdot_frame = FrameFromAngularVelocity_Integrand(rfrak_frame, OmegaVec().vec());
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
-                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
                                                             dydt[1], dydt[2]); }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
-                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
                                                             dydt[3], dydt[4]); }
-    dydt[5] = rfrakdot_ellHat[0];
-    dydt[6] = rfrakdot_ellHat[1];
-    dydt[7] = rfrakdot_ellHat[2];
+    dydt[5] = rfrakdot_frame[0];
+    dydt[6] = rfrakdot_frame[1];
+    dydt[7] = rfrakdot_frame[2];
     dydt[8] = v*v*v/m;
 
     return GSL_SUCCESS; // GSL expects this if everything went well
@@ -490,8 +493,8 @@ public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const Quaternion S_S1, S_S2;
-  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
+  const Quaternion S_chi1, S_chi2;
+  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_frame_x, rfrak_frame_y, rfrak_frame_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
@@ -511,23 +514,24 @@ public:
 
 public:
   TaylorTn_1p5PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
-           double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
-           const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
+           m2_i, const double v_i, const Quaternion S_chi1_i, const Quaternion S_chi2_i, const double rfrak_chi1_x_i,
+           const double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double
+           rfrak_frame_x_i, const double rfrak_frame_y_i, const double rfrak_frame_z_i) :
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_chi1(S_chi1_i), S_chi2(S_chi2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
-    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
-    m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
-    nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
-    nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
-    ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
-    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
-    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
-    2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x +
-    chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_frame_x(rfrak_frame_x_i), rfrak_frame_y(rfrak_frame_y_i),
+    rfrak_frame_z(rfrak_frame_z_i), m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_frame_x*xHat +
+    rfrak_frame_y*yHat + rfrak_frame_z*zHat)), nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)),
+    ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]),
+    lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]), ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]),
+    R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)), R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)),
+    chiVec1(S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1)),
+    chiVec2(S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]),
+    chi1_z(chiVec1[3]), chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) +
+    pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) +
+    pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x
+    + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
     chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)),
     S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), S_la(chi1_la*pow(m1, 2) + chi2_la*pow(m2, 2)), Sigma_l(m*(-chi1_l*m1 +
     chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), Sigma_la(m*(-chi1_la*m1 + chi2_la*m2)), chi_s_l(0.5*chi1_l +
@@ -535,7 +539,7 @@ public:
     Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_SO_3((-4.0*S_l -
     1.25*Sigma_l*delta)/pow(m, 2)), E_0(1.00000000000000), E_2(-0.0833333333333333*nu - 0.75),
     E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -544,12 +548,12 @@ public:
     rfrak_chi1_y = y[2];
     rfrak_chi2_x = y[3];
     rfrak_chi2_y = y[4];
-    rfrak_ell_x = y[5];
-    rfrak_ell_y = y[6];
-    rfrak_ell_z = y[7];
+    rfrak_frame_x = y[5];
+    rfrak_frame_y = y[6];
+    rfrak_frame_z = y[7];
     Phi = y[8];
 
-    R = exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat);
+    R = exp(rfrak_frame_x*xHat + rfrak_frame_y*yHat + rfrak_frame_z*zHat);
     nHat = R*xHat*conjugate(R);
     lambdaHat = R*yHat*conjugate(R);
     ellHat = R*zHat*conjugate(R);
@@ -564,8 +568,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
-    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
+    chiVec1 = S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1);
+    chiVec2 = S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -653,21 +657,21 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
-    std::vector<double> rfrak_ellHat(3);
-    rfrak_ellHat[0] = y[5];
-    rfrak_ellHat[1] = y[6];
-    rfrak_ellHat[2] = y[7];
-    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
+    std::vector<double> rfrak_frame(3);
+    rfrak_frame[0] = y[5];
+    rfrak_frame[1] = y[6];
+    rfrak_frame[2] = y[7];
+    const std::vector<double> rfrakdot_frame = FrameFromAngularVelocity_Integrand(rfrak_frame, OmegaVec().vec());
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
-                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
                                                             dydt[1], dydt[2]); }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
-                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
                                                             dydt[3], dydt[4]); }
-    dydt[5] = rfrakdot_ellHat[0];
-    dydt[6] = rfrakdot_ellHat[1];
-    dydt[7] = rfrakdot_ellHat[2];
+    dydt[5] = rfrakdot_frame[0];
+    dydt[6] = rfrakdot_frame[1];
+    dydt[7] = rfrakdot_frame[2];
     dydt[8] = v*v*v/m;
 
     return GSL_SUCCESS; // GSL expects this if everything went well
@@ -680,8 +684,8 @@ public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const Quaternion S_S1, S_S2;
-  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
+  const Quaternion S_chi1, S_chi2;
+  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_frame_x, rfrak_frame_y, rfrak_frame_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
@@ -701,23 +705,24 @@ public:
 
 public:
   TaylorTn_2p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
-           double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
-           const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
+           m2_i, const double v_i, const Quaternion S_chi1_i, const Quaternion S_chi2_i, const double rfrak_chi1_x_i,
+           const double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double
+           rfrak_frame_x_i, const double rfrak_frame_y_i, const double rfrak_frame_z_i) :
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_chi1(S_chi1_i), S_chi2(S_chi2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
-    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
-    m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
-    nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
-    nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
-    ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
-    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
-    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
-    2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x +
-    chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_frame_x(rfrak_frame_x_i), rfrak_frame_y(rfrak_frame_y_i),
+    rfrak_frame_z(rfrak_frame_z_i), m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_frame_x*xHat +
+    rfrak_frame_y*yHat + rfrak_frame_z*zHat)), nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)),
+    ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]),
+    lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]), ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]),
+    R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)), R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)),
+    chiVec1(S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1)),
+    chiVec2(S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]),
+    chi1_z(chiVec1[3]), chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) +
+    pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) +
+    pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x
+    + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
     chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)),
     S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), S_la(chi1_la*pow(m1, 2) + chi2_la*pow(m2, 2)), Sigma_l(m*(-chi1_l*m1 +
     chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), Sigma_la(m*(-chi1_la*m1 + chi2_la*m2)), chi_s_l(0.5*chi1_l +
@@ -731,7 +736,7 @@ public:
     E_SQ_4(-1.5*pow(chi_a_l, 2) - 1.5*pow(chi_s_l, 2) - delta*(0.5*chi2chi2 + 3.0*chi_a_l*chi_s_l) + nu*(chi1chi2 +
     6.0*pow(chi_a_l, 2)) + 0.25*(chi1chi1 + chi2chi2)*(delta - 2.0*nu + 1.0)), E_SO_3((4.66666666666667*S_l +
     2.0*Sigma_l*delta)/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -740,12 +745,12 @@ public:
     rfrak_chi1_y = y[2];
     rfrak_chi2_x = y[3];
     rfrak_chi2_y = y[4];
-    rfrak_ell_x = y[5];
-    rfrak_ell_y = y[6];
-    rfrak_ell_z = y[7];
+    rfrak_frame_x = y[5];
+    rfrak_frame_y = y[6];
+    rfrak_frame_z = y[7];
     Phi = y[8];
 
-    R = exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat);
+    R = exp(rfrak_frame_x*xHat + rfrak_frame_y*yHat + rfrak_frame_z*zHat);
     nHat = R*xHat*conjugate(R);
     lambdaHat = R*yHat*conjugate(R);
     ellHat = R*zHat*conjugate(R);
@@ -760,8 +765,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
-    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
+    chiVec1 = S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1);
+    chiVec2 = S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -864,21 +869,21 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
-    std::vector<double> rfrak_ellHat(3);
-    rfrak_ellHat[0] = y[5];
-    rfrak_ellHat[1] = y[6];
-    rfrak_ellHat[2] = y[7];
-    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
+    std::vector<double> rfrak_frame(3);
+    rfrak_frame[0] = y[5];
+    rfrak_frame[1] = y[6];
+    rfrak_frame[2] = y[7];
+    const std::vector<double> rfrakdot_frame = FrameFromAngularVelocity_Integrand(rfrak_frame, OmegaVec().vec());
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
-                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
                                                             dydt[1], dydt[2]); }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
-                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
                                                             dydt[3], dydt[4]); }
-    dydt[5] = rfrakdot_ellHat[0];
-    dydt[6] = rfrakdot_ellHat[1];
-    dydt[7] = rfrakdot_ellHat[2];
+    dydt[5] = rfrakdot_frame[0];
+    dydt[6] = rfrakdot_frame[1];
+    dydt[7] = rfrakdot_frame[2];
     dydt[8] = v*v*v/m;
 
     return GSL_SUCCESS; // GSL expects this if everything went well
@@ -891,8 +896,8 @@ public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const Quaternion S_S1, S_S2;
-  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
+  const Quaternion S_chi1, S_chi2;
+  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_frame_x, rfrak_frame_y, rfrak_frame_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
@@ -912,23 +917,24 @@ public:
 
 public:
   TaylorTn_2p5PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
-           double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
-           const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
+           m2_i, const double v_i, const Quaternion S_chi1_i, const Quaternion S_chi2_i, const double rfrak_chi1_x_i,
+           const double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double
+           rfrak_frame_x_i, const double rfrak_frame_y_i, const double rfrak_frame_z_i) :
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_chi1(S_chi1_i), S_chi2(S_chi2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
-    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
-    m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
-    nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
-    nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
-    ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
-    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
-    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
-    2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x +
-    chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_frame_x(rfrak_frame_x_i), rfrak_frame_y(rfrak_frame_y_i),
+    rfrak_frame_z(rfrak_frame_z_i), m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_frame_x*xHat +
+    rfrak_frame_y*yHat + rfrak_frame_z*zHat)), nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)),
+    ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]),
+    lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]), ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]),
+    R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)), R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)),
+    chiVec1(S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1)),
+    chiVec2(S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]),
+    chi1_z(chiVec1[3]), chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) +
+    pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) +
+    pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x
+    + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
     chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)),
     S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), S_la(chi1_la*pow(m1, 2) + chi2_la*pow(m2, 2)), Sigma_l(m*(-chi1_l*m1 +
     chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), Sigma_la(m*(-chi1_la*m1 + chi2_la*m2)), chi_s_l(0.5*chi1_l +
@@ -944,7 +950,7 @@ public:
     2) - 1.5*pow(chi_s_l, 2) - delta*(0.5*chi2chi2 + 3.0*chi_a_l*chi_s_l) + nu*(chi1chi2 + 6.0*pow(chi_a_l, 2)) +
     0.25*(chi1chi1 + chi2chi2)*(delta - 2.0*nu + 1.0)), E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)),
     E_SO_5((S_l*(-6.77777777777778*nu + 11.0) + Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -953,12 +959,12 @@ public:
     rfrak_chi1_y = y[2];
     rfrak_chi2_x = y[3];
     rfrak_chi2_y = y[4];
-    rfrak_ell_x = y[5];
-    rfrak_ell_y = y[6];
-    rfrak_ell_z = y[7];
+    rfrak_frame_x = y[5];
+    rfrak_frame_y = y[6];
+    rfrak_frame_z = y[7];
     Phi = y[8];
 
-    R = exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat);
+    R = exp(rfrak_frame_x*xHat + rfrak_frame_y*yHat + rfrak_frame_z*zHat);
     nHat = R*xHat*conjugate(R);
     lambdaHat = R*yHat*conjugate(R);
     ellHat = R*zHat*conjugate(R);
@@ -973,8 +979,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
-    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
+    chiVec1 = S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1);
+    chiVec2 = S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -1089,21 +1095,21 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
-    std::vector<double> rfrak_ellHat(3);
-    rfrak_ellHat[0] = y[5];
-    rfrak_ellHat[1] = y[6];
-    rfrak_ellHat[2] = y[7];
-    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
+    std::vector<double> rfrak_frame(3);
+    rfrak_frame[0] = y[5];
+    rfrak_frame[1] = y[6];
+    rfrak_frame[2] = y[7];
+    const std::vector<double> rfrakdot_frame = FrameFromAngularVelocity_Integrand(rfrak_frame, OmegaVec().vec());
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
-                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
                                                             dydt[1], dydt[2]); }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
-                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
                                                             dydt[3], dydt[4]); }
-    dydt[5] = rfrakdot_ellHat[0];
-    dydt[6] = rfrakdot_ellHat[1];
-    dydt[7] = rfrakdot_ellHat[2];
+    dydt[5] = rfrakdot_frame[0];
+    dydt[6] = rfrakdot_frame[1];
+    dydt[7] = rfrakdot_frame[2];
     dydt[8] = v*v*v/m;
 
     return GSL_SUCCESS; // GSL expects this if everything went well
@@ -1116,8 +1122,8 @@ public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const Quaternion S_S1, S_S2;
-  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
+  const Quaternion S_chi1, S_chi2;
+  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_frame_x, rfrak_frame_y, rfrak_frame_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
@@ -1137,23 +1143,24 @@ public:
 
 public:
   TaylorTn_3p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
-           double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
-           const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
+           m2_i, const double v_i, const Quaternion S_chi1_i, const Quaternion S_chi2_i, const double rfrak_chi1_x_i,
+           const double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double
+           rfrak_frame_x_i, const double rfrak_frame_y_i, const double rfrak_frame_z_i) :
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_chi1(S_chi1_i), S_chi2(S_chi2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
-    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
-    m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
-    nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
-    nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
-    ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
-    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
-    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
-    2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x +
-    chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_frame_x(rfrak_frame_x_i), rfrak_frame_y(rfrak_frame_y_i),
+    rfrak_frame_z(rfrak_frame_z_i), m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_frame_x*xHat +
+    rfrak_frame_y*yHat + rfrak_frame_z*zHat)), nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)),
+    ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]),
+    lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]), ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]),
+    R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)), R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)),
+    chiVec1(S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1)),
+    chiVec2(S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]),
+    chi1_z(chiVec1[3]), chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) +
+    pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) +
+    pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x
+    + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
     chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)),
     S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), S_la(chi1_la*pow(m1, 2) + chi2_la*pow(m2, 2)), Sigma_l(m*(-chi1_l*m1 +
     chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), Sigma_la(m*(-chi1_la*m1 + chi2_la*m2)), chi_s_l(0.5*chi1_l +
@@ -1173,7 +1180,7 @@ public:
     6.0*pow(chi_a_l, 2)) + 0.25*(chi1chi1 + chi2chi2)*(delta - 2.0*nu + 1.0)), E_SO_3((4.66666666666667*S_l +
     2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu + 11.0) + Sigma_l*delta*(-3.33333333333333*nu +
     3.0))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -1182,12 +1189,12 @@ public:
     rfrak_chi1_y = y[2];
     rfrak_chi2_x = y[3];
     rfrak_chi2_y = y[4];
-    rfrak_ell_x = y[5];
-    rfrak_ell_y = y[6];
-    rfrak_ell_z = y[7];
+    rfrak_frame_x = y[5];
+    rfrak_frame_y = y[6];
+    rfrak_frame_z = y[7];
     Phi = y[8];
 
-    R = exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat);
+    R = exp(rfrak_frame_x*xHat + rfrak_frame_y*yHat + rfrak_frame_z*zHat);
     nHat = R*xHat*conjugate(R);
     lambdaHat = R*yHat*conjugate(R);
     ellHat = R*zHat*conjugate(R);
@@ -1202,8 +1209,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
-    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
+    chiVec1 = S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1);
+    chiVec2 = S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -1330,21 +1337,21 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
-    std::vector<double> rfrak_ellHat(3);
-    rfrak_ellHat[0] = y[5];
-    rfrak_ellHat[1] = y[6];
-    rfrak_ellHat[2] = y[7];
-    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
+    std::vector<double> rfrak_frame(3);
+    rfrak_frame[0] = y[5];
+    rfrak_frame[1] = y[6];
+    rfrak_frame[2] = y[7];
+    const std::vector<double> rfrakdot_frame = FrameFromAngularVelocity_Integrand(rfrak_frame, OmegaVec().vec());
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
-                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
                                                             dydt[1], dydt[2]); }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
-                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
                                                             dydt[3], dydt[4]); }
-    dydt[5] = rfrakdot_ellHat[0];
-    dydt[6] = rfrakdot_ellHat[1];
-    dydt[7] = rfrakdot_ellHat[2];
+    dydt[5] = rfrakdot_frame[0];
+    dydt[6] = rfrakdot_frame[1];
+    dydt[7] = rfrakdot_frame[2];
     dydt[8] = v*v*v/m;
 
     return GSL_SUCCESS; // GSL expects this if everything went well
@@ -1357,8 +1364,8 @@ public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const Quaternion S_S1, S_S2;
-  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
+  const Quaternion S_chi1, S_chi2;
+  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_frame_x, rfrak_frame_y, rfrak_frame_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
@@ -1378,23 +1385,24 @@ public:
 
 public:
   TaylorTn_3p5PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
-           double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
-           const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
+           m2_i, const double v_i, const Quaternion S_chi1_i, const Quaternion S_chi2_i, const double rfrak_chi1_x_i,
+           const double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double
+           rfrak_frame_x_i, const double rfrak_frame_y_i, const double rfrak_frame_z_i) :
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_chi1(S_chi1_i), S_chi2(S_chi2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
-    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
-    m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
-    nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
-    nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
-    ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
-    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
-    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
-    2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x +
-    chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_frame_x(rfrak_frame_x_i), rfrak_frame_y(rfrak_frame_y_i),
+    rfrak_frame_z(rfrak_frame_z_i), m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_frame_x*xHat +
+    rfrak_frame_y*yHat + rfrak_frame_z*zHat)), nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)),
+    ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]),
+    lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]), ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]),
+    R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)), R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)),
+    chiVec1(S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1)),
+    chiVec2(S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]),
+    chi1_z(chiVec1[3]), chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) +
+    pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) +
+    pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x
+    + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
     chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)),
     S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), S_la(chi1_la*pow(m1, 2) + chi2_la*pow(m2, 2)), Sigma_l(m*(-chi1_l*m1 +
     chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), Sigma_la(m*(-chi1_la*m1 + chi2_la*m2)), chi_s_l(0.5*chi1_l +
@@ -1418,7 +1426,7 @@ public:
     2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu + 11.0) + Sigma_l*delta*(-3.33333333333333*nu +
     3.0))/pow(m, 2)), E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75) + Sigma_l*delta*(1.25*pow(nu, 2) -
     39.0*nu + 6.75))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -1427,12 +1435,12 @@ public:
     rfrak_chi1_y = y[2];
     rfrak_chi2_x = y[3];
     rfrak_chi2_y = y[4];
-    rfrak_ell_x = y[5];
-    rfrak_ell_y = y[6];
-    rfrak_ell_z = y[7];
+    rfrak_frame_x = y[5];
+    rfrak_frame_y = y[6];
+    rfrak_frame_z = y[7];
     Phi = y[8];
 
-    R = exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat);
+    R = exp(rfrak_frame_x*xHat + rfrak_frame_y*yHat + rfrak_frame_z*zHat);
     nHat = R*xHat*conjugate(R);
     lambdaHat = R*yHat*conjugate(R);
     ellHat = R*zHat*conjugate(R);
@@ -1447,8 +1455,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
-    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
+    chiVec1 = S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1);
+    chiVec2 = S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -1595,21 +1603,21 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
-    std::vector<double> rfrak_ellHat(3);
-    rfrak_ellHat[0] = y[5];
-    rfrak_ellHat[1] = y[6];
-    rfrak_ellHat[2] = y[7];
-    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
+    std::vector<double> rfrak_frame(3);
+    rfrak_frame[0] = y[5];
+    rfrak_frame[1] = y[6];
+    rfrak_frame[2] = y[7];
+    const std::vector<double> rfrakdot_frame = FrameFromAngularVelocity_Integrand(rfrak_frame, OmegaVec().vec());
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
-                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
                                                             dydt[1], dydt[2]); }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
-                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
                                                             dydt[3], dydt[4]); }
-    dydt[5] = rfrakdot_ellHat[0];
-    dydt[6] = rfrakdot_ellHat[1];
-    dydt[7] = rfrakdot_ellHat[2];
+    dydt[5] = rfrakdot_frame[0];
+    dydt[6] = rfrakdot_frame[1];
+    dydt[7] = rfrakdot_frame[2];
     dydt[8] = v*v*v/m;
 
     return GSL_SUCCESS; // GSL expects this if everything went well
@@ -1622,8 +1630,8 @@ public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const Quaternion S_S1, S_S2;
-  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
+  const Quaternion S_chi1, S_chi2;
+  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_frame_x, rfrak_frame_y, rfrak_frame_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
@@ -1643,23 +1651,24 @@ public:
 
 public:
   TaylorTn_4p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
-           double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
-           const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
+           m2_i, const double v_i, const Quaternion S_chi1_i, const Quaternion S_chi2_i, const double rfrak_chi1_x_i,
+           const double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double
+           rfrak_frame_x_i, const double rfrak_frame_y_i, const double rfrak_frame_z_i) :
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_chi1(S_chi1_i), S_chi2(S_chi2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
-    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
-    m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
-    nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
-    nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
-    ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
-    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
-    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
-    2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x +
-    chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_frame_x(rfrak_frame_x_i), rfrak_frame_y(rfrak_frame_y_i),
+    rfrak_frame_z(rfrak_frame_z_i), m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_frame_x*xHat +
+    rfrak_frame_y*yHat + rfrak_frame_z*zHat)), nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)),
+    ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]),
+    lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]), ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]),
+    R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)), R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)),
+    chiVec1(S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1)),
+    chiVec2(S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]),
+    chi1_z(chiVec1[3]), chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) +
+    pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) +
+    pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x
+    + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
     chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)),
     S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), S_la(chi1_la*pow(m1, 2) + chi2_la*pow(m2, 2)), Sigma_l(m*(-chi1_l*m1 +
     chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), Sigma_la(m*(-chi1_la*m1 + chi2_la*m2)), chi_s_l(0.5*chi1_l +
@@ -1687,7 +1696,7 @@ public:
     E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu + 11.0) +
     Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)), E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75)
     + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -1696,12 +1705,12 @@ public:
     rfrak_chi1_y = y[2];
     rfrak_chi2_x = y[3];
     rfrak_chi2_y = y[4];
-    rfrak_ell_x = y[5];
-    rfrak_ell_y = y[6];
-    rfrak_ell_z = y[7];
+    rfrak_frame_x = y[5];
+    rfrak_frame_y = y[6];
+    rfrak_frame_z = y[7];
     Phi = y[8];
 
-    R = exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat);
+    R = exp(rfrak_frame_x*xHat + rfrak_frame_y*yHat + rfrak_frame_z*zHat);
     nHat = R*xHat*conjugate(R);
     lambdaHat = R*yHat*conjugate(R);
     ellHat = R*zHat*conjugate(R);
@@ -1716,8 +1725,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
-    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
+    chiVec1 = S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1);
+    chiVec2 = S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -1887,21 +1896,21 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
-    std::vector<double> rfrak_ellHat(3);
-    rfrak_ellHat[0] = y[5];
-    rfrak_ellHat[1] = y[6];
-    rfrak_ellHat[2] = y[7];
-    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
+    std::vector<double> rfrak_frame(3);
+    rfrak_frame[0] = y[5];
+    rfrak_frame[1] = y[6];
+    rfrak_frame[2] = y[7];
+    const std::vector<double> rfrakdot_frame = FrameFromAngularVelocity_Integrand(rfrak_frame, OmegaVec().vec());
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
-                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
                                                             dydt[1], dydt[2]); }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
-                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
                                                             dydt[3], dydt[4]); }
-    dydt[5] = rfrakdot_ellHat[0];
-    dydt[6] = rfrakdot_ellHat[1];
-    dydt[7] = rfrakdot_ellHat[2];
+    dydt[5] = rfrakdot_frame[0];
+    dydt[6] = rfrakdot_frame[1];
+    dydt[7] = rfrakdot_frame[2];
     dydt[8] = v*v*v/m;
 
     return GSL_SUCCESS; // GSL expects this if everything went well
@@ -1914,8 +1923,8 @@ public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const Quaternion S_S1, S_S2;
-  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
+  const Quaternion S_chi1, S_chi2;
+  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_frame_x, rfrak_frame_y, rfrak_frame_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
@@ -1936,23 +1945,24 @@ public:
 
 public:
   TaylorTn_4p5PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
-           double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
-           const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
+           m2_i, const double v_i, const Quaternion S_chi1_i, const Quaternion S_chi2_i, const double rfrak_chi1_x_i,
+           const double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double
+           rfrak_frame_x_i, const double rfrak_frame_y_i, const double rfrak_frame_z_i) :
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_chi1(S_chi1_i), S_chi2(S_chi2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
-    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
-    m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
-    nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
-    nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
-    ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
-    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
-    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
-    2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x +
-    chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_frame_x(rfrak_frame_x_i), rfrak_frame_y(rfrak_frame_y_i),
+    rfrak_frame_z(rfrak_frame_z_i), m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_frame_x*xHat +
+    rfrak_frame_y*yHat + rfrak_frame_z*zHat)), nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)),
+    ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]),
+    lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]), ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]),
+    R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)), R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)),
+    chiVec1(S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1)),
+    chiVec2(S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]),
+    chi1_z(chiVec1[3]), chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) +
+    pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) +
+    pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x
+    + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
     chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)),
     S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), S_la(chi1_la*pow(m1, 2) + chi2_la*pow(m2, 2)), Sigma_l(m*(-chi1_l*m1 +
     chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), Sigma_la(m*(-chi1_la*m1 + chi2_la*m2)), chi_s_l(0.5*chi1_l +
@@ -1980,7 +1990,7 @@ public:
     E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu + 11.0) +
     Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)), E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75)
     + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -1989,12 +1999,12 @@ public:
     rfrak_chi1_y = y[2];
     rfrak_chi2_x = y[3];
     rfrak_chi2_y = y[4];
-    rfrak_ell_x = y[5];
-    rfrak_ell_y = y[6];
-    rfrak_ell_z = y[7];
+    rfrak_frame_x = y[5];
+    rfrak_frame_y = y[6];
+    rfrak_frame_z = y[7];
     Phi = y[8];
 
-    R = exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat);
+    R = exp(rfrak_frame_x*xHat + rfrak_frame_y*yHat + rfrak_frame_z*zHat);
     nHat = R*xHat*conjugate(R);
     lambdaHat = R*yHat*conjugate(R);
     ellHat = R*zHat*conjugate(R);
@@ -2009,8 +2019,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
-    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
+    chiVec1 = S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1);
+    chiVec2 = S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -2201,21 +2211,21 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
-    std::vector<double> rfrak_ellHat(3);
-    rfrak_ellHat[0] = y[5];
-    rfrak_ellHat[1] = y[6];
-    rfrak_ellHat[2] = y[7];
-    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
+    std::vector<double> rfrak_frame(3);
+    rfrak_frame[0] = y[5];
+    rfrak_frame[1] = y[6];
+    rfrak_frame[2] = y[7];
+    const std::vector<double> rfrakdot_frame = FrameFromAngularVelocity_Integrand(rfrak_frame, OmegaVec().vec());
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
-                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
                                                             dydt[1], dydt[2]); }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
-                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
                                                             dydt[3], dydt[4]); }
-    dydt[5] = rfrakdot_ellHat[0];
-    dydt[6] = rfrakdot_ellHat[1];
-    dydt[7] = rfrakdot_ellHat[2];
+    dydt[5] = rfrakdot_frame[0];
+    dydt[6] = rfrakdot_frame[1];
+    dydt[7] = rfrakdot_frame[2];
     dydt[8] = v*v*v/m;
 
     return GSL_SUCCESS; // GSL expects this if everything went well
@@ -2228,8 +2238,8 @@ public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const Quaternion S_S1, S_S2;
-  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
+  const Quaternion S_chi1, S_chi2;
+  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_frame_x, rfrak_frame_y, rfrak_frame_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
@@ -2250,23 +2260,24 @@ public:
 
 public:
   TaylorTn_5p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
-           double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
-           const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
+           m2_i, const double v_i, const Quaternion S_chi1_i, const Quaternion S_chi2_i, const double rfrak_chi1_x_i,
+           const double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double
+           rfrak_frame_x_i, const double rfrak_frame_y_i, const double rfrak_frame_z_i) :
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_chi1(S_chi1_i), S_chi2(S_chi2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
-    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
-    m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
-    nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
-    nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
-    ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
-    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
-    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
-    2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x +
-    chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_frame_x(rfrak_frame_x_i), rfrak_frame_y(rfrak_frame_y_i),
+    rfrak_frame_z(rfrak_frame_z_i), m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_frame_x*xHat +
+    rfrak_frame_y*yHat + rfrak_frame_z*zHat)), nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)),
+    ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]),
+    lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]), ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]),
+    R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)), R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)),
+    chiVec1(S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1)),
+    chiVec2(S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]),
+    chi1_z(chiVec1[3]), chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) +
+    pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) +
+    pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x
+    + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
     chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)),
     S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), S_la(chi1_la*pow(m1, 2) + chi2_la*pow(m2, 2)), Sigma_l(m*(-chi1_l*m1 +
     chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), Sigma_la(m*(-chi1_la*m1 + chi2_la*m2)), chi_s_l(0.5*chi1_l +
@@ -2297,7 +2308,7 @@ public:
     - 2.0*nu + 1.0)), E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu +
     11.0) + Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)), E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu
     + 33.75) + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -2306,12 +2317,12 @@ public:
     rfrak_chi1_y = y[2];
     rfrak_chi2_x = y[3];
     rfrak_chi2_y = y[4];
-    rfrak_ell_x = y[5];
-    rfrak_ell_y = y[6];
-    rfrak_ell_z = y[7];
+    rfrak_frame_x = y[5];
+    rfrak_frame_y = y[6];
+    rfrak_frame_z = y[7];
     Phi = y[8];
 
-    R = exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat);
+    R = exp(rfrak_frame_x*xHat + rfrak_frame_y*yHat + rfrak_frame_z*zHat);
     nHat = R*xHat*conjugate(R);
     lambdaHat = R*yHat*conjugate(R);
     ellHat = R*zHat*conjugate(R);
@@ -2326,8 +2337,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
-    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
+    chiVec1 = S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1);
+    chiVec2 = S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -2558,21 +2569,21 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
-    std::vector<double> rfrak_ellHat(3);
-    rfrak_ellHat[0] = y[5];
-    rfrak_ellHat[1] = y[6];
-    rfrak_ellHat[2] = y[7];
-    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
+    std::vector<double> rfrak_frame(3);
+    rfrak_frame[0] = y[5];
+    rfrak_frame[1] = y[6];
+    rfrak_frame[2] = y[7];
+    const std::vector<double> rfrakdot_frame = FrameFromAngularVelocity_Integrand(rfrak_frame, OmegaVec().vec());
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
-                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
                                                             dydt[1], dydt[2]); }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
-                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
                                                             dydt[3], dydt[4]); }
-    dydt[5] = rfrakdot_ellHat[0];
-    dydt[6] = rfrakdot_ellHat[1];
-    dydt[7] = rfrakdot_ellHat[2];
+    dydt[5] = rfrakdot_frame[0];
+    dydt[6] = rfrakdot_frame[1];
+    dydt[7] = rfrakdot_frame[2];
     dydt[8] = v*v*v/m;
 
     return GSL_SUCCESS; // GSL expects this if everything went well
@@ -2585,8 +2596,8 @@ public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const Quaternion S_S1, S_S2;
-  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
+  const Quaternion S_chi1, S_chi2;
+  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_frame_x, rfrak_frame_y, rfrak_frame_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
@@ -2607,23 +2618,24 @@ public:
 
 public:
   TaylorTn_5p5PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
-           double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
-           const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
+           m2_i, const double v_i, const Quaternion S_chi1_i, const Quaternion S_chi2_i, const double rfrak_chi1_x_i,
+           const double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double
+           rfrak_frame_x_i, const double rfrak_frame_y_i, const double rfrak_frame_z_i) :
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_chi1(S_chi1_i), S_chi2(S_chi2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
-    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
-    m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
-    nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
-    nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
-    ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
-    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
-    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
-    2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x +
-    chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_frame_x(rfrak_frame_x_i), rfrak_frame_y(rfrak_frame_y_i),
+    rfrak_frame_z(rfrak_frame_z_i), m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_frame_x*xHat +
+    rfrak_frame_y*yHat + rfrak_frame_z*zHat)), nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)),
+    ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]),
+    lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]), ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]),
+    R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)), R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)),
+    chiVec1(S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1)),
+    chiVec2(S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]),
+    chi1_z(chiVec1[3]), chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) +
+    pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) +
+    pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x
+    + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
     chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)),
     S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), S_la(chi1_la*pow(m1, 2) + chi2_la*pow(m2, 2)), Sigma_l(m*(-chi1_l*m1 +
     chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), Sigma_la(m*(-chi1_la*m1 + chi2_la*m2)), chi_s_l(0.5*chi1_l +
@@ -2655,7 +2667,7 @@ public:
     E_SO_5((S_l*(-6.77777777777778*nu + 11.0) + Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)),
     E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75) + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu +
     6.75))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -2664,12 +2676,12 @@ public:
     rfrak_chi1_y = y[2];
     rfrak_chi2_x = y[3];
     rfrak_chi2_y = y[4];
-    rfrak_ell_x = y[5];
-    rfrak_ell_y = y[6];
-    rfrak_ell_z = y[7];
+    rfrak_frame_x = y[5];
+    rfrak_frame_y = y[6];
+    rfrak_frame_z = y[7];
     Phi = y[8];
 
-    R = exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat);
+    R = exp(rfrak_frame_x*xHat + rfrak_frame_y*yHat + rfrak_frame_z*zHat);
     nHat = R*xHat*conjugate(R);
     lambdaHat = R*yHat*conjugate(R);
     ellHat = R*zHat*conjugate(R);
@@ -2684,8 +2696,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
-    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
+    chiVec1 = S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1);
+    chiVec2 = S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -2969,21 +2981,21 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
-    std::vector<double> rfrak_ellHat(3);
-    rfrak_ellHat[0] = y[5];
-    rfrak_ellHat[1] = y[6];
-    rfrak_ellHat[2] = y[7];
-    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
+    std::vector<double> rfrak_frame(3);
+    rfrak_frame[0] = y[5];
+    rfrak_frame[1] = y[6];
+    rfrak_frame[2] = y[7];
+    const std::vector<double> rfrakdot_frame = FrameFromAngularVelocity_Integrand(rfrak_frame, OmegaVec().vec());
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
-                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
                                                             dydt[1], dydt[2]); }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
-                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
                                                             dydt[3], dydt[4]); }
-    dydt[5] = rfrakdot_ellHat[0];
-    dydt[6] = rfrakdot_ellHat[1];
-    dydt[7] = rfrakdot_ellHat[2];
+    dydt[5] = rfrakdot_frame[0];
+    dydt[6] = rfrakdot_frame[1];
+    dydt[7] = rfrakdot_frame[2];
     dydt[8] = v*v*v/m;
 
     return GSL_SUCCESS; // GSL expects this if everything went well
@@ -2996,8 +3008,8 @@ public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const Quaternion S_S1, S_S2;
-  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
+  const Quaternion S_chi1, S_chi2;
+  double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_frame_x, rfrak_frame_y, rfrak_frame_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
   double nHat_x, nHat_y, nHat_z, lambdaHat_x, lambdaHat_y, lambdaHat_z, ellHat_x, ellHat_y, ellHat_z;
@@ -3018,23 +3030,24 @@ public:
 
 public:
   TaylorTn_6p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
-           double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
-           const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
+           m2_i, const double v_i, const Quaternion S_chi1_i, const Quaternion S_chi2_i, const double rfrak_chi1_x_i,
+           const double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double
+           rfrak_frame_x_i, const double rfrak_frame_y_i, const double rfrak_frame_z_i) :
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_chi1(S_chi1_i), S_chi2(S_chi2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
-    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
-    m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
-    nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
-    nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
-    ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
-    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
-    chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
-    2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
-    2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
-    chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z), chi2_l(chi2_x*ellHat_x +
-    chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
+    rfrak_chi2_y(rfrak_chi2_y_i), rfrak_frame_x(rfrak_frame_x_i), rfrak_frame_y(rfrak_frame_y_i),
+    rfrak_frame_z(rfrak_frame_z_i), m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_frame_x*xHat +
+    rfrak_frame_y*yHat + rfrak_frame_z*zHat)), nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)),
+    ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]),
+    lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]), ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]),
+    R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)), R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)),
+    chiVec1(S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1)),
+    chiVec2(S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]),
+    chi1_z(chiVec1[3]), chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) +
+    pow(chi1_y, 2) + pow(chi1_z, 2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) +
+    pow(chi2_y, 2) + pow(chi2_z, 2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x
+    + chi1_y*nHat_y + chi1_z*nHat_z), chi1_la(chi1_x*lambdaHat_x + chi1_y*lambdaHat_y + chi1_z*lambdaHat_z),
+    chi2_l(chi2_x*ellHat_x + chi2_y*ellHat_y + chi2_z*ellHat_z), chi2_n(chi2_x*nHat_x + chi2_y*nHat_y + chi2_z*nHat_z),
     chi2_la(chi2_x*lambdaHat_x + chi2_y*lambdaHat_y + chi2_z*lambdaHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)),
     S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)), S_la(chi1_la*pow(m1, 2) + chi2_la*pow(m2, 2)), Sigma_l(m*(-chi1_l*m1 +
     chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), Sigma_la(m*(-chi1_la*m1 + chi2_la*m2)), chi_s_l(0.5*chi1_l +
@@ -3069,7 +3082,7 @@ public:
     E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu + 11.0) +
     Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)), E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75)
     + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -3078,12 +3091,12 @@ public:
     rfrak_chi1_y = y[2];
     rfrak_chi2_x = y[3];
     rfrak_chi2_y = y[4];
-    rfrak_ell_x = y[5];
-    rfrak_ell_y = y[6];
-    rfrak_ell_z = y[7];
+    rfrak_frame_x = y[5];
+    rfrak_frame_y = y[6];
+    rfrak_frame_z = y[7];
     Phi = y[8];
 
-    R = exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat);
+    R = exp(rfrak_frame_x*xHat + rfrak_frame_y*yHat + rfrak_frame_z*zHat);
     nHat = R*xHat*conjugate(R);
     lambdaHat = R*yHat*conjugate(R);
     ellHat = R*zHat*conjugate(R);
@@ -3098,8 +3111,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
-    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
+    chiVec1 = S_chi1*R_S1*zHat*conjugate(R_S1)*conjugate(S_chi1);
+    chiVec2 = S_chi2*R_S2*zHat*conjugate(R_S2)*conjugate(S_chi2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -3467,21 +3480,21 @@ public:
   }
 
   int CommonRHS(const double dvdt, const double* y, double* dydt) {
-    std::vector<double> rfrak_ellHat(3);
-    rfrak_ellHat[0] = y[5];
-    rfrak_ellHat[1] = y[6];
-    rfrak_ellHat[2] = y[7];
-    const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
+    std::vector<double> rfrak_frame(3);
+    rfrak_frame[0] = y[5];
+    rfrak_frame[1] = y[6];
+    rfrak_frame[2] = y[7];
+    const std::vector<double> rfrakdot_frame = FrameFromAngularVelocity_Integrand(rfrak_frame, OmegaVec().vec());
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
-                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
                                                             dydt[1], dydt[2]); }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
-                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
                                                             dydt[3], dydt[4]); }
-    dydt[5] = rfrakdot_ellHat[0];
-    dydt[6] = rfrakdot_ellHat[1];
-    dydt[7] = rfrakdot_ellHat[2];
+    dydt[5] = rfrakdot_frame[0];
+    dydt[6] = rfrakdot_frame[1];
+    dydt[7] = rfrakdot_frame[2];
     dydt[8] = v*v*v/m;
 
     return GSL_SUCCESS; // GSL expects this if everything went well
