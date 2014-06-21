@@ -110,23 +110,27 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
                                )
 {
   // Transform the input into the forms we will actually use
-  const double chi1Mag_i = std::sqrt(chi1_i[0]*chi1_i[0] + chi1_i[1]*chi1_i[1] + chi1_i[2]*chi1_i[2]);
-  const double chi2Mag_i = std::sqrt(chi2_i[0]*chi2_i[0] + chi2_i[1]*chi2_i[1] + chi2_i[2]*chi2_i[2]);
-  const std::vector<double> rfrak_chi1_i = sqrtOfRotor(-Quaternion(chi1_i).normalized()*zHat).log().vec();
-  const std::vector<double> rfrak_chi2_i = sqrtOfRotor(-Quaternion(chi2_i).normalized()*zHat).log().vec();
-  const std::vector<double> rfrak_ell_i = R_frame_i.log().vec();
+  const double chi1Mag = Quaternions::Quaternion(chi1_i).abs();
+  const double chi2Mag = Quaternions::Quaternion(chi2_i).abs();
+  const Quaternion S_chi1_i = ( chi1Mag>1e-12
+                                ? std::sqrt(chi1Mag) * Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi1_i).normalized()*Quaternions::zHat)
+                                : Quaternions::Zero);
+  const Quaternion S_chi2_i = ( chi2Mag>1e-12
+                                ? std::sqrt(chi2Mag) * Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi2_i).normalized()*Quaternions::zHat)
+                                : Quaternions::Zero);
+  const std::vector<double> rfrak_frame_i = R_frame_i.log().vec();
 
   // These are the basic variables to be evolved
   std::vector<double> y(9);
-  y[0] = v_i;
-  y[1] = rfrak_chi1_i[0];
-  y[2] = rfrak_chi1_i[1];
-  y[3] = rfrak_chi2_i[0];
-  y[4] = rfrak_chi2_i[1];
-  y[5] = rfrak_ell_i[0];
-  y[6] = rfrak_ell_i[1];
-  y[7] = rfrak_ell_i[2];
-  y[8] = 0.0; // Phi is integrated as a convenient diagnostic; it is not actually needed
+  y[0] = v_i; // PN expansion parameter v [ = sqrt(x) = Omega_orb^{1/3} ]
+  y[1] = 0.0; // x component of logarithm of R_chi1 dynamics rotor
+  y[2] = 0.0; // y component of logarithm of R_chi1 dynamics rotor
+  y[3] = 0.0; // x component of logarithm of R_chi2 dynamics rotor
+  y[4] = 0.0; // y component of logarithm of R_chi2 dynamics rotor
+  y[5] = rfrak_frame_i[0]; // x component of logarithm of R_frame rotor
+  y[6] = rfrak_frame_i[1]; // y component of logarithm of R_frame rotor
+  y[7] = rfrak_frame_i[2]; // z component of logarithm of R_frame rotor
+  y[8] = 0.0; // Orbital phase Phi [integrated as a convenient diagnostic; not actually needed]
 
   // Tn encapsulates all the actual PN calculations -- especially the
   // right-hand sides of the evolution system
@@ -134,81 +138,81 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   switch(int(2*PNOrder)) {
   case 0:
     Tn = new TaylorTn_0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-                            chi1Mag_i, chi2Mag_i,
-                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                            S_chi1_i, S_chi2_i,
+                            0.0, 0.0, 0.0, 0.0,
+                            rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 1:
     Tn = new TaylorTn_0p50PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-                               chi1Mag_i, chi2Mag_i,
-                               rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-                               rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                               S_chi1_i, S_chi2_i,
+                               0.0, 0.0, 0.0, 0.0,
+                               rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 2:
     Tn = new TaylorTn_1p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-                            chi1Mag_i, chi2Mag_i,
-                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              S_chi1_i, S_chi2_i,
+                              0.0, 0.0, 0.0, 0.0,
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 3:
     Tn = new TaylorTn_1p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-                            chi1Mag_i, chi2Mag_i,
-                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              S_chi1_i, S_chi2_i,
+                              0.0, 0.0, 0.0, 0.0,
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 4:
     Tn = new TaylorTn_2p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-                            chi1Mag_i, chi2Mag_i,
-                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              S_chi1_i, S_chi2_i,
+                              0.0, 0.0, 0.0, 0.0,
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 5:
     Tn = new TaylorTn_2p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-                            chi1Mag_i, chi2Mag_i,
-                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              S_chi1_i, S_chi2_i,
+                              0.0, 0.0, 0.0, 0.0,
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 6:
     Tn = new TaylorTn_3p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-                            chi1Mag_i, chi2Mag_i,
-                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              S_chi1_i, S_chi2_i,
+                              0.0, 0.0, 0.0, 0.0,
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 7:
     Tn = new TaylorTn_3p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-                            chi1Mag_i, chi2Mag_i,
-                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              S_chi1_i, S_chi2_i,
+                              0.0, 0.0, 0.0, 0.0,
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 8:
     Tn = new TaylorTn_4p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-                            chi1Mag_i, chi2Mag_i,
-                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              S_chi1_i, S_chi2_i,
+                              0.0, 0.0, 0.0, 0.0,
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 9:
     Tn = new TaylorTn_4p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-                            chi1Mag_i, chi2Mag_i,
-                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              S_chi1_i, S_chi2_i,
+                              0.0, 0.0, 0.0, 0.0,
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 10:
     Tn = new TaylorTn_5p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-                            chi1Mag_i, chi2Mag_i,
-                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              S_chi1_i, S_chi2_i,
+                              0.0, 0.0, 0.0, 0.0,
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 11:
     Tn = new TaylorTn_5p5PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-                            chi1Mag_i, chi2Mag_i,
-                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              S_chi1_i, S_chi2_i,
+                              0.0, 0.0, 0.0, 0.0,
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   case 12:
     Tn = new TaylorTn_6p0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
-                            chi1Mag_i, chi2Mag_i,
-                            rfrak_chi1_i[0], rfrak_chi1_i[1], rfrak_chi2_i[0], rfrak_chi2_i[1],
-                            rfrak_ell_i[0], rfrak_ell_i[1], rfrak_ell_i[2]);
+                              S_chi1_i, S_chi2_i,
+                              0.0, 0.0, 0.0, 0.0,
+                              rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   default:
     std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": PN order " << PNOrder << " is not yet implemented." << std::endl;
@@ -274,9 +278,9 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     t.push_back(time);
     v.push_back(y[0]);
     const Quaternion R_chi1_i = exp(Quaternion(0.0, y[1], y[2], 0.0));
-    chi1.push_back((chi1Mag_i*R_chi1_i*zHat*R_chi1_i.conjugate()).vec());
+    chi1.push_back((S_chi1_i*R_chi1_i*zHat*R_chi1_i.conjugate()*S_chi1_i.conjugate()).vec());
     const Quaternion R_chi2_i = exp(Quaternion(0.0, y[3], y[4], 0.0));
-    chi2.push_back((chi2Mag_i*R_chi2_i*zHat*R_chi2_i.conjugate()).vec());
+    chi2.push_back((S_chi2_i*R_chi2_i*zHat*R_chi2_i.conjugate()*S_chi2_i.conjugate()).vec());
     const Quaternion R_frame_i = exp(Quaternion(0.0, y[5], y[6], y[7]));
     // const Quaternion R_frame_i = Unflipped(R_frame.back(), exp(Quaternion(0.0, y[5], y[6], y[7])));
     R_frame.push_back(R_frame_i);
@@ -312,9 +316,9 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
       t.push_back(time);
       v.push_back(y[0]);
       const Quaternion R_chi1_i = exp(Quaternion(0.0, y[1], y[2], 0.0));
-      chi1.push_back((chi1Mag_i*R_chi1_i*zHat*R_chi1_i.conjugate()).vec());
+      chi1.push_back((S_chi1_i*R_chi1_i*zHat*R_chi1_i.conjugate()*S_chi1_i.conjugate()).vec());
       const Quaternion R_chi2_i = exp(Quaternion(0.0, y[3], y[4], 0.0));
-      chi2.push_back((chi2Mag_i*R_chi2_i*zHat*R_chi2_i.conjugate()).vec());
+      chi2.push_back((S_chi2_i*R_chi2_i*zHat*R_chi2_i.conjugate()*S_chi2_i.conjugate()).vec());
       const Quaternion R_frame_i = Unflipped(R_frame.back(), exp(Quaternion(0.0, y[5], y[6], y[7])));
       R_frame.push_back(R_frame_i);
       Phi.push_back(y[8]);
