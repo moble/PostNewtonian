@@ -118,7 +118,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
                                 ? std::sqrt(Quaternions::Quaternion(chi2_i).abs())
                                   *Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi2_i).normalized()*Quaternions::zHat)
                                 : Quaternions::Zero);
-  const std::vector<double> _i = R_frame_i.log().vec();
+  const std::vector<double> rfrak_ell_i = R_frame_i.log().vec();
 
   // These are the basic variables to be evolved
   std::vector<double> y(9);
