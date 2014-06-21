@@ -1,11 +1,11 @@
 // File produced automatically by OrbitalEvolutionCodeGen_Q.ipynb
 
 class TaylorTn_0PN_Q : public TaylorTn_Q {
-private:
+public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const double chi1Mag, chi2Mag;
+  const Quaternion S_S1, S_S2;
   double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
   const double m, delta, nu;
   Quaternion R, nHat, ellHat;
@@ -18,20 +18,21 @@ private:
   double chi1_l, chi1_n, chi2_l, chi2_n, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, Fcal_coeff;
   const double Fcal_0, E_0;
   double Phi;
+  const bool EvolveSpin1, EvolveSpin2;
 
 public:
   TaylorTn_0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const
+           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
            double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
            const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), chi1Mag(chi1Mag_i), chi2Mag(chi2Mag_i),
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
     rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
     m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
     nHat(R*xHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
+    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
     chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
     2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
     2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
@@ -39,7 +40,8 @@ public:
     chi2_z*nHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
     Sigma_l(m*(-chi1_l*m1 + chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), chi_s_l(0.5*chi1_l + 0.5*chi2_l),
     chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    E_0(1.00000000000000), Phi(0.0)
+    E_0(1.00000000000000),
+    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -64,8 +66,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
+    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -112,7 +114,7 @@ public:
     const double dEdv = -E_0*m*nu*v;
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -120,7 +122,7 @@ public:
     Recalculate(t, y);
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
     const double dvdt_T4 = 1.0*Fcal_0*Fcal_coeff/(E_0*m*nu*v);
-    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -129,7 +131,7 @@ public:
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
     const double dtdv = 1.0*E_0*m*nu*v/(Fcal_0*Fcal_coeff);
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -140,8 +142,12 @@ public:
     rfrak_ellHat[2] = y[7];
     const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
     dydt[0] = dvdt;
-    FrameFromAngularVelocity_2D_Integrand(y[1], y[2], OmegaVec_chiVec_1().vec(), dydt[1], dydt[2]);
-    FrameFromAngularVelocity_2D_Integrand(y[3], y[4], OmegaVec_chiVec_2().vec(), dydt[3], dydt[4]);
+    if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
+                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            dydt[1], dydt[2]); }
+    if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
+                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            dydt[3], dydt[4]); }
     dydt[5] = rfrakdot_ellHat[0];
     dydt[6] = rfrakdot_ellHat[1];
     dydt[7] = rfrakdot_ellHat[2];
@@ -153,11 +159,11 @@ public:
 
 
 class TaylorTn_0p50PN_Q : public TaylorTn_Q {
-private:
+public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const double chi1Mag, chi2Mag;
+  const Quaternion S_S1, S_S2;
   double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
   const double m, delta, nu;
   Quaternion R, nHat, ellHat;
@@ -170,20 +176,21 @@ private:
   double chi1_l, chi1_n, chi2_l, chi2_n, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, Fcal_coeff;
   const double Fcal_0, E_0;
   double Phi;
+  const bool EvolveSpin1, EvolveSpin2;
 
 public:
   TaylorTn_0p50PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const
+           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
            double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
            const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), chi1Mag(chi1Mag_i), chi2Mag(chi2Mag_i),
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
     rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
     m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
     nHat(R*xHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
+    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
     chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
     2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
     2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
@@ -191,7 +198,8 @@ public:
     chi2_z*nHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
     Sigma_l(m*(-chi1_l*m1 + chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), chi_s_l(0.5*chi1_l + 0.5*chi2_l),
     chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    E_0(1.00000000000000), Phi(0.0)
+    E_0(1.00000000000000),
+    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -216,8 +224,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
+    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -266,7 +274,7 @@ public:
     const double dEdv = -E_0*m*nu*v;
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -274,7 +282,7 @@ public:
     Recalculate(t, y);
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
     const double dvdt_T4 = 1.0*Fcal_0*Fcal_coeff/(E_0*m*nu*v);
-    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -283,7 +291,7 @@ public:
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
     const double dtdv = 1.0*E_0*m*nu*v/(Fcal_0*Fcal_coeff);
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -294,8 +302,12 @@ public:
     rfrak_ellHat[2] = y[7];
     const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
     dydt[0] = dvdt;
-    FrameFromAngularVelocity_2D_Integrand(y[1], y[2], OmegaVec_chiVec_1().vec(), dydt[1], dydt[2]);
-    FrameFromAngularVelocity_2D_Integrand(y[3], y[4], OmegaVec_chiVec_2().vec(), dydt[3], dydt[4]);
+    if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
+                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            dydt[1], dydt[2]); }
+    if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
+                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            dydt[3], dydt[4]); }
     dydt[5] = rfrakdot_ellHat[0];
     dydt[6] = rfrakdot_ellHat[1];
     dydt[7] = rfrakdot_ellHat[2];
@@ -307,11 +319,11 @@ public:
 
 
 class TaylorTn_1p0PN_Q : public TaylorTn_Q {
-private:
+public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const double chi1Mag, chi2Mag;
+  const Quaternion S_S1, S_S2;
   double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
   const double m, delta, nu;
   Quaternion R, nHat, ellHat;
@@ -324,20 +336,21 @@ private:
   double chi1_l, chi1_n, chi2_l, chi2_n, S_l, S_n, Sigma_l, Sigma_n, chi_s_l, chi_a_l, Fcal_coeff;
   const double Fcal_0, Fcal_2, E_0, E_2;
   double Phi;
+  const bool EvolveSpin1, EvolveSpin2;
 
 public:
   TaylorTn_1p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const
+           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
            double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
            const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), chi1Mag(chi1Mag_i), chi2Mag(chi2Mag_i),
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
     rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
     m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
     nHat(R*xHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]), nHat_y(nHat[2]), nHat_z(nHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
+    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
     chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
     2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
     2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
@@ -345,7 +358,8 @@ public:
     chi2_z*nHat_z), S_l(chi1_l*pow(m1, 2) + chi2_l*pow(m2, 2)), S_n(chi1_n*pow(m1, 2) + chi2_n*pow(m2, 2)),
     Sigma_l(m*(-chi1_l*m1 + chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), chi_s_l(0.5*chi1_l + 0.5*chi2_l),
     chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
-    Fcal_2(-2.91666666666667*nu - 3.71130952380952), E_0(1.00000000000000), E_2(-0.0833333333333333*nu - 0.75), Phi(0.0)
+    Fcal_2(-2.91666666666667*nu - 3.71130952380952), E_0(1.00000000000000), E_2(-0.0833333333333333*nu - 0.75),
+    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -370,8 +384,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
+    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -426,7 +440,7 @@ public:
     const double dEdv = -m*nu*v*(E_0 + 2.0*E_2*pow(v, 2));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -435,7 +449,7 @@ public:
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
     const double dvdt_T4 = -2.0*Fcal_coeff*(-0.5*Fcal_0/(E_0*m) + pow(v, 2)*(-0.5*Fcal_2/m +
       1.0*E_2*Fcal_0/(E_0*m))/E_0)/(nu*v);
-    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -444,7 +458,7 @@ public:
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
     const double dtdv = -0.5*nu*v*(-2.0*E_0*m/Fcal_0 + m*pow(v, 2)*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0)/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -455,8 +469,12 @@ public:
     rfrak_ellHat[2] = y[7];
     const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
     dydt[0] = dvdt;
-    FrameFromAngularVelocity_2D_Integrand(y[1], y[2], OmegaVec_chiVec_1().vec(), dydt[1], dydt[2]);
-    FrameFromAngularVelocity_2D_Integrand(y[3], y[4], OmegaVec_chiVec_2().vec(), dydt[3], dydt[4]);
+    if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
+                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            dydt[1], dydt[2]); }
+    if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
+                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            dydt[3], dydt[4]); }
     dydt[5] = rfrakdot_ellHat[0];
     dydt[6] = rfrakdot_ellHat[1];
     dydt[7] = rfrakdot_ellHat[2];
@@ -468,11 +486,11 @@ public:
 
 
 class TaylorTn_1p5PN_Q : public TaylorTn_Q {
-private:
+public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const double chi1Mag, chi2Mag;
+  const Quaternion S_S1, S_S2;
   double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
@@ -489,21 +507,22 @@ private:
   const double E_0, E_2;
   double E_SO_3;
   double Phi;
+  const bool EvolveSpin1, EvolveSpin2;
 
 public:
   TaylorTn_1p5PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const
+           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
            double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
            const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), chi1Mag(chi1Mag_i), chi2Mag(chi2Mag_i),
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
     rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
     m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
+    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
     chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
     2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
     2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
@@ -515,7 +534,8 @@ public:
     0.5*chi2_l), chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
     Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_SO_3((-4.0*S_l -
     1.25*Sigma_l*delta)/pow(m, 2)), E_0(1.00000000000000), E_2(-0.0833333333333333*nu - 0.75),
-    E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)), Phi(0.0)
+    E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)),
+    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -544,8 +564,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
+    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -609,7 +629,7 @@ public:
     const double dEdv = -0.5*m*nu*v*(2.0*E_0 + pow(v, 2)*(4.0*E_2 + 5.0*E_SO_3*v));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -618,7 +638,7 @@ public:
     if(v>=1.0) { return GSL_EDOM; } // Beyond domain of PN validity
     const double dvdt_T4 = -2.0*Fcal_coeff*(pow(v, 2)*(v*((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m +
       1.25*E_SO_3*Fcal_0/(E_0*m))/E_0 + (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -628,7 +648,7 @@ public:
     const double dtdv = -0.5*nu*v*(-2.0*E_0*m/Fcal_0 + pow(v, 2)*(m*v*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 -
       5.0*E_SO_3)/Fcal_0 + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -639,8 +659,12 @@ public:
     rfrak_ellHat[2] = y[7];
     const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
     dydt[0] = dvdt;
-    FrameFromAngularVelocity_2D_Integrand(y[1], y[2], OmegaVec_chiVec_1().vec(), dydt[1], dydt[2]);
-    FrameFromAngularVelocity_2D_Integrand(y[3], y[4], OmegaVec_chiVec_2().vec(), dydt[3], dydt[4]);
+    if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
+                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            dydt[1], dydt[2]); }
+    if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
+                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            dydt[3], dydt[4]); }
     dydt[5] = rfrakdot_ellHat[0];
     dydt[6] = rfrakdot_ellHat[1];
     dydt[7] = rfrakdot_ellHat[2];
@@ -652,11 +676,11 @@ public:
 
 
 class TaylorTn_2p0PN_Q : public TaylorTn_Q {
-private:
+public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const double chi1Mag, chi2Mag;
+  const Quaternion S_S1, S_S2;
   double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
@@ -673,21 +697,22 @@ private:
   const double E_0, E_2, E_4;
   double E_SQ_4, E_SO_3;
   double Phi;
+  const bool EvolveSpin1, EvolveSpin2;
 
 public:
   TaylorTn_2p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const
+           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
            double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
            const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), chi1Mag(chi1Mag_i), chi2Mag(chi2Mag_i),
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
     rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
     m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
+    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
     chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
     2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
     2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
@@ -705,7 +730,8 @@ public:
     E_0(1.00000000000000), E_2(-0.0833333333333333*nu - 0.75), E_4(-0.0416666666666667*pow(nu, 2) + 2.375*nu - 3.375),
     E_SQ_4(-1.5*pow(chi_a_l, 2) - 1.5*pow(chi_s_l, 2) - delta*(0.5*chi2chi2 + 3.0*chi_a_l*chi_s_l) + nu*(chi1chi2 +
     6.0*pow(chi_a_l, 2)) + 0.25*(chi1chi1 + chi2chi2)*(delta - 2.0*nu + 1.0)), E_SO_3((4.66666666666667*S_l +
-    2.0*Sigma_l*delta)/pow(m, 2)), Phi(0.0)
+    2.0*Sigma_l*delta)/pow(m, 2)),
+    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -734,8 +760,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
+    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -811,7 +837,7 @@ public:
     const double dEdv = -0.5*m*nu*v*(2.0*E_0 + pow(v, 2)*(4.0*E_2 + v*(5.0*E_SO_3 + 6.0*v*(E_4 + E_SQ_4))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -822,7 +848,7 @@ public:
       1.5*E_4*Fcal_0 + 1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2, 2)*Fcal_0/(E_0*m))/E_0)/E_0 + ((-0.5*Fcal_3 -
       0.5*Fcal_SO_3)/m + 1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) + (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) -
       0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -833,7 +859,7 @@ public:
       2.0*Fcal_SQ_4) - 2.0*E_0*pow(Fcal_2, 2)/Fcal_0 + 4.0*E_2*Fcal_2)/Fcal_0)/Fcal_0 + m*(E_0*(2.0*Fcal_3 +
       2.0*Fcal_SO_3)/Fcal_0 - 5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -844,8 +870,12 @@ public:
     rfrak_ellHat[2] = y[7];
     const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
     dydt[0] = dvdt;
-    FrameFromAngularVelocity_2D_Integrand(y[1], y[2], OmegaVec_chiVec_1().vec(), dydt[1], dydt[2]);
-    FrameFromAngularVelocity_2D_Integrand(y[3], y[4], OmegaVec_chiVec_2().vec(), dydt[3], dydt[4]);
+    if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
+                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            dydt[1], dydt[2]); }
+    if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
+                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            dydt[3], dydt[4]); }
     dydt[5] = rfrakdot_ellHat[0];
     dydt[6] = rfrakdot_ellHat[1];
     dydt[7] = rfrakdot_ellHat[2];
@@ -857,11 +887,11 @@ public:
 
 
 class TaylorTn_2p5PN_Q : public TaylorTn_Q {
-private:
+public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const double chi1Mag, chi2Mag;
+  const Quaternion S_S1, S_S2;
   double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
@@ -878,21 +908,22 @@ private:
   const double E_0, E_2, E_4;
   double E_SQ_4, E_SO_3, E_SO_5;
   double Phi;
+  const bool EvolveSpin1, EvolveSpin2;
 
 public:
   TaylorTn_2p5PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const
+           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
            double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
            const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), chi1Mag(chi1Mag_i), chi2Mag(chi2Mag_i),
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
     rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
     m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
+    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
     chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
     2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
     2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
@@ -912,7 +943,8 @@ public:
     E_2(-0.0833333333333333*nu - 0.75), E_4(-0.0416666666666667*pow(nu, 2) + 2.375*nu - 3.375), E_SQ_4(-1.5*pow(chi_a_l,
     2) - 1.5*pow(chi_s_l, 2) - delta*(0.5*chi2chi2 + 3.0*chi_a_l*chi_s_l) + nu*(chi1chi2 + 6.0*pow(chi_a_l, 2)) +
     0.25*(chi1chi1 + chi2chi2)*(delta - 2.0*nu + 1.0)), E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)),
-    E_SO_5((S_l*(-6.77777777777778*nu + 11.0) + Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)), Phi(0.0)
+    E_SO_5((S_l*(-6.77777777777778*nu + 11.0) + Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)),
+    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -941,8 +973,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
+    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -1027,7 +1059,7 @@ public:
       6.0*E_SQ_4))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -1039,7 +1071,7 @@ public:
       ((-0.5*Fcal_4 - 0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 + 1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2,
       2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m + 1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) +
       (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -1052,7 +1084,7 @@ public:
       2.0*E_0*pow(Fcal_2, 2)/Fcal_0 + 4.0*E_2*Fcal_2)/Fcal_0)/Fcal_0) + m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 -
       5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -1063,8 +1095,12 @@ public:
     rfrak_ellHat[2] = y[7];
     const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
     dydt[0] = dvdt;
-    FrameFromAngularVelocity_2D_Integrand(y[1], y[2], OmegaVec_chiVec_1().vec(), dydt[1], dydt[2]);
-    FrameFromAngularVelocity_2D_Integrand(y[3], y[4], OmegaVec_chiVec_2().vec(), dydt[3], dydt[4]);
+    if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
+                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            dydt[1], dydt[2]); }
+    if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
+                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            dydt[3], dydt[4]); }
     dydt[5] = rfrakdot_ellHat[0];
     dydt[6] = rfrakdot_ellHat[1];
     dydt[7] = rfrakdot_ellHat[2];
@@ -1076,11 +1112,11 @@ public:
 
 
 class TaylorTn_3p0PN_Q : public TaylorTn_Q {
-private:
+public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const double chi1Mag, chi2Mag;
+  const Quaternion S_S1, S_S2;
   double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
@@ -1097,21 +1133,22 @@ private:
   const double E_0, E_2, E_4, E_6;
   double E_SQ_4, E_SO_3, E_SO_5;
   double Phi;
+  const bool EvolveSpin1, EvolveSpin2;
 
 public:
   TaylorTn_3p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const
+           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
            double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
            const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), chi1Mag(chi1Mag_i), chi2Mag(chi2Mag_i),
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
     rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
     m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
+    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
     chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
     2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
     2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
@@ -1135,7 +1172,8 @@ public:
     E_SQ_4(-1.5*pow(chi_a_l, 2) - 1.5*pow(chi_s_l, 2) - delta*(0.5*chi2chi2 + 3.0*chi_a_l*chi_s_l) + nu*(chi1chi2 +
     6.0*pow(chi_a_l, 2)) + 0.25*(chi1chi1 + chi2chi2)*(delta - 2.0*nu + 1.0)), E_SO_3((4.66666666666667*S_l +
     2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu + 11.0) + Sigma_l*delta*(-3.33333333333333*nu +
-    3.0))/pow(m, 2)), Phi(0.0)
+    3.0))/pow(m, 2)),
+    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -1164,8 +1202,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
+    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -1255,7 +1293,7 @@ public:
       v*(8.0*E_6*v + 7.0*E_SO_5)))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -1270,7 +1308,7 @@ public:
       5.0*E_2*E_SO_3*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_4 - 0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 +
       1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2, 2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m +
       1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) + (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -1287,7 +1325,7 @@ public:
       m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 - 5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 -
       4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -1298,8 +1336,12 @@ public:
     rfrak_ellHat[2] = y[7];
     const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
     dydt[0] = dvdt;
-    FrameFromAngularVelocity_2D_Integrand(y[1], y[2], OmegaVec_chiVec_1().vec(), dydt[1], dydt[2]);
-    FrameFromAngularVelocity_2D_Integrand(y[3], y[4], OmegaVec_chiVec_2().vec(), dydt[3], dydt[4]);
+    if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
+                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            dydt[1], dydt[2]); }
+    if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
+                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            dydt[3], dydt[4]); }
     dydt[5] = rfrakdot_ellHat[0];
     dydt[6] = rfrakdot_ellHat[1];
     dydt[7] = rfrakdot_ellHat[2];
@@ -1311,11 +1353,11 @@ public:
 
 
 class TaylorTn_3p5PN_Q : public TaylorTn_Q {
-private:
+public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const double chi1Mag, chi2Mag;
+  const Quaternion S_S1, S_S2;
   double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
@@ -1332,21 +1374,22 @@ private:
   const double E_0, E_2, E_4, E_6;
   double E_SQ_4, E_SO_3, E_SO_5, E_SO_7;
   double Phi;
+  const bool EvolveSpin1, EvolveSpin2;
 
 public:
   TaylorTn_3p5PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const
+           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
            double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
            const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), chi1Mag(chi1Mag_i), chi2Mag(chi2Mag_i),
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
     rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
     m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
+    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
     chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
     2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
     2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
@@ -1374,7 +1417,8 @@ public:
     6.0*pow(chi_a_l, 2)) + 0.25*(chi1chi1 + chi2chi2)*(delta - 2.0*nu + 1.0)), E_SO_3((4.66666666666667*S_l +
     2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu + 11.0) + Sigma_l*delta*(-3.33333333333333*nu +
     3.0))/pow(m, 2)), E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75) + Sigma_l*delta*(1.25*pow(nu, 2) -
-    39.0*nu + 6.75))/pow(m, 2)), Phi(0.0)
+    39.0*nu + 6.75))/pow(m, 2)),
+    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -1403,8 +1447,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
+    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -1505,7 +1549,7 @@ public:
       v*(7.0*E_SO_5 + v*(8.0*E_6 + 9.0*E_SO_7*v))))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -1524,7 +1568,7 @@ public:
       5.0*E_2*E_SO_3*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_4 - 0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 +
       1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2, 2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m +
       1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) + (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -1546,7 +1590,7 @@ public:
       m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 - 5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 -
       4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -1557,8 +1601,12 @@ public:
     rfrak_ellHat[2] = y[7];
     const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
     dydt[0] = dvdt;
-    FrameFromAngularVelocity_2D_Integrand(y[1], y[2], OmegaVec_chiVec_1().vec(), dydt[1], dydt[2]);
-    FrameFromAngularVelocity_2D_Integrand(y[3], y[4], OmegaVec_chiVec_2().vec(), dydt[3], dydt[4]);
+    if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
+                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            dydt[1], dydt[2]); }
+    if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
+                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            dydt[3], dydt[4]); }
     dydt[5] = rfrakdot_ellHat[0];
     dydt[6] = rfrakdot_ellHat[1];
     dydt[7] = rfrakdot_ellHat[2];
@@ -1570,11 +1618,11 @@ public:
 
 
 class TaylorTn_4p0PN_Q : public TaylorTn_Q {
-private:
+public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const double chi1Mag, chi2Mag;
+  const Quaternion S_S1, S_S2;
   double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
@@ -1591,21 +1639,22 @@ private:
   const double E_0, E_2, E_4, E_6, E_8, E_lnv_8;
   double E_SQ_4, E_SO_3, E_SO_5, E_SO_7;
   double Phi;
+  const bool EvolveSpin1, EvolveSpin2;
 
 public:
   TaylorTn_4p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const
+           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
            double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
            const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), chi1Mag(chi1Mag_i), chi2Mag(chi2Mag_i),
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
     rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
     m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
+    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
     chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
     2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
     2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
@@ -1637,7 +1686,8 @@ public:
     + 3.0*chi_a_l*chi_s_l) + nu*(chi1chi2 + 6.0*pow(chi_a_l, 2)) + 0.25*(chi1chi1 + chi2chi2)*(delta - 2.0*nu + 1.0)),
     E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu + 11.0) +
     Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)), E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75)
-    + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)), Phi(0.0)
+    + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)),
+    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -1666,8 +1716,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
+    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -1775,7 +1825,7 @@ public:
       v*(7.0*E_SO_5 + v*(8.0*E_6 + v*(9.0*E_SO_7 + v*(10.0*E_8 + E_lnv_8*(10.0*logv + 1.0)))))))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -1802,7 +1852,7 @@ public:
       0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 + 1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2,
       2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m + 1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) +
       (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -1832,7 +1882,7 @@ public:
       - 2.0*E_0*pow(Fcal_2, 2)/Fcal_0 + 4.0*E_2*Fcal_2)/Fcal_0)/Fcal_0) + m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 -
       5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -1843,8 +1893,12 @@ public:
     rfrak_ellHat[2] = y[7];
     const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
     dydt[0] = dvdt;
-    FrameFromAngularVelocity_2D_Integrand(y[1], y[2], OmegaVec_chiVec_1().vec(), dydt[1], dydt[2]);
-    FrameFromAngularVelocity_2D_Integrand(y[3], y[4], OmegaVec_chiVec_2().vec(), dydt[3], dydt[4]);
+    if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
+                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            dydt[1], dydt[2]); }
+    if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
+                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            dydt[3], dydt[4]); }
     dydt[5] = rfrakdot_ellHat[0];
     dydt[6] = rfrakdot_ellHat[1];
     dydt[7] = rfrakdot_ellHat[2];
@@ -1856,11 +1910,11 @@ public:
 
 
 class TaylorTn_4p5PN_Q : public TaylorTn_Q {
-private:
+public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const double chi1Mag, chi2Mag;
+  const Quaternion S_S1, S_S2;
   double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
@@ -1878,21 +1932,22 @@ private:
   const double E_0, E_2, E_4, E_6, E_8, E_lnv_8;
   double E_SQ_4, E_SO_3, E_SO_5, E_SO_7;
   double Phi;
+  const bool EvolveSpin1, EvolveSpin2;
 
 public:
   TaylorTn_4p5PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const
+           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
            double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
            const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), chi1Mag(chi1Mag_i), chi2Mag(chi2Mag_i),
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
     rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
     m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
+    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
     chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
     2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
     2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
@@ -1924,7 +1979,8 @@ public:
     + 3.0*chi_a_l*chi_s_l) + nu*(chi1chi2 + 6.0*pow(chi_a_l, 2)) + 0.25*(chi1chi1 + chi2chi2)*(delta - 2.0*nu + 1.0)),
     E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu + 11.0) +
     Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)), E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75)
-    + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)), Phi(0.0)
+    + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)),
+    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -1953,8 +2009,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
+    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -2062,7 +2118,7 @@ public:
       v*(7.0*E_SO_5 + v*(8.0*E_6 + v*(9.0*E_SO_7 + v*(10.0*E_8 + E_lnv_8*(10.0*logv + 1.0)))))))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -2097,7 +2153,7 @@ public:
       5.0*E_2*E_SO_3*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_4 - 0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 +
       1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2, 2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m +
       1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) + (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -2140,7 +2196,7 @@ public:
       - 2.0*E_0*pow(Fcal_2, 2)/Fcal_0 + 4.0*E_2*Fcal_2)/Fcal_0)/Fcal_0) + m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 -
       5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -2151,8 +2207,12 @@ public:
     rfrak_ellHat[2] = y[7];
     const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
     dydt[0] = dvdt;
-    FrameFromAngularVelocity_2D_Integrand(y[1], y[2], OmegaVec_chiVec_1().vec(), dydt[1], dydt[2]);
-    FrameFromAngularVelocity_2D_Integrand(y[3], y[4], OmegaVec_chiVec_2().vec(), dydt[3], dydt[4]);
+    if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
+                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            dydt[1], dydt[2]); }
+    if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
+                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            dydt[3], dydt[4]); }
     dydt[5] = rfrakdot_ellHat[0];
     dydt[6] = rfrakdot_ellHat[1];
     dydt[7] = rfrakdot_ellHat[2];
@@ -2164,11 +2224,11 @@ public:
 
 
 class TaylorTn_5p0PN_Q : public TaylorTn_Q {
-private:
+public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const double chi1Mag, chi2Mag;
+  const Quaternion S_S1, S_S2;
   double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
@@ -2186,21 +2246,22 @@ private:
   const double E_0, E_2, E_4, E_6, E_8, E_lnv_8, E_10, E_lnv_10;
   double E_SQ_4, E_SO_3, E_SO_5, E_SO_7;
   double Phi;
+  const bool EvolveSpin1, EvolveSpin2;
 
 public:
   TaylorTn_5p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const
+           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
            double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
            const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), chi1Mag(chi1Mag_i), chi2Mag(chi2Mag_i),
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
     rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
     m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
+    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
     chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
     2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
     2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
@@ -2235,7 +2296,8 @@ public:
     delta*(0.5*chi2chi2 + 3.0*chi_a_l*chi_s_l) + nu*(chi1chi2 + 6.0*pow(chi_a_l, 2)) + 0.25*(chi1chi1 + chi2chi2)*(delta
     - 2.0*nu + 1.0)), E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu +
     11.0) + Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)), E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu
-    + 33.75) + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)), Phi(0.0)
+    + 33.75) + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)),
+    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -2264,8 +2326,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
+    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -2376,7 +2438,7 @@ public:
       E_lnv_10*(12.0*logv + 1.0))))))))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -2426,7 +2488,7 @@ public:
       5.0*E_2*E_SO_3*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_4 - 0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 +
       1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2, 2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m +
       1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) + (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -2491,7 +2553,7 @@ public:
       - 2.0*E_0*pow(Fcal_2, 2)/Fcal_0 + 4.0*E_2*Fcal_2)/Fcal_0)/Fcal_0) + m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 -
       5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -2502,8 +2564,12 @@ public:
     rfrak_ellHat[2] = y[7];
     const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
     dydt[0] = dvdt;
-    FrameFromAngularVelocity_2D_Integrand(y[1], y[2], OmegaVec_chiVec_1().vec(), dydt[1], dydt[2]);
-    FrameFromAngularVelocity_2D_Integrand(y[3], y[4], OmegaVec_chiVec_2().vec(), dydt[3], dydt[4]);
+    if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
+                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            dydt[1], dydt[2]); }
+    if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
+                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            dydt[3], dydt[4]); }
     dydt[5] = rfrakdot_ellHat[0];
     dydt[6] = rfrakdot_ellHat[1];
     dydt[7] = rfrakdot_ellHat[2];
@@ -2515,11 +2581,11 @@ public:
 
 
 class TaylorTn_5p5PN_Q : public TaylorTn_Q {
-private:
+public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const double chi1Mag, chi2Mag;
+  const Quaternion S_S1, S_S2;
   double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
@@ -2537,21 +2603,22 @@ private:
   const double E_0, E_2, E_4, E_6, E_8, E_lnv_8, E_10, E_lnv_10, E_11;
   double E_SQ_4, E_SO_3, E_SO_5, E_SO_7;
   double Phi;
+  const bool EvolveSpin1, EvolveSpin2;
 
 public:
   TaylorTn_5p5PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const
+           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
            double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
            const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), chi1Mag(chi1Mag_i), chi2Mag(chi2Mag_i),
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
     rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
     m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
+    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
     chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
     2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
     2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
@@ -2587,7 +2654,8 @@ public:
     0.25*(chi1chi1 + chi2chi2)*(delta - 2.0*nu + 1.0)), E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)),
     E_SO_5((S_l*(-6.77777777777778*nu + 11.0) + Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)),
     E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75) + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu +
-    6.75))/pow(m, 2)), Phi(0.0)
+    6.75))/pow(m, 2)),
+    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -2616,8 +2684,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
+    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -2729,7 +2797,7 @@ public:
       13.0*E_11*v + E_lnv_10*(12.0*logv + 1.0))))))))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -2799,7 +2867,7 @@ public:
       5.0*E_2*E_SO_3*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_4 - 0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 +
       1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2, 2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m +
       1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) + (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -2896,7 +2964,7 @@ public:
       - 2.0*E_0*pow(Fcal_2, 2)/Fcal_0 + 4.0*E_2*Fcal_2)/Fcal_0)/Fcal_0) + m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 -
       5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -2907,8 +2975,12 @@ public:
     rfrak_ellHat[2] = y[7];
     const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
     dydt[0] = dvdt;
-    FrameFromAngularVelocity_2D_Integrand(y[1], y[2], OmegaVec_chiVec_1().vec(), dydt[1], dydt[2]);
-    FrameFromAngularVelocity_2D_Integrand(y[3], y[4], OmegaVec_chiVec_2().vec(), dydt[3], dydt[4]);
+    if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
+                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            dydt[1], dydt[2]); }
+    if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
+                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            dydt[3], dydt[4]); }
     dydt[5] = rfrakdot_ellHat[0];
     dydt[6] = rfrakdot_ellHat[1];
     dydt[7] = rfrakdot_ellHat[2];
@@ -2920,11 +2992,11 @@ public:
 
 
 class TaylorTn_6p0PN_Q : public TaylorTn_Q {
-private:
+public:
   const Quaternion xHat, yHat, zHat;
   const double m1, m2;
   double v;
-  const double chi1Mag, chi2Mag;
+  const Quaternion S_S1, S_S2;
   double rfrak_chi1_x, rfrak_chi1_y, rfrak_chi2_x, rfrak_chi2_y, rfrak_ell_x, rfrak_ell_y, rfrak_ell_z;
   const double m, delta, nu;
   Quaternion R, nHat, lambdaHat, ellHat;
@@ -2942,21 +3014,22 @@ private:
   const double E_0, E_2, E_4, E_6, E_8, E_lnv_8, E_10, E_lnv_10, E_11, E_12, E_lnv_12;
   double E_SQ_4, E_SO_3, E_SO_5, E_SO_7;
   double Phi;
+  const bool EvolveSpin1, EvolveSpin2;
 
 public:
   TaylorTn_6p0PN_Q(const Quaternion xHat_i, const Quaternion yHat_i, const Quaternion zHat_i, const double m1_i, const double
-           m2_i, const double v_i, const double chi1Mag_i, const double chi2Mag_i, const double rfrak_chi1_x_i, const
+           m2_i, const double v_i, const Quaternion S_S1_i, const Quaternion S_S2_i, const double rfrak_chi1_x_i, const
            double rfrak_chi1_y_i, const double rfrak_chi2_x_i, const double rfrak_chi2_y_i, const double rfrak_ell_x_i,
            const double rfrak_ell_y_i, const double rfrak_ell_z_i) :
-    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), chi1Mag(chi1Mag_i), chi2Mag(chi2Mag_i),
+    xHat(xHat_i), yHat(yHat_i), zHat(zHat_i), m1(m1_i), m2(m2_i), v(v_i), S_S1(S_S1_i), S_S2(S_S2_i),
     rfrak_chi1_x(rfrak_chi1_x_i), rfrak_chi1_y(rfrak_chi1_y_i), rfrak_chi2_x(rfrak_chi2_x_i),
     rfrak_chi2_y(rfrak_chi2_y_i), rfrak_ell_x(rfrak_ell_x_i), rfrak_ell_y(rfrak_ell_y_i), rfrak_ell_z(rfrak_ell_z_i),
     m(m1 + m2), delta((m1 - m2)/m), nu(m1*m2/pow(m, 2)), R(exp(rfrak_ell_x*xHat + rfrak_ell_y*yHat + rfrak_ell_z*zHat)),
     nHat(R*xHat*conjugate(R)), lambdaHat(R*yHat*conjugate(R)), ellHat(R*zHat*conjugate(R)), nHat_x(nHat[1]),
     nHat_y(nHat[2]), nHat_z(nHat[3]), lambdaHat_x(lambdaHat[1]), lambdaHat_y(lambdaHat[2]), lambdaHat_z(lambdaHat[3]),
     ellHat_x(ellHat[1]), ellHat_y(ellHat[2]), ellHat_z(ellHat[3]), R_S1(exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat)),
-    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(chi1Mag*R_S1*zHat*conjugate(R_S1)),
-    chiVec2(chi2Mag*R_S2*zHat*conjugate(R_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
+    R_S2(exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat)), chiVec1(S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1)),
+    chiVec2(S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2)), chi1_x(chiVec1[1]), chi1_y(chiVec1[2]), chi1_z(chiVec1[3]),
     chi2_x(chiVec2[1]), chi2_y(chiVec2[2]), chi2_z(chiVec2[3]), chi1chi1(pow(chi1_x, 2) + pow(chi1_y, 2) + pow(chi1_z,
     2)), chi1chi2(chi1_x*chi2_x + chi1_y*chi2_y + chi1_z*chi2_z), chi2chi2(pow(chi2_x, 2) + pow(chi2_y, 2) + pow(chi2_z,
     2)), chi1_l(chi1_x*ellHat_x + chi1_y*ellHat_y + chi1_z*ellHat_z), chi1_n(chi1_x*nHat_x + chi1_y*nHat_y +
@@ -2995,7 +3068,8 @@ public:
     + nu*(chi1chi2 + 6.0*pow(chi_a_l, 2)) + 0.25*(chi1chi1 + chi2chi2)*(delta - 2.0*nu + 1.0)),
     E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu + 11.0) +
     Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)), E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75)
-    + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)), Phi(0.0)
+    + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)),
+    Phi(0.0), EvolveSpin1(S_S1.abs()>1e-10), EvolveSpin2(S_S2.abs()>1e-10)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -3024,8 +3098,8 @@ public:
     ellHat_z = ellHat[3];
     R_S1 = exp(rfrak_chi1_x*xHat + rfrak_chi1_y*yHat);
     R_S2 = exp(rfrak_chi2_x*xHat + rfrak_chi2_y*yHat);
-    chiVec1 = chi1Mag*R_S1*zHat*conjugate(R_S1);
-    chiVec2 = chi2Mag*R_S2*zHat*conjugate(R_S2);
+    chiVec1 = S_S1*R_S1*zHat*conjugate(R_S1)*conjugate(S_S1);
+    chiVec2 = S_S2*R_S2*zHat*conjugate(R_S2)*conjugate(S_S2);
     chi1_x = chiVec1[1];
     chi1_y = chiVec1[2];
     chi1_z = chiVec1[3];
@@ -3137,7 +3211,7 @@ public:
       E_lnv_10*(12.0*logv + 1.0) + v*(13.0*E_11 + v*(14.0*E_12 + E_lnv_12*(14.0*logv + 1.0))))))))))));
     const double Absorption = 0;
     const double dvdt_T1 = (-Absorption - Flux)/dEdv;
-    if(dvdt_T1<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T1<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T1, y, dydt);
   }
 
@@ -3238,7 +3312,7 @@ public:
       0.5*Fcal_SQ_4)/m + ((1.0*E_2*Fcal_2 + 1.5*E_4*Fcal_0 + 1.5*E_SQ_4*Fcal_0)/m - 2.0*pow(E_2,
       2)*Fcal_0/(E_0*m))/E_0)/E_0) + ((-0.5*Fcal_3 - 0.5*Fcal_SO_3)/m + 1.25*E_SO_3*Fcal_0/(E_0*m))/E_0) +
       (-0.5*Fcal_2/m + 1.0*E_2*Fcal_0/(E_0*m))/E_0) - 0.5*Fcal_0/(E_0*m))/(nu*v);
-    if(dvdt_T4<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T4<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T4, y, dydt);
   }
 
@@ -3388,7 +3462,7 @@ public:
       - 2.0*E_0*pow(Fcal_2, 2)/Fcal_0 + 4.0*E_2*Fcal_2)/Fcal_0)/Fcal_0) + m*(E_0*(2.0*Fcal_3 + 2.0*Fcal_SO_3)/Fcal_0 -
       5.0*E_SO_3)/Fcal_0) + m*(2.0*E_0*Fcal_2/Fcal_0 - 4.0*E_2)/Fcal_0))/Fcal_coeff;
     const double dvdt_T5 = 1.0/dtdv;
-    if(dvdt_T5<1e-12) { return GSL_EDIVERGE; } // v is decreasing
+    if(dvdt_T5<1.0e-12) { return GSL_EDIVERGE; } // v is decreasing
     return CommonRHS(dvdt_T5, y, dydt);
   }
 
@@ -3399,8 +3473,12 @@ public:
     rfrak_ellHat[2] = y[7];
     const std::vector<double> rfrakdot_ellHat = FrameFromAngularVelocity_Integrand(rfrak_ellHat, OmegaVec().vec());
     dydt[0] = dvdt;
-    FrameFromAngularVelocity_2D_Integrand(y[1], y[2], OmegaVec_chiVec_1().vec(), dydt[1], dydt[2]);
-    FrameFromAngularVelocity_2D_Integrand(y[3], y[4], OmegaVec_chiVec_2().vec(), dydt[3], dydt[4]);
+    if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
+                                                            (S_S1.inverse()*OmegaVec_chiVec_1()*S_S1).vec(),
+                                                            dydt[1], dydt[2]); }
+    if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
+                                                            (S_S2.inverse()*OmegaVec_chiVec_2()*S_S2).vec(),
+                                                            dydt[3], dydt[4]); }
     dydt[5] = rfrakdot_ellHat[0];
     dydt[6] = rfrakdot_ellHat[1];
     dydt[7] = rfrakdot_ellHat[2];
