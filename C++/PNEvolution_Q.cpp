@@ -110,13 +110,13 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
                                )
 {
   // Transform the input into the forms we will actually use
-  const Quaternion S_chi1_i = ( Quaternions::Quaternion(chi1_i).abs()>1e-12
-                                ? std::sqrt(Quaternions::Quaternion(chi1_i).abs())
-                                  *Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi1_i).normalized()*Quaternions::zHat)
+  const double chi1Mag = Quaternions::Quaternion(chi1_i).abs();
+  const double chi2Mag = Quaternions::Quaternion(chi2_i).abs();
+  const Quaternion S_chi1_i = ( chi1Mag>1e-12
+                                ? std::sqrt(chi1Mag) * Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi1_i).normalized()*Quaternions::zHat)
                                 : Quaternions::Zero);
-  const Quaternion S_chi2_i = ( Quaternions::Quaternion(chi2_i).abs()>1e-12
-                                ? std::sqrt(Quaternions::Quaternion(chi2_i).abs())
-                                  *Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi2_i).normalized()*Quaternions::zHat)
+  const Quaternion S_chi2_i = ( chi2Mag>1e-12
+                                ? std::sqrt(chi2Mag) * Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi2_i).normalized()*Quaternions::zHat)
                                 : Quaternions::Zero);
   const std::vector<double> rfrak_frame_i = R_frame_i.log().vec();
 
