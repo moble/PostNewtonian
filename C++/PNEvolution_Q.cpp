@@ -110,11 +110,11 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
                                )
 {
   // Transform the input into the forms we will actually use
-  const Quaternion S_chi1_i = ( Quaternions::Quaternion(chi1_i).abs()>1e-10
+  const Quaternion S_chi1_i = ( Quaternions::Quaternion(chi1_i).abs()>1e-8
                                 ? std::sqrt(Quaternions::Quaternion(chi1_i).abs())
                                   *Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi1_i).normalized()*Quaternions::zHat)
                                 : Quaternions::Zero);
-  const Quaternion S_chi2_i = ( Quaternions::Quaternion(chi2_i).abs()>1e-10
+  const Quaternion S_chi2_i = ( Quaternions::Quaternion(chi2_i).abs()>1e-8
                                 ? std::sqrt(Quaternions::Quaternion(chi2_i).abs())
                                   *Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi2_i).normalized()*Quaternions::zHat)
                                 : Quaternions::Zero);
@@ -122,15 +122,15 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
 
   // These are the basic variables to be evolved
   std::vector<double> y(9);
-  y[0] = v_i;
-  y[1] = 0.0;
-  y[2] = 0.0;
-  y[3] = 0.0;
-  y[4] = 0.0;
-  y[5] = rfrak_frame_i[0];
-  y[6] = rfrak_frame_i[1];
-  y[7] = rfrak_frame_i[2];
-  y[8] = 0.0; // Phi is integrated as a convenient diagnostic; it is not actually needed
+  y[0] = v_i; // PN expansion parameter v [ = sqrt(x) = Omega_orb^{1/3} ]
+  y[1] = 0.0; // x component of logarithm of R_chi1 dynamics rotor
+  y[2] = 0.0; // y component of logarithm of R_chi1 dynamics rotor
+  y[3] = 0.0; // x component of logarithm of R_chi2 dynamics rotor
+  y[4] = 0.0; // y component of logarithm of R_chi2 dynamics rotor
+  y[5] = rfrak_frame_i[0]; // x component of logarithm of R_frame rotor
+  y[6] = rfrak_frame_i[1]; // y component of logarithm of R_frame rotor
+  y[7] = rfrak_frame_i[2]; // z component of logarithm of R_frame rotor
+  y[8] = 0.0; // Orbital phase Phi [integrated as a convenient diagnostic; not actually needed]
 
   // Tn encapsulates all the actual PN calculations -- especially the
   // right-hand sides of the evolution system

@@ -42,7 +42,7 @@ public:
     2)), Sigma_l(m*(-chi1_l*m1 + chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), chi_s_l(0.5*chi1_l + 0.5*chi2_l),
     chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
     E_0(1.00000000000000),
-    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.normsquared()>1e-8), EvolveSpin2(S_chi2.normsquared()>1e-8)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -145,10 +145,18 @@ public:
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
                                                             (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
-                                                            dydt[1], dydt[2]); }
+                                                            dydt[1], dydt[2]);
+    } else {
+      dydt[1] = 0.0;
+      dydt[2] = 0.0;
+    }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
                                                             (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
-                                                            dydt[3], dydt[4]); }
+                                                            dydt[3], dydt[4]);
+    } else {
+      dydt[3] = 0.0;
+      dydt[4] = 0.0;
+    }
     dydt[5] = rfrakdot_frame[0];
     dydt[6] = rfrakdot_frame[1];
     dydt[7] = rfrakdot_frame[2];
@@ -201,7 +209,7 @@ public:
     2)), Sigma_l(m*(-chi1_l*m1 + chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), chi_s_l(0.5*chi1_l + 0.5*chi2_l),
     chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
     E_0(1.00000000000000),
-    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.normsquared()>1e-8), EvolveSpin2(S_chi2.normsquared()>1e-8)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -306,10 +314,18 @@ public:
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
                                                             (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
-                                                            dydt[1], dydt[2]); }
+                                                            dydt[1], dydt[2]);
+    } else {
+      dydt[1] = 0.0;
+      dydt[2] = 0.0;
+    }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
                                                             (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
-                                                            dydt[3], dydt[4]); }
+                                                            dydt[3], dydt[4]);
+    } else {
+      dydt[3] = 0.0;
+      dydt[4] = 0.0;
+    }
     dydt[5] = rfrakdot_frame[0];
     dydt[6] = rfrakdot_frame[1];
     dydt[7] = rfrakdot_frame[2];
@@ -362,7 +378,7 @@ public:
     2)), Sigma_l(m*(-chi1_l*m1 + chi2_l*m2)), Sigma_n(m*(-chi1_n*m1 + chi2_n*m2)), chi_s_l(0.5*chi1_l + 0.5*chi2_l),
     chi_a_l(0.5*chi1_l - 0.5*chi2_l), Fcal_coeff(6.4*pow(nu, 2)*pow(v, 10)), Fcal_0(1.00000000000000),
     Fcal_2(-2.91666666666667*nu - 3.71130952380952), E_0(1.00000000000000), E_2(-0.0833333333333333*nu - 0.75),
-    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.normsquared()>1e-8), EvolveSpin2(S_chi2.normsquared()>1e-8)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -474,10 +490,18 @@ public:
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
                                                             (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
-                                                            dydt[1], dydt[2]); }
+                                                            dydt[1], dydt[2]);
+    } else {
+      dydt[1] = 0.0;
+      dydt[2] = 0.0;
+    }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
                                                             (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
-                                                            dydt[3], dydt[4]); }
+                                                            dydt[3], dydt[4]);
+    } else {
+      dydt[3] = 0.0;
+      dydt[4] = 0.0;
+    }
     dydt[5] = rfrakdot_frame[0];
     dydt[6] = rfrakdot_frame[1];
     dydt[7] = rfrakdot_frame[2];
@@ -539,7 +563,7 @@ public:
     Fcal_2(-2.91666666666667*nu - 3.71130952380952), Fcal_3(12.5663706143592), Fcal_SO_3((-4.0*S_l -
     1.25*Sigma_l*delta)/pow(m, 2)), E_0(1.00000000000000), E_2(-0.0833333333333333*nu - 0.75),
     E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.normsquared()>1e-8), EvolveSpin2(S_chi2.normsquared()>1e-8)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -665,10 +689,18 @@ public:
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
                                                             (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
-                                                            dydt[1], dydt[2]); }
+                                                            dydt[1], dydt[2]);
+    } else {
+      dydt[1] = 0.0;
+      dydt[2] = 0.0;
+    }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
                                                             (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
-                                                            dydt[3], dydt[4]); }
+                                                            dydt[3], dydt[4]);
+    } else {
+      dydt[3] = 0.0;
+      dydt[4] = 0.0;
+    }
     dydt[5] = rfrakdot_frame[0];
     dydt[6] = rfrakdot_frame[1];
     dydt[7] = rfrakdot_frame[2];
@@ -736,7 +768,7 @@ public:
     E_SQ_4(-1.5*pow(chi_a_l, 2) - 1.5*pow(chi_s_l, 2) - delta*(0.5*chi2chi2 + 3.0*chi_a_l*chi_s_l) + nu*(chi1chi2 +
     6.0*pow(chi_a_l, 2)) + 0.25*(chi1chi1 + chi2chi2)*(delta - 2.0*nu + 1.0)), E_SO_3((4.66666666666667*S_l +
     2.0*Sigma_l*delta)/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.normsquared()>1e-8), EvolveSpin2(S_chi2.normsquared()>1e-8)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -877,10 +909,18 @@ public:
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
                                                             (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
-                                                            dydt[1], dydt[2]); }
+                                                            dydt[1], dydt[2]);
+    } else {
+      dydt[1] = 0.0;
+      dydt[2] = 0.0;
+    }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
                                                             (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
-                                                            dydt[3], dydt[4]); }
+                                                            dydt[3], dydt[4]);
+    } else {
+      dydt[3] = 0.0;
+      dydt[4] = 0.0;
+    }
     dydt[5] = rfrakdot_frame[0];
     dydt[6] = rfrakdot_frame[1];
     dydt[7] = rfrakdot_frame[2];
@@ -950,7 +990,7 @@ public:
     2) - 1.5*pow(chi_s_l, 2) - delta*(0.5*chi2chi2 + 3.0*chi_a_l*chi_s_l) + nu*(chi1chi2 + 6.0*pow(chi_a_l, 2)) +
     0.25*(chi1chi1 + chi2chi2)*(delta - 2.0*nu + 1.0)), E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)),
     E_SO_5((S_l*(-6.77777777777778*nu + 11.0) + Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.normsquared()>1e-8), EvolveSpin2(S_chi2.normsquared()>1e-8)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -1103,10 +1143,18 @@ public:
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
                                                             (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
-                                                            dydt[1], dydt[2]); }
+                                                            dydt[1], dydt[2]);
+    } else {
+      dydt[1] = 0.0;
+      dydt[2] = 0.0;
+    }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
                                                             (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
-                                                            dydt[3], dydt[4]); }
+                                                            dydt[3], dydt[4]);
+    } else {
+      dydt[3] = 0.0;
+      dydt[4] = 0.0;
+    }
     dydt[5] = rfrakdot_frame[0];
     dydt[6] = rfrakdot_frame[1];
     dydt[7] = rfrakdot_frame[2];
@@ -1180,7 +1228,7 @@ public:
     6.0*pow(chi_a_l, 2)) + 0.25*(chi1chi1 + chi2chi2)*(delta - 2.0*nu + 1.0)), E_SO_3((4.66666666666667*S_l +
     2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu + 11.0) + Sigma_l*delta*(-3.33333333333333*nu +
     3.0))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.normsquared()>1e-8), EvolveSpin2(S_chi2.normsquared()>1e-8)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -1345,10 +1393,18 @@ public:
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
                                                             (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
-                                                            dydt[1], dydt[2]); }
+                                                            dydt[1], dydt[2]);
+    } else {
+      dydt[1] = 0.0;
+      dydt[2] = 0.0;
+    }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
                                                             (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
-                                                            dydt[3], dydt[4]); }
+                                                            dydt[3], dydt[4]);
+    } else {
+      dydt[3] = 0.0;
+      dydt[4] = 0.0;
+    }
     dydt[5] = rfrakdot_frame[0];
     dydt[6] = rfrakdot_frame[1];
     dydt[7] = rfrakdot_frame[2];
@@ -1426,7 +1482,7 @@ public:
     2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu + 11.0) + Sigma_l*delta*(-3.33333333333333*nu +
     3.0))/pow(m, 2)), E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75) + Sigma_l*delta*(1.25*pow(nu, 2) -
     39.0*nu + 6.75))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.normsquared()>1e-8), EvolveSpin2(S_chi2.normsquared()>1e-8)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -1611,10 +1667,18 @@ public:
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
                                                             (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
-                                                            dydt[1], dydt[2]); }
+                                                            dydt[1], dydt[2]);
+    } else {
+      dydt[1] = 0.0;
+      dydt[2] = 0.0;
+    }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
                                                             (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
-                                                            dydt[3], dydt[4]); }
+                                                            dydt[3], dydt[4]);
+    } else {
+      dydt[3] = 0.0;
+      dydt[4] = 0.0;
+    }
     dydt[5] = rfrakdot_frame[0];
     dydt[6] = rfrakdot_frame[1];
     dydt[7] = rfrakdot_frame[2];
@@ -1696,7 +1760,7 @@ public:
     E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu + 11.0) +
     Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)), E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75)
     + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.normsquared()>1e-8), EvolveSpin2(S_chi2.normsquared()>1e-8)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -1904,10 +1968,18 @@ public:
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
                                                             (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
-                                                            dydt[1], dydt[2]); }
+                                                            dydt[1], dydt[2]);
+    } else {
+      dydt[1] = 0.0;
+      dydt[2] = 0.0;
+    }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
                                                             (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
-                                                            dydt[3], dydt[4]); }
+                                                            dydt[3], dydt[4]);
+    } else {
+      dydt[3] = 0.0;
+      dydt[4] = 0.0;
+    }
     dydt[5] = rfrakdot_frame[0];
     dydt[6] = rfrakdot_frame[1];
     dydt[7] = rfrakdot_frame[2];
@@ -1990,7 +2062,7 @@ public:
     E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu + 11.0) +
     Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)), E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75)
     + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.normsquared()>1e-8), EvolveSpin2(S_chi2.normsquared()>1e-8)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -2219,10 +2291,18 @@ public:
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
                                                             (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
-                                                            dydt[1], dydt[2]); }
+                                                            dydt[1], dydt[2]);
+    } else {
+      dydt[1] = 0.0;
+      dydt[2] = 0.0;
+    }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
                                                             (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
-                                                            dydt[3], dydt[4]); }
+                                                            dydt[3], dydt[4]);
+    } else {
+      dydt[3] = 0.0;
+      dydt[4] = 0.0;
+    }
     dydt[5] = rfrakdot_frame[0];
     dydt[6] = rfrakdot_frame[1];
     dydt[7] = rfrakdot_frame[2];
@@ -2308,7 +2388,7 @@ public:
     - 2.0*nu + 1.0)), E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu +
     11.0) + Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)), E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu
     + 33.75) + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.normsquared()>1e-8), EvolveSpin2(S_chi2.normsquared()>1e-8)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -2577,10 +2657,18 @@ public:
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
                                                             (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
-                                                            dydt[1], dydt[2]); }
+                                                            dydt[1], dydt[2]);
+    } else {
+      dydt[1] = 0.0;
+      dydt[2] = 0.0;
+    }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
                                                             (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
-                                                            dydt[3], dydt[4]); }
+                                                            dydt[3], dydt[4]);
+    } else {
+      dydt[3] = 0.0;
+      dydt[4] = 0.0;
+    }
     dydt[5] = rfrakdot_frame[0];
     dydt[6] = rfrakdot_frame[1];
     dydt[7] = rfrakdot_frame[2];
@@ -2667,7 +2755,7 @@ public:
     E_SO_5((S_l*(-6.77777777777778*nu + 11.0) + Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)),
     E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75) + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu +
     6.75))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.normsquared()>1e-8), EvolveSpin2(S_chi2.normsquared()>1e-8)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -2989,10 +3077,18 @@ public:
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
                                                             (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
-                                                            dydt[1], dydt[2]); }
+                                                            dydt[1], dydt[2]);
+    } else {
+      dydt[1] = 0.0;
+      dydt[2] = 0.0;
+    }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
                                                             (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
-                                                            dydt[3], dydt[4]); }
+                                                            dydt[3], dydt[4]);
+    } else {
+      dydt[3] = 0.0;
+      dydt[4] = 0.0;
+    }
     dydt[5] = rfrakdot_frame[0];
     dydt[6] = rfrakdot_frame[1];
     dydt[7] = rfrakdot_frame[2];
@@ -3082,7 +3178,7 @@ public:
     E_SO_3((4.66666666666667*S_l + 2.0*Sigma_l*delta)/pow(m, 2)), E_SO_5((S_l*(-6.77777777777778*nu + 11.0) +
     Sigma_l*delta*(-3.33333333333333*nu + 3.0))/pow(m, 2)), E_SO_7((S_l*(2.41666666666667*pow(nu, 2) - 91.75*nu + 33.75)
     + Sigma_l*delta*(1.25*pow(nu, 2) - 39.0*nu + 6.75))/pow(m, 2)),
-    Phi(0.0), EvolveSpin1(S_chi1.abs()>1e-10), EvolveSpin2(S_chi2.abs()>1e-10)
+    Phi(0.0), EvolveSpin1(S_chi1.normsquared()>1e-8), EvolveSpin2(S_chi2.normsquared()>1e-8)
   { }
 
   void Recalculate(double t, const double* y) {
@@ -3488,10 +3584,18 @@ public:
     dydt[0] = dvdt;
     if(EvolveSpin1) { FrameFromAngularVelocity_2D_Integrand(y[1], y[2],
                                                             (S_chi1.inverse()*OmegaVec_chiVec_1()*S_chi1).vec(),
-                                                            dydt[1], dydt[2]); }
+                                                            dydt[1], dydt[2]);
+    } else {
+      dydt[1] = 0.0;
+      dydt[2] = 0.0;
+    }
     if(EvolveSpin2) { FrameFromAngularVelocity_2D_Integrand(y[3], y[4],
                                                             (S_chi2.inverse()*OmegaVec_chiVec_2()*S_chi2).vec(),
-                                                            dydt[3], dydt[4]); }
+                                                            dydt[3], dydt[4]);
+    } else {
+      dydt[3] = 0.0;
+      dydt[4] = 0.0;
+    }
     dydt[5] = rfrakdot_frame[0];
     dydt[6] = rfrakdot_frame[1];
     dydt[7] = rfrakdot_frame[2];
