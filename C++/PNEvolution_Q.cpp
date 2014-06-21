@@ -110,11 +110,11 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
                                )
 {
   // Transform the input into the forms we will actually use
-  const Quaternion S_chi1_i = ( Quaternions::Quaternion(chi1_i).abs()>1e-8
+  const Quaternion S_chi1_i = ( Quaternions::Quaternion(chi1_i).abs()>1e-12
                                 ? std::sqrt(Quaternions::Quaternion(chi1_i).abs())
                                   *Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi1_i).normalized()*Quaternions::zHat)
                                 : Quaternions::Zero);
-  const Quaternion S_chi2_i = ( Quaternions::Quaternion(chi2_i).abs()>1e-8
+  const Quaternion S_chi2_i = ( Quaternions::Quaternion(chi2_i).abs()>1e-12
                                 ? std::sqrt(Quaternions::Quaternion(chi2_i).abs())
                                   *Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi2_i).normalized()*Quaternions::zHat)
                                 : Quaternions::Zero);
