@@ -16,7 +16,8 @@ using Quaternions::FrameFromAngularVelocity_Integrand;
 using Quaternions::FrameFromAngularVelocity_2D_Integrand;
 
 // This macro is useful for debugging
-#define INFOTOCERR std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << std::endl
+#define INFOTOCERR std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << ": "
+#define INFOTOCOUT std::cout << __FILE__ << ":" << __LINE__ << ":" << __func__ << ": "
 
 #define QuatLogDiscontinuity 1.4142135623730951
 inline Quaternion Unflipped(const Quaternion& R0, const Quaternion& R1) {
@@ -300,13 +301,13 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
 
     // Check if it worked and the system is still reasonable
     if(status == GSL_EDOM) {
-      std::cout << "Velocity v has become greater than 1.0" << std::endl;
+      INFOTOCOUT << "Velocity v has become greater than 1.0.  This is a nice way for PN to stop." << std::endl;
       break;
     } else if(status == GSL_EDIVERGE) {
-      std::cout << "Velocity is no longer increasing" << std::endl;
+      INFOTOCOUT << "Velocity is no longer increasing.  This is an unusual way for PN to stop, but probably okay." << std::endl;
       break;
     } else if(status != GSL_SUCCESS) {
-      std::cerr << "GSL odeiv2 error.  Return value=" << status << "\n" << std::endl;
+      INFOTOCERR << "GSL odeiv2 error.  Return value=" << status << "\nThis is potentially a bad way for PN to stop." << std::endl;
       break;
     }
 
@@ -328,16 +329,16 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     // Check if we should stop because this has gone on suspiciously long
     if((ForwardInTime && time>=endtime)
        || (!ForwardInTime && time<endtime)) {
-      std::cerr << "Time has gone on four times as long as expected.  This seems strange, so we'll stop."
-                << "\nNote that this is unusual.  You may have a short waveform that stops before merger,"
-                << "\nor one of the stopping criteria may have gotten fooled." << std::endl;
+      INFOTOCERR << "Time has gone on four times as long as expected.  This seems strange, so we'll stop."
+                 << "\nNote that this is unusual.  You may have a short waveform that stops before merger,"
+                 << "\nor one of the stopping criteria may have gotten fooled." << std::endl;
       break;
     }
 
     // Check if we should stop because there have been too many steps
     if(NSteps>MaxSteps) {
-      std::cerr << "\n\nThe integration has taken " << NSteps << ".  This seems excessive, so we'll stop."
-                << "\nNote that this is unusual.  You may have a short waveform that stops before merger." << std::endl;
+      INFOTOCERR << "\n\nThe integration has taken " << NSteps << ".  This seems excessive, so we'll stop."
+                 << "\nNote that this is unusual.  You may have a short waveform that stops before merger." << std::endl;
       break;
     }
 
@@ -346,7 +347,8 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     // disruption.  [This is the condition that we expect to stop us
     // near merger.]
     if(nSteps>500 && std::abs(h)<std::abs(hmin)) {
-      INFOTOCERR << "The step size " << h << " has become smaller than the lower limit of " << hmin << std::endl;
+      INFOTOCOUT << "The step size " << h << " has become smaller than the lower limit of " << hmin
+                 << ".\nThis is probably fine, as it indicates the evolution has naturally reached its end." << std::endl;
       break;
     }
 
