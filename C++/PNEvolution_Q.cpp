@@ -302,10 +302,10 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
       INFOTOCOUT << "Velocity v has become greater than 1.0.  This is a nice way for PN to stop." << std::endl;
       break;
     } else if(status == GSL_EDIVERGE) {
-      INFOTOCOUT << "Velocity is no longer increasing.  This is an unusual way for PN to stop, but probably okay." << std::endl;
+      INFOTOCOUT << "Velocity is no longer increasing.  This is not an uncommon way for PN to stop, and probably okay." << std::endl;
       break;
     } else if(status != GSL_SUCCESS) {
-      INFOTOCERR << "GSL odeiv2 error.  Return value=" << status << "\nThis is potentially a bad way for PN to stop." << std::endl;
+      INFOTOCERR << "GSL odeiv2 error.  Return value=" << status << "\nThis is potentially a very bad way for PN to stop." << std::endl;
       break;
     }
 
