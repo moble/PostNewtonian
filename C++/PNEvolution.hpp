@@ -52,6 +52,7 @@ namespace PostNewtonian {
                   std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
                   std::vector<Quaternions::Quaternion>& R_frame,
                   std::vector<double>& Phi, std::vector<std::vector<double> >& L,
+                  const unsigned int MinStepsPerOrbit=32,
                   const bool ForwardInTime=true
                   );
 

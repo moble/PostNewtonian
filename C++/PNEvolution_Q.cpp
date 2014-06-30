@@ -107,8 +107,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
                                std::vector<std::vector<double> >& chi1, std::vector<std::vector<double> >& chi2,
                                std::vector<Quaternions::Quaternion>& R_frame,
                                std::vector<double>& Phi, std::vector<std::vector<double> >& L,
-                               const bool ForwardInTime
-                               )
+                               const unsigned int MinStepsPerOrbit, const bool ForwardInTime)
 {
   // Transform the input into the forms we will actually use
   const double chi1Mag = Quaternions::Quaternion(chi1_i).abs();
@@ -240,7 +239,6 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   const double hmin_storage = ForwardInTime ? 1.0e-5 : -1.0e-5;
   const double hmax = (endtime-time) / (2.0*MinSteps); // Time-direction is taken care of
   double hnext = hmax;
-  const unsigned int MinStepsPerOrbit = 20;
 
   // We will be using `push_back`, so we first reserve the rough lower
   // limit we will need (after clearing out any content the input
@@ -415,7 +413,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     std::vector<Quaternions::Quaternion> R_frameBackward;
     EvolvePN_Q(Approximant, PNOrder, v_0, v_i, m1, m2, chi1_i, chi2_i, R_frame_i,
                tBackward, vBackward, chi1Backward, chi2Backward, R_frameBackward, PhiBackward, LBackward,
-               false);
+               MinStepsPerOrbit, false);
 
     // Remove the first element of each of the backward data vectors
     // so that point is not duplicated
