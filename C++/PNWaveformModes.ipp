@@ -1,6 +1,6 @@
 // File produced automatically by WaveformModeCodeGen.ipynb
 
-class WaveformModes {
+class WaveformModes_Base {
 public:
   virtual std::vector<std::complex<double> > operator()(
     const double v_k,
@@ -18,7 +18,7 @@ const unsigned int ellMax = 8;
 const std::complex<double> I(0,1.0);
 inline std::complex<double> conjugate(const std::complex<double>& a) { return std::conj(a); }
 
-class WaveformModes_0PN : public WaveformModes {
+class WaveformModes_0PN : public WaveformModes_Base {
 private:
   const double m1, m2;
   double v;
@@ -32,7 +32,7 @@ public:
     rhOverM_2_0_0(-0.145802960879951), rhOverM_2_2_0(1.00000000000000), rhOverM_4_0_0(-0.00140298964521140)
   { }
 
-  using WaveformModes::operator();
+  using WaveformModes_Base::operator();
 
   std::vector<std::complex<double> > operator()(
     const double v_k,
@@ -127,10 +127,10 @@ public:
     return Modes;
   }
 
-}; // class WaveformModes_0PN : public WaveformModes
+}; // class WaveformModes_0PN : public WaveformModes_Base
 
 
-class WaveformModes_0p50PN : public WaveformModes {
+class WaveformModes_0p50PN : public WaveformModes_Base {
 private:
   const double m1, m2;
   double v;
@@ -147,7 +147,7 @@ public:
     rhOverM_4_0_0(-0.00140298964521140)
   { }
 
-  using WaveformModes::operator();
+  using WaveformModes_Base::operator();
 
   std::vector<std::complex<double> > operator()(
     const double v_k,
@@ -242,10 +242,10 @@ public:
     return Modes;
   }
 
-}; // class WaveformModes_0p50PN : public WaveformModes
+}; // class WaveformModes_0p50PN : public WaveformModes_Base
 
 
-class WaveformModes_1p0PN : public WaveformModes {
+class WaveformModes_1p0PN : public WaveformModes_Base {
 private:
   const double m1, m2;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
@@ -279,7 +279,7 @@ public:
     rhOverM_2_2_SO_Asymm_2(-0.5*Sigma_la - 0.5*I*Sigma_n)
   { }
 
-  using WaveformModes::operator();
+  using WaveformModes_Base::operator();
 
   std::vector<std::complex<double> > operator()(
     const double v_k,
@@ -400,10 +400,10 @@ public:
     return Modes;
   }
 
-}; // class WaveformModes_1p0PN : public WaveformModes
+}; // class WaveformModes_1p0PN : public WaveformModes_Base
 
 
-class WaveformModes_1p5PN : public WaveformModes {
+class WaveformModes_1p5PN : public WaveformModes_Base {
 private:
   const double m1, m2;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
@@ -452,7 +452,7 @@ public:
     Sigma_n))
   { }
 
-  using WaveformModes::operator();
+  using WaveformModes_Base::operator();
 
   std::vector<std::complex<double> > operator()(
     const double v_k,
@@ -591,10 +591,10 @@ public:
     return Modes;
   }
 
-}; // class WaveformModes_1p5PN : public WaveformModes
+}; // class WaveformModes_1p5PN : public WaveformModes_Base
 
 
-class WaveformModes_2p0PN : public WaveformModes {
+class WaveformModes_2p0PN : public WaveformModes_Base {
 private:
   const double m1, m2;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
@@ -665,7 +665,7 @@ public:
     Sigma_n)), rhOverM_4_0_SO_Asymm_4(0), rhOverM_4_2_SO_Asymm_4(0), rhOverM_4_4_SO_Asymm_4(0)
   { }
 
-  using WaveformModes::operator();
+  using WaveformModes_Base::operator();
 
   std::vector<std::complex<double> > operator()(
     const double v_k,
@@ -829,10 +829,10 @@ public:
     return Modes;
   }
 
-}; // class WaveformModes_2p0PN : public WaveformModes
+}; // class WaveformModes_2p0PN : public WaveformModes_Base
 
 
-class WaveformModes_2p5PN : public WaveformModes {
+class WaveformModes_2p5PN : public WaveformModes_Base {
 private:
   const double m1, m2;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
@@ -923,7 +923,7 @@ public:
     rhOverM_4_3_SO_Asymm_5(0), rhOverM_4_4_SO_Asymm_4(0)
   { }
 
-  using WaveformModes::operator();
+  using WaveformModes_Base::operator();
 
   std::vector<std::complex<double> > operator()(
     const double v_k,
@@ -1095,10 +1095,10 @@ public:
     return Modes;
   }
 
-}; // class WaveformModes_2p5PN : public WaveformModes
+}; // class WaveformModes_2p5PN : public WaveformModes_Base
 
 
-class WaveformModes_3p0PN : public WaveformModes {
+class WaveformModes_3p0PN : public WaveformModes_Base {
 private:
   const double m1, m2;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
@@ -1219,7 +1219,7 @@ public:
     rhOverM_4_2_SO_Asymm_4(0), rhOverM_4_3_SO_Asymm_5(0), rhOverM_4_4_SO_Asymm_4(0)
   { }
 
-  using WaveformModes::operator();
+  using WaveformModes_Base::operator();
 
   std::vector<std::complex<double> > operator()(
     const double v_k,
@@ -1399,10 +1399,10 @@ public:
     return Modes;
   }
 
-}; // class WaveformModes_3p0PN : public WaveformModes
+}; // class WaveformModes_3p0PN : public WaveformModes_Base
 
 
-class WaveformModes_3p5PN : public WaveformModes {
+class WaveformModes_3p5PN : public WaveformModes_Base {
 private:
   const double m1, m2;
   double v, chi1_x, chi1_y, chi1_z, chi2_x, chi2_y, chi2_z, ellHat_x, ellHat_y, ellHat_z, nHat_x, nHat_y, nHat_z;
@@ -1524,7 +1524,7 @@ public:
     rhOverM_4_2_SO_Asymm_4(0), rhOverM_4_3_SO_Asymm_5(0), rhOverM_4_4_SO_Asymm_4(0)
   { }
 
-  using WaveformModes::operator();
+  using WaveformModes_Base::operator();
 
   std::vector<std::complex<double> > operator()(
     const double v_k,
@@ -1704,4 +1704,4 @@ public:
     return Modes;
   }
 
-}; // class WaveformModes_3p5PN : public WaveformModes
+}; // class WaveformModes_3p5PN : public WaveformModes_Base

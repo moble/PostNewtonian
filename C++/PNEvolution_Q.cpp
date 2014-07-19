@@ -98,7 +98,7 @@ void CombineForwardAndBackward(std::vector<T>& Forward, const std::vector<T>& Ba
   return;
 }
 
-void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOrder,
+void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOrbitalEvolutionOrder,
                                const double v_0, const double v_i,
                                const double m1, const double m2,
                                const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
@@ -135,7 +135,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   // Tn encapsulates all the actual PN calculations -- especially the
   // right-hand sides of the evolution system
   TaylorTn_Q* Tn = 0;
-  switch(int(2*PNOrder)) {
+  switch(int(2*PNOrbitalEvolutionOrder)) {
   case 0:
     Tn = new TaylorTn_0PN_Q(xHat, yHat, zHat, m1, m2, v_i,
                             S_chi1_i, S_chi2_i,
@@ -215,11 +215,11 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
                               rfrak_frame_i[0], rfrak_frame_i[1], rfrak_frame_i[2]);
     break;
   default:
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": PN order " << PNOrder << " is not yet implemented." << std::endl;
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": PN order " << PNOrbitalEvolutionOrder << " is not yet implemented." << std::endl;
     throw(-1);
   }
   if(Tn==0) {
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Tn did not get assigned with PNOrder=" << PNOrder << "." << std::endl;
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": Tn did not get assigned with PNOrbitalEvolutionOrder=" << PNOrbitalEvolutionOrder << "." << std::endl;
     throw(-1);
   }
 
@@ -411,7 +411,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     std::vector<double> tBackward, vBackward, PhiBackward;
     std::vector<std::vector<double> > chi1Backward, chi2Backward, LBackward;
     std::vector<Quaternions::Quaternion> R_frameBackward;
-    EvolvePN_Q(Approximant, PNOrder, v_0, v_i, m1, m2, chi1_i, chi2_i, R_frame_i,
+    EvolvePN_Q(Approximant, PNOrbitalEvolutionOrder, v_0, v_i, m1, m2, chi1_i, chi2_i, R_frame_i,
                tBackward, vBackward, chi1Backward, chi2Backward, R_frameBackward, PhiBackward, LBackward,
                MinStepsPerOrbit, false);
 

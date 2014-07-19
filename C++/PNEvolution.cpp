@@ -158,7 +158,7 @@ void CombineForwardAndBackward(std::vector<T>& Forward, const std::vector<T>& Ba
   return;
 }
 
-void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrder,
+void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrbitalEvolutionOrder,
                              const double v_0, const double v_i,
                              const double m1, const double m2,
                              const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
@@ -202,7 +202,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
   // Tn encapsulates all the actual PN calculations -- especially the
   // right-hand sides of the evolution system
   TaylorTn* Tn;
-  switch(int(2*PNOrder)) {
+  switch(int(2*PNOrbitalEvolutionOrder)) {
   case 0:
     Tn = new TaylorTn_0PN(m1, m2, v_i,
                           chi1_i[0], chi1_i[1], chi1_i[2],
@@ -295,7 +295,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
                             nHat_i[0], nHat_i[1], nHat_i[2]);
     break;
   default:
-    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": PN order " << PNOrder << " is not yet implemented." << std::endl;
+    std::cerr << "\n\n" << __FILE__ << ":" << __LINE__ << ": PN order " << PNOrbitalEvolutionOrder << " is not yet implemented." << std::endl;
     throw(-1);
   }
 
@@ -445,7 +445,7 @@ void PostNewtonian::EvolvePN(const std::string& Approximant, const double PNOrde
     std::vector<double> tBackward, vBackward, PhiBackward;
     std::vector<std::vector<double> > chi1Backward, chi2Backward, LBackward;
     std::vector<Quaternions::Quaternion> R_frameBackward;
-    EvolvePN(Approximant, PNOrder, v_0, v_i, m1, m2, chi1_i, chi2_i, R_frame_i,
+    EvolvePN(Approximant, PNOrbitalEvolutionOrder, v_0, v_i, m1, m2, chi1_i, chi2_i, R_frame_i,
              tBackward, vBackward, chi1Backward, chi2Backward, R_frameBackward, PhiBackward, LBackward,
              false);
 

@@ -32,22 +32,22 @@ int main(int argc, char *argv[]) {
   chi2_i[2] = -2.268760863004861961e-01;
 
   PostNewtonian::EvolvePN_Q(Approximant, PNOrder,
-			    v0, v_i,
-			    m1,
-			    chi1_i, chi2_i,
-			    R_frame_i,
-			    t, v,
-			    chi1, chi2,
-			    R_frame,
-			    Phi
-			    );
+                            v0, v_i,
+                            m1,
+                            chi1_i, chi2_i,
+                            R_frame_i,
+                            t, v,
+                            chi1, chi2,
+                            R_frame,
+                            Phi
+                            );
 
   std::stringstream FileName("");
   FileName << "EvolvePN_" << Approximant << "_"<< int(PNOrder) <<"p"<< (PNOrder-int(PNOrder))*10 << "PN_Q.dat";
 
   std::cerr << "NTimes = " << t.size()
-	    << "\nPrinting results to " << FileName.str() << "... "
-	    << std::flush;
+            << "\nPrinting results to " << FileName.str() << "... "
+            << std::flush;
 
   std::ofstream File(FileName.str().c_str());
 
@@ -83,10 +83,10 @@ int main(int argc, char *argv[]) {
   const unsigned int tsize = t.size();
   for(unsigned int i=0; i<tsize; ++i) {
     File << t[i] << " " << v[i]
-	 << " " << chi1[i][0] << " " << chi1[i][1] << " " << chi1[i][2]
-	 << " " << chi2[i][0] << " " << chi2[i][1] << " " << chi2[i][2]
-	 << " " << R_frame[i][0] << " " << R_frame[i][1] << " " << R_frame[i][2] << " " << R_frame[i][3]
-	 << " " << Phi[i] << std::endl;
+         << " " << chi1[i][0] << " " << chi1[i][1] << " " << chi1[i][2]
+         << " " << chi2[i][0] << " " << chi2[i][1] << " " << chi2[i][2]
+         << " " << R_frame[i][0] << " " << R_frame[i][1] << " " << R_frame[i][2] << " " << R_frame[i][3]
+         << " " << Phi[i] << std::endl;
   }
 
   File.close();

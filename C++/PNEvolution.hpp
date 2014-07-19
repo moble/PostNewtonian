@@ -22,7 +22,7 @@ namespace PostNewtonian {
                 std::vector<double>& Phi, std::vector<std::vector<double> >& L
                 );
 
-  void EvolvePN(const std::string& Approximant, const double PNOrder,
+  void EvolvePN(const std::string& Approximant, const double PNOrbitalEvolutionOrder,
                 const double v0, const double v_i,
                 const double m1, const double m2,
                 const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
@@ -43,7 +43,7 @@ namespace PostNewtonian {
                   std::vector<double>& Phi, std::vector<std::vector<double> >& L
                   );
 
-  void EvolvePN_Q(const std::string& Approximant, const double PNOrder,
+  void EvolvePN_Q(const std::string& Approximant, const double PNOrbitalEvolutionOrder,
                   const double v0, const double v_i,
                   const double m1, const double m2,
                   const std::vector<double>& chi1_i, const std::vector<double>& chi2_i,
