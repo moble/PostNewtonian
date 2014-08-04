@@ -27,7 +27,7 @@ def collect_recursively(expr, syms, func=None, evaluate=True, exact=False, distr
 
 class PNSymbol(Symbol) :
     """This is the basic object created by calls to `AddVariable`, etc.,
-    and is a simple subclass of python.Symbol, as described above.
+    and is a simple subclass of sympy.Symbol.
 
     The method `__new__` is always called first, since this is an
     immutable object, which creates the object, allocating memory for
@@ -114,7 +114,7 @@ class PNCollection(OrderedDict) : # subclass of OrderedDict
                     frame.f_globals[sym.__name__] = sym
         finally:
             del frame
-        self[sym] = name
+        self.update({sym:name})
         return sym
     def AddVariable(self, name, constant=False, fundamental=False, substitution=None, substitution_atoms=None, datatype=None, **args) :
         return self._AddVariable(name, constant=constant, fundamental=fundamental,
