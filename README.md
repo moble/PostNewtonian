@@ -38,7 +38,7 @@ view the important notebooks in this module at on `nbviewer`:
   * [Flux](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/Flux.ipynb)
   * [OrbitalEvolution](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/OrbitalEvolution.ipynb)
   * [Precession](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/Precession.ipynb)
-  * [Variables](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/Variables.ipynb)
+  * [Variables](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/Variables_Q.ipynb)
   * [Variables_Q](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/Variables_Q.ipynb)
   * [WaveformModes](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/WaveformModes.ipynb)
 
@@ -94,7 +94,7 @@ in the `PNTerms` subdirectory, and depend on each other to build up
 complicated expressions.  The rough order of this dependency is as
 follows.
 
-- `Variables.ipynb`: Define the fundamental variables, and write all
+- `Variables_Q.ipynb`: Define the fundamental variables, and write all
   the non-fundamental variables in terms of them.  Centralizing these
   definitions reduces mistakes.
 
