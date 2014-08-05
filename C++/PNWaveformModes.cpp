@@ -15,39 +15,33 @@ std::vector<std::vector<std::complex<double> > > PostNewtonian::WaveformModes
     break;
   case 2:
     WM = new WaveformModes_1p0PN(m1, m2, v[0],
-                                 chi1[0][0], chi1[0][1], chi1[0][2],
-                                 chi2[0][0], chi2[0][1], chi2[0][2],
-                                 0., 0., 1., 1., 0., 0.);
+                                 Quaternions::Quaternion(0.0, chi1[0][0], chi1[0][1], chi1[0][2]),
+                                 Quaternions::Quaternion(0.0, chi2[0][0], chi2[0][1], chi2[0][2]));
     break;
   case 3:
     WM = new WaveformModes_1p5PN(m1, m2, v[0],
-                                 chi1[0][0], chi1[0][1], chi1[0][2],
-                                 chi2[0][0], chi2[0][1], chi2[0][2],
-                                 0., 0., 1., 1., 0., 0.);
+                                 Quaternions::Quaternion(0.0, chi1[0][0], chi1[0][1], chi1[0][2]),
+                                 Quaternions::Quaternion(0.0, chi2[0][0], chi2[0][1], chi2[0][2]));
     break;
   case 4:
     WM = new WaveformModes_2p0PN(m1, m2, v[0],
-                                 chi1[0][0], chi1[0][1], chi1[0][2],
-                                 chi2[0][0], chi2[0][1], chi2[0][2],
-                                 0., 0., 1., 1., 0., 0.);
+                                 Quaternions::Quaternion(0.0, chi1[0][0], chi1[0][1], chi1[0][2]),
+                                 Quaternions::Quaternion(0.0, chi2[0][0], chi2[0][1], chi2[0][2]));
     break;
   case 5:
     WM = new WaveformModes_2p5PN(m1, m2, v[0],
-                                 chi1[0][0], chi1[0][1], chi1[0][2],
-                                 chi2[0][0], chi2[0][1], chi2[0][2],
-                                 0., 0., 1., 1., 0., 0.);
+                                 Quaternions::Quaternion(0.0, chi1[0][0], chi1[0][1], chi1[0][2]),
+                                 Quaternions::Quaternion(0.0, chi2[0][0], chi2[0][1], chi2[0][2]));
     break;
   case 6:
     WM = new WaveformModes_3p0PN(m1, m2, v[0],
-                                 chi1[0][0], chi1[0][1], chi1[0][2],
-                                 chi2[0][0], chi2[0][1], chi2[0][2],
-                                 0., 0., 1., 1., 0., 0.);
+                                 Quaternions::Quaternion(0.0, chi1[0][0], chi1[0][1], chi1[0][2]),
+                                 Quaternions::Quaternion(0.0, chi2[0][0], chi2[0][1], chi2[0][2]));
     break;
   case 7:
     WM = new WaveformModes_3p5PN(m1, m2, v[0],
-                                 chi1[0][0], chi1[0][1], chi1[0][2],
-                                 chi2[0][0], chi2[0][1], chi2[0][2],
-                                 0., 0., 1., 1., 0., 0.);
+                                 Quaternions::Quaternion(0.0, chi1[0][0], chi1[0][1], chi1[0][2]),
+                                 Quaternions::Quaternion(0.0, chi2[0][0], chi2[0][1], chi2[0][2]));
     break;
   default:
     std::cerr << __FILE__ << ":" << __LINE__ << ":" << __func__ << ": PNWaveformModeOrder " << PNWaveformModeOrder << " not yet implemented." << std::endl;

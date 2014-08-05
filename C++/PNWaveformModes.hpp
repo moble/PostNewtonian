@@ -11,8 +11,10 @@ namespace PostNewtonian {
   /// waveform, given the present speed and spins of the black holes.
   /// The BHs are assumed to be along the x axis, with individual
   /// velocities along the y axis.  (That is, the modes are given in
-  /// the corotating frame.)  This waveform will need to be
-  /// transformed back into an inertial frame for many applications.
+  /// the co-orbital frame.)  This waveform will need to be
+  /// transformed back into an inertial frame (or more generally, a
+  /// frame related to the waveform rather than the PN orbital
+  /// elements) for many applications.
   ///
   /// The returned data are given as vectors of complex numbers,
   /// representing mode (2,-2), followed by (2,-1), etc., all the way
