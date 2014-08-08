@@ -932,10 +932,10 @@ public:
     hHat_spin_Asymm_3_3_3(0.690065559342354*I*(S_lambda + I*S_n + delta*(Sigma_lambda + I*Sigma_n))/pow(m, 2)),
     hHat_spin_Asymm_3_2_4(0.0352147606136882*(-Sigma_lambda*(83.0*nu - 17.0) + 4.0*I*Sigma_n*(55.0*nu - 13.0) +
     25.0*delta*(S_lambda - 4.0*I*S_n))/pow(m, 2)), hHat_spin_Asymm_3_1_3(0.17817416127495*(I*S_lambda + S_n +
-    delta*(I*Sigma_lambda + Sigma_n))/pow(m, 2)), hHat_spin_Asymm_3_0_4(-0.038575837490523*(17.0*S_lambda*delta +
-    315.0*Sigma_lambda*nu)/pow(m, 2)), hHat_spin_Asymm_4_4_4(0.950798536569581*(-3.0*Sigma_lambda*nu + Sigma_lambda -
-    I*Sigma_n*(3.0*nu - 1.0) + delta*(S_lambda + I*S_n))/pow(m, 2)),
-    hHat_spin_Asymm_4_2_4(0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) - 42.0*I*Sigma_n*nu +
+    delta*(I*Sigma_lambda + Sigma_n))/pow(m, 2)), hHat_spin_Asymm_3_0_4(0.038575837490523*(-17.0*S_lambda*delta +
+    Sigma_lambda*(35.0*nu - 9.0))/pow(m, 2)), hHat_spin_Asymm_4_4_4(0.950798536569581*(-3.0*Sigma_lambda*nu +
+    Sigma_lambda - I*Sigma_n*(3.0*nu - 1.0) + delta*(S_lambda + I*S_n))/pow(m, 2)),
+    hHat_spin_Asymm_4_2_4(0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) + 14.0*I*Sigma_n*(3.0*nu - 1.0) +
     delta*(13.0*S_lambda - 14.0*I*S_n))/pow(m, 2)), hHat_spin_Asymm_4_0_4(0.00841793787126842*I*(S_n*delta -
     3.0*Sigma_n*nu + Sigma_n)/pow(m, 2))
   { }
@@ -994,10 +994,10 @@ public:
     hHat_spin_Asymm_3_2_4 = 0.0352147606136882*(-Sigma_lambda*(83.0*nu - 17.0) + 4.0*I*Sigma_n*(55.0*nu - 13.0) +
       25.0*delta*(S_lambda - 4.0*I*S_n))/pow(m, 2);
     hHat_spin_Asymm_3_1_3 = 0.17817416127495*(I*S_lambda + S_n + delta*(I*Sigma_lambda + Sigma_n))/pow(m, 2);
-    hHat_spin_Asymm_3_0_4 = -0.038575837490523*(17.0*S_lambda*delta + 315.0*Sigma_lambda*nu)/pow(m, 2);
+    hHat_spin_Asymm_3_0_4 = 0.038575837490523*(-17.0*S_lambda*delta + Sigma_lambda*(35.0*nu - 9.0))/pow(m, 2);
     hHat_spin_Asymm_4_4_4 = 0.950798536569581*(-3.0*Sigma_lambda*nu + Sigma_lambda - I*Sigma_n*(3.0*nu - 1.0) +
       delta*(S_lambda + I*S_n))/pow(m, 2);
-    hHat_spin_Asymm_4_2_4 = 0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) - 42.0*I*Sigma_n*nu +
+    hHat_spin_Asymm_4_2_4 = 0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) + 14.0*I*Sigma_n*(3.0*nu - 1.0) +
       delta*(13.0*S_lambda - 14.0*I*S_n))/pow(m, 2);
     hHat_spin_Asymm_4_0_4 = 0.00841793787126842*I*(S_n*delta - 3.0*Sigma_n*nu + Sigma_n)/pow(m, 2);
 
@@ -1276,10 +1276,10 @@ public:
     hHat_spin_Asymm_3_3_3(0.690065559342354*I*(S_lambda + I*S_n + delta*(Sigma_lambda + I*Sigma_n))/pow(m, 2)),
     hHat_spin_Asymm_3_2_4(0.0352147606136882*(-Sigma_lambda*(83.0*nu - 17.0) + 4.0*I*Sigma_n*(55.0*nu - 13.0) +
     25.0*delta*(S_lambda - 4.0*I*S_n))/pow(m, 2)), hHat_spin_Asymm_3_1_3(0.17817416127495*(I*S_lambda + S_n +
-    delta*(I*Sigma_lambda + Sigma_n))/pow(m, 2)), hHat_spin_Asymm_3_0_4(-0.038575837490523*(17.0*S_lambda*delta +
-    315.0*Sigma_lambda*nu)/pow(m, 2)), hHat_spin_Asymm_4_4_4(0.950798536569581*(-3.0*Sigma_lambda*nu + Sigma_lambda -
-    I*Sigma_n*(3.0*nu - 1.0) + delta*(S_lambda + I*S_n))/pow(m, 2)),
-    hHat_spin_Asymm_4_2_4(0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) - 42.0*I*Sigma_n*nu +
+    delta*(I*Sigma_lambda + Sigma_n))/pow(m, 2)), hHat_spin_Asymm_3_0_4(0.038575837490523*(-17.0*S_lambda*delta +
+    Sigma_lambda*(35.0*nu - 9.0))/pow(m, 2)), hHat_spin_Asymm_4_4_4(0.950798536569581*(-3.0*Sigma_lambda*nu +
+    Sigma_lambda - I*Sigma_n*(3.0*nu - 1.0) + delta*(S_lambda + I*S_n))/pow(m, 2)),
+    hHat_spin_Asymm_4_2_4(0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) + 14.0*I*Sigma_n*(3.0*nu - 1.0) +
     delta*(13.0*S_lambda - 14.0*I*S_n))/pow(m, 2)), hHat_spin_Asymm_4_0_4(0.00841793787126842*I*(S_n*delta -
     3.0*Sigma_n*nu + Sigma_n)/pow(m, 2))
   { }
@@ -1338,10 +1338,10 @@ public:
     hHat_spin_Asymm_3_2_4 = 0.0352147606136882*(-Sigma_lambda*(83.0*nu - 17.0) + 4.0*I*Sigma_n*(55.0*nu - 13.0) +
       25.0*delta*(S_lambda - 4.0*I*S_n))/pow(m, 2);
     hHat_spin_Asymm_3_1_3 = 0.17817416127495*(I*S_lambda + S_n + delta*(I*Sigma_lambda + Sigma_n))/pow(m, 2);
-    hHat_spin_Asymm_3_0_4 = -0.038575837490523*(17.0*S_lambda*delta + 315.0*Sigma_lambda*nu)/pow(m, 2);
+    hHat_spin_Asymm_3_0_4 = 0.038575837490523*(-17.0*S_lambda*delta + Sigma_lambda*(35.0*nu - 9.0))/pow(m, 2);
     hHat_spin_Asymm_4_4_4 = 0.950798536569581*(-3.0*Sigma_lambda*nu + Sigma_lambda - I*Sigma_n*(3.0*nu - 1.0) +
       delta*(S_lambda + I*S_n))/pow(m, 2);
-    hHat_spin_Asymm_4_2_4 = 0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) - 42.0*I*Sigma_n*nu +
+    hHat_spin_Asymm_4_2_4 = 0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) + 14.0*I*Sigma_n*(3.0*nu - 1.0) +
       delta*(13.0*S_lambda - 14.0*I*S_n))/pow(m, 2);
     hHat_spin_Asymm_4_0_4 = 0.00841793787126842*I*(S_n*delta - 3.0*Sigma_n*nu + Sigma_n)/pow(m, 2);
 
@@ -1655,10 +1655,10 @@ public:
     hHat_spin_Asymm_3_3_3(0.690065559342354*I*(S_lambda + I*S_n + delta*(Sigma_lambda + I*Sigma_n))/pow(m, 2)),
     hHat_spin_Asymm_3_2_4(0.0352147606136882*(-Sigma_lambda*(83.0*nu - 17.0) + 4.0*I*Sigma_n*(55.0*nu - 13.0) +
     25.0*delta*(S_lambda - 4.0*I*S_n))/pow(m, 2)), hHat_spin_Asymm_3_1_3(0.17817416127495*(I*S_lambda + S_n +
-    delta*(I*Sigma_lambda + Sigma_n))/pow(m, 2)), hHat_spin_Asymm_3_0_4(-0.038575837490523*(17.0*S_lambda*delta +
-    315.0*Sigma_lambda*nu)/pow(m, 2)), hHat_spin_Asymm_4_4_4(0.950798536569581*(-3.0*Sigma_lambda*nu + Sigma_lambda -
-    I*Sigma_n*(3.0*nu - 1.0) + delta*(S_lambda + I*S_n))/pow(m, 2)),
-    hHat_spin_Asymm_4_2_4(0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) - 42.0*I*Sigma_n*nu +
+    delta*(I*Sigma_lambda + Sigma_n))/pow(m, 2)), hHat_spin_Asymm_3_0_4(0.038575837490523*(-17.0*S_lambda*delta +
+    Sigma_lambda*(35.0*nu - 9.0))/pow(m, 2)), hHat_spin_Asymm_4_4_4(0.950798536569581*(-3.0*Sigma_lambda*nu +
+    Sigma_lambda - I*Sigma_n*(3.0*nu - 1.0) + delta*(S_lambda + I*S_n))/pow(m, 2)),
+    hHat_spin_Asymm_4_2_4(0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) + 14.0*I*Sigma_n*(3.0*nu - 1.0) +
     delta*(13.0*S_lambda - 14.0*I*S_n))/pow(m, 2)), hHat_spin_Asymm_4_0_4(0.00841793787126842*I*(S_n*delta -
     3.0*Sigma_n*nu + Sigma_n)/pow(m, 2))
   { }
@@ -1718,10 +1718,10 @@ public:
     hHat_spin_Asymm_3_2_4 = 0.0352147606136882*(-Sigma_lambda*(83.0*nu - 17.0) + 4.0*I*Sigma_n*(55.0*nu - 13.0) +
       25.0*delta*(S_lambda - 4.0*I*S_n))/pow(m, 2);
     hHat_spin_Asymm_3_1_3 = 0.17817416127495*(I*S_lambda + S_n + delta*(I*Sigma_lambda + Sigma_n))/pow(m, 2);
-    hHat_spin_Asymm_3_0_4 = -0.038575837490523*(17.0*S_lambda*delta + 315.0*Sigma_lambda*nu)/pow(m, 2);
+    hHat_spin_Asymm_3_0_4 = 0.038575837490523*(-17.0*S_lambda*delta + Sigma_lambda*(35.0*nu - 9.0))/pow(m, 2);
     hHat_spin_Asymm_4_4_4 = 0.950798536569581*(-3.0*Sigma_lambda*nu + Sigma_lambda - I*Sigma_n*(3.0*nu - 1.0) +
       delta*(S_lambda + I*S_n))/pow(m, 2);
-    hHat_spin_Asymm_4_2_4 = 0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) - 42.0*I*Sigma_n*nu +
+    hHat_spin_Asymm_4_2_4 = 0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) + 14.0*I*Sigma_n*(3.0*nu - 1.0) +
       delta*(13.0*S_lambda - 14.0*I*S_n))/pow(m, 2);
     hHat_spin_Asymm_4_0_4 = 0.00841793787126842*I*(S_n*delta - 3.0*Sigma_n*nu + Sigma_n)/pow(m, 2);
 
@@ -2046,10 +2046,10 @@ public:
     hHat_spin_Asymm_3_3_3(0.690065559342354*I*(S_lambda + I*S_n + delta*(Sigma_lambda + I*Sigma_n))/pow(m, 2)),
     hHat_spin_Asymm_3_2_4(0.0352147606136882*(-Sigma_lambda*(83.0*nu - 17.0) + 4.0*I*Sigma_n*(55.0*nu - 13.0) +
     25.0*delta*(S_lambda - 4.0*I*S_n))/pow(m, 2)), hHat_spin_Asymm_3_1_3(0.17817416127495*(I*S_lambda + S_n +
-    delta*(I*Sigma_lambda + Sigma_n))/pow(m, 2)), hHat_spin_Asymm_3_0_4(-0.038575837490523*(17.0*S_lambda*delta +
-    315.0*Sigma_lambda*nu)/pow(m, 2)), hHat_spin_Asymm_4_4_4(0.950798536569581*(-3.0*Sigma_lambda*nu + Sigma_lambda -
-    I*Sigma_n*(3.0*nu - 1.0) + delta*(S_lambda + I*S_n))/pow(m, 2)),
-    hHat_spin_Asymm_4_2_4(0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) - 42.0*I*Sigma_n*nu +
+    delta*(I*Sigma_lambda + Sigma_n))/pow(m, 2)), hHat_spin_Asymm_3_0_4(0.038575837490523*(-17.0*S_lambda*delta +
+    Sigma_lambda*(35.0*nu - 9.0))/pow(m, 2)), hHat_spin_Asymm_4_4_4(0.950798536569581*(-3.0*Sigma_lambda*nu +
+    Sigma_lambda - I*Sigma_n*(3.0*nu - 1.0) + delta*(S_lambda + I*S_n))/pow(m, 2)),
+    hHat_spin_Asymm_4_2_4(0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) + 14.0*I*Sigma_n*(3.0*nu - 1.0) +
     delta*(13.0*S_lambda - 14.0*I*S_n))/pow(m, 2)), hHat_spin_Asymm_4_0_4(0.00841793787126842*I*(S_n*delta -
     3.0*Sigma_n*nu + Sigma_n)/pow(m, 2))
   { }
@@ -2085,36 +2085,38 @@ public:
     S2_lambda = chi2_lambda*pow(m2, 2);
     logv = log(v);
     rhOverM_coeff = 6.34132367616962*nu*pow(v, 2);
-    hHat_spin_Symm_2_2_3 = 0.166666666666667*(3.0*S_ell + 5.0*Sigma_ell*delta)/pow(m, 2);
-    hHat_spin_Symm_2_2_4 = 0.166666666666667*(12.0*S1_ell*S2_ell + 10.0*S1_lambda*S2_lambda - 15.0*I*S1_lambda*S2_n -
+    // Negate every spin, and change the 2_2_3 mode
+    // hHat_spin_Symm_2_2_3 = 0.166666666666667*(3.0*S_ell + 5.0*Sigma_ell*delta)/pow(m, 2);
+    hHat_spin_Symm_2_2_3 = 0.166666666666667*(17.0*S_ell + 7.0*Sigma_ell*delta)/pow(m, 2);
+    hHat_spin_Symm_2_2_4 = -0.166666666666667*(12.0*S1_ell*S2_ell + 10.0*S1_lambda*S2_lambda - 15.0*I*S1_lambda*S2_n -
       15.0*I*S1_n*S2_lambda - 22.0*S1_n*S2_n)/(pow(m, 4)*nu);
-    hHat_spin_Symm_2_1_2 = 0.5*I*Sigma_ell/pow(m, 2);
-    hHat_spin_Symm_2_1_4 = 0.0238095238095238*I*(-86.0*S_ell*delta + Sigma_ell*(139.0*nu - 79.0))/pow(m, 2);
-    hHat_spin_Symm_2_0_3 = 0.408248290463863*(5.0*S_ell + 3.0*Sigma_ell*delta)/pow(m, 2);
+    hHat_spin_Symm_2_1_2 = -0.5*I*Sigma_ell/pow(m, 2);
+    hHat_spin_Symm_2_1_4 = -0.0238095238095238*I*(-86.0*S_ell*delta + Sigma_ell*(139.0*nu - 79.0))/pow(m, 2);
+    hHat_spin_Symm_2_0_3 = -0.408248290463863*(5.0*S_ell + 3.0*Sigma_ell*delta)/pow(m, 2);
     hHat_spin_Symm_2_0_4 = 0.816496580927726*(-S1_lambda*S2_lambda + S1_n*S2_n)/(pow(m, 4)*nu);
-    hHat_spin_Symm_3_3_4 = 0.388161877130074*I*(7.0*S_ell*delta - 3.0*Sigma_ell*(3.0*nu - 1.0))/pow(m, 2);
-    hHat_spin_Symm_3_2_3 = 0.563436169819011*(S_ell + Sigma_ell*delta)/pow(m, 2);
-    hHat_spin_Symm_3_1_4 = 0.0111358850796843*I*(S_ell*delta - 5.0*Sigma_ell*(3.0*nu - 1.0))/pow(m, 2);
-    hHat_spin_Symm_4_3_4 = 0.672316092750596*I*(-S_ell*delta + 3.0*Sigma_ell*nu - Sigma_ell)/pow(m, 2);
-    hHat_spin_Symm_4_1_4 = 0.00941154065526303*I*(S_ell*delta - 3.0*Sigma_ell*nu + Sigma_ell)/pow(m, 2);
-    hHat_spin_Asymm_2_2_2 = 0.5*(-Sigma_lambda - I*Sigma_n)/pow(m, 2);
-    hHat_spin_Asymm_2_2_4 = 0.0119047619047619*(19.0*S_lambda*delta + 182.0*I*S_n*delta - 43.0*Sigma_lambda*nu +
+    hHat_spin_Symm_3_3_4 = -0.388161877130074*I*(7.0*S_ell*delta - 3.0*Sigma_ell*(3.0*nu - 1.0))/pow(m, 2);
+    hHat_spin_Symm_3_2_3 = -0.563436169819011*(S_ell + Sigma_ell*delta)/pow(m, 2);
+    hHat_spin_Symm_3_1_4 = -0.0111358850796843*I*(S_ell*delta - 5.0*Sigma_ell*(3.0*nu - 1.0))/pow(m, 2);
+    hHat_spin_Symm_4_3_4 = -0.672316092750596*I*(-S_ell*delta + 3.0*Sigma_ell*nu - Sigma_ell)/pow(m, 2);
+    hHat_spin_Symm_4_1_4 = -0.00941154065526303*I*(S_ell*delta - 3.0*Sigma_ell*nu + Sigma_ell)/pow(m, 2);
+    hHat_spin_Asymm_2_2_2 = -0.5*(-Sigma_lambda - I*Sigma_n)/pow(m, 2);
+    hHat_spin_Asymm_2_2_4 = -0.0119047619047619*(19.0*S_lambda*delta + 182.0*I*S_n*delta - 43.0*Sigma_lambda*nu +
       5.0*Sigma_lambda - 280.0*I*Sigma_n*nu + 98.0*I*Sigma_n)/pow(m, 2);
-    hHat_spin_Asymm_2_1_3 = 0.166666666666667*(4.0*I*S_lambda + 25.0*S_n + 4.0*I*Sigma_lambda*delta +
+    hHat_spin_Asymm_2_1_3 = -0.166666666666667*(4.0*I*S_lambda + 25.0*S_n + 4.0*I*Sigma_lambda*delta +
       13.0*Sigma_n*delta)/pow(m, 2);
     hHat_spin_Asymm_2_1_4 = 0.5*(-3.0*S1_ell*S2_n - 3.0*S1_n*S2_ell)/(pow(m, 4)*nu);
-    hHat_spin_Asymm_2_0_2 = 0.408248290463863*I*Sigma_n/pow(m, 2);
-    hHat_spin_Asymm_2_0_4 = 0.0194403947839935*I*(255.0*S_n*delta - Sigma_n*(506.0*nu - 45.0))/pow(m, 2);
-    hHat_spin_Asymm_3_3_3 = 0.690065559342354*I*(S_lambda + I*S_n + delta*(Sigma_lambda + I*Sigma_n))/pow(m, 2);
-    hHat_spin_Asymm_3_2_4 = 0.0352147606136882*(-Sigma_lambda*(83.0*nu - 17.0) + 4.0*I*Sigma_n*(55.0*nu - 13.0) +
+    hHat_spin_Asymm_2_0_2 = -0.408248290463863*I*Sigma_n/pow(m, 2);
+    hHat_spin_Asymm_2_0_4 = -0.0194403947839935*I*(255.0*S_n*delta - Sigma_n*(506.0*nu - 45.0))/pow(m, 2);
+    hHat_spin_Asymm_3_3_3 = -0.690065559342354*I*(S_lambda + I*S_n + delta*(Sigma_lambda + I*Sigma_n))/pow(m, 2);
+    hHat_spin_Asymm_3_2_4 = -0.0352147606136882*(-Sigma_lambda*(83.0*nu - 17.0) + 4.0*I*Sigma_n*(55.0*nu - 13.0) +
       25.0*delta*(S_lambda - 4.0*I*S_n))/pow(m, 2);
-    hHat_spin_Asymm_3_1_3 = 0.17817416127495*(I*S_lambda + S_n + delta*(I*Sigma_lambda + Sigma_n))/pow(m, 2);
-    hHat_spin_Asymm_3_0_4 = -0.038575837490523*(17.0*S_lambda*delta + 315.0*Sigma_lambda*nu)/pow(m, 2);
-    hHat_spin_Asymm_4_4_4 = 0.950798536569581*(-3.0*Sigma_lambda*nu + Sigma_lambda - I*Sigma_n*(3.0*nu - 1.0) +
+    hHat_spin_Asymm_3_1_3 = -0.17817416127495*(I*S_lambda + S_n + delta*(I*Sigma_lambda + Sigma_n))/pow(m, 2);
+    hHat_spin_Asymm_3_0_4 = -0.038575837490523*(-17.0*S_lambda*delta + Sigma_lambda*(35.0*nu - 9.0))/pow(m, 2);
+    hHat_spin_Asymm_4_4_4 = -0.950798536569581*(-3.0*Sigma_lambda*nu + Sigma_lambda - I*Sigma_n*(3.0*nu - 1.0) +
       delta*(S_lambda + I*S_n))/pow(m, 2);
-    hHat_spin_Asymm_4_2_4 = 0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) - 42.0*I*Sigma_n*nu +
+    hHat_spin_Asymm_4_2_4 = -0.0133099284374987*(-13.0*Sigma_lambda*(3.0*nu - 1.0) + 14.0*I*Sigma_n*(3.0*nu - 1.0) +
       delta*(13.0*S_lambda - 14.0*I*S_n))/pow(m, 2);
-    hHat_spin_Asymm_4_0_4 = 0.00841793787126842*I*(S_n*delta - 3.0*Sigma_n*nu + Sigma_n)/pow(m, 2);
+    hHat_spin_Asymm_4_0_4 = -0.00841793787126842*I*(S_n*delta - 3.0*Sigma_n*nu + Sigma_n)/pow(m, 2);
 
     std::vector<std::complex<double> > Modes(77);
     // (ell,m)=(2,-2):
