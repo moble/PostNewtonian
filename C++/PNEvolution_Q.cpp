@@ -225,11 +225,12 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
 
   // Here are the parameters for the evolution
   const double nu = m1*m2/((m1+m2)*(m1+m2));
-  double time = -5.0/(256.0*nu*std::pow(y[0],8)); // This is the lowest-order pN time-to-merger
+  const double time_to_merger = 5.0/(256.0*nu*std::pow(y[0],8)); // This is the lowest-order pN time-to-merger
+  double time = 0.0;
   double endtime =
     ForwardInTime
-    ? -3*time // Happily run far into positive times just for a comfy margin of error
-    : 2*(-5.0/(256.0*nu*std::pow(v_0,8))); // This should be a pretty good estimate, considering that it should be very early...
+    ? 4*time_to_merger // Happily run far into positive times just for a comfy margin of error
+    : 3*(-5.0/(256.0*nu*std::pow(v_0,8))); // This should be (3x) a pretty good estimate, considering that it should be very early...
   const unsigned int MinSteps = 100000; // This is only a very rough lower limit
   const unsigned int MaxSteps = 200000; // This is a hard upper limit; much bigger than this and Mike's laptop has been known to crash
   double h = ForwardInTime ? 1.0 : -1.0;
@@ -435,13 +436,13 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     CombineForwardAndBackward(R_frame, R_frameBackward);
   }
 
-  // Make the last time = 0.0
-  if(ForwardInTime) {
-    const double tback = t.back();
-    for(unsigned int i=0; i<t.size(); ++i) {
-      t[i] -= tback;
-    }
-  }
+  // // Make the last time = 0.0
+  // if(ForwardInTime) {
+  //   const double tback = t.back();
+  //   for(unsigned int i=0; i<t.size(); ++i) {
+  //     t[i] -= tback;
+  //   }
+  // }
 
   delete Tn;
 
