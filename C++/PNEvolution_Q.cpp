@@ -277,13 +277,13 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     Tn->Recalculate(time, &y[0]);
     t.push_back(time);
     v.push_back(y[0]);
-    const Quaternion R_chi1_i = exp(Quaternion(0.0, y[1], y[2], 0.0));
-    chi1.push_back((S_chi1_i*R_chi1_i*zHat*R_chi1_i.conjugate()*S_chi1_i.conjugate()).vec());
-    const Quaternion R_chi2_i = exp(Quaternion(0.0, y[3], y[4], 0.0));
-    chi2.push_back((S_chi2_i*R_chi2_i*zHat*R_chi2_i.conjugate()*S_chi2_i.conjugate()).vec());
-    const Quaternion R_frame_i = exp(Quaternion(0.0, y[5], y[6], y[7]));
-    // const Quaternion R_frame_i = Unflipped(R_frame.back(), exp(Quaternion(0.0, y[5], y[6], y[7])));
-    R_frame.push_back(R_frame_i);
+    const Quaternion R_chi1_j = exp(Quaternion(0.0, y[1], y[2], 0.0));
+    chi1.push_back((S_chi1_i*R_chi1_j*zHat*R_chi1_j.conjugate()*S_chi1_i.conjugate()).vec());
+    const Quaternion R_chi2_j = exp(Quaternion(0.0, y[3], y[4], 0.0));
+    chi2.push_back((S_chi2_i*R_chi2_j*zHat*R_chi2_j.conjugate()*S_chi2_i.conjugate()).vec());
+    const Quaternion R_frame_j = exp(Quaternion(0.0, y[5], y[6], y[7]));
+    // const Quaternion R_frame_j = Unflipped(R_frame.back(), exp(Quaternion(0.0, y[5], y[6], y[7])));
+    R_frame.push_back(R_frame_j);
     Phi.push_back(y[8]);
     L.push_back((Tn->OrbitalAngularMomentum()).vec());
   }
@@ -315,12 +315,12 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     if(std::abs(t.back()-time)>=std::abs(hmin_storage)) {
       t.push_back(time);
       v.push_back(y[0]);
-      const Quaternion R_chi1_i = exp(Quaternion(0.0, y[1], y[2], 0.0));
-      chi1.push_back((S_chi1_i*R_chi1_i*zHat*R_chi1_i.conjugate()*S_chi1_i.conjugate()).vec());
-      const Quaternion R_chi2_i = exp(Quaternion(0.0, y[3], y[4], 0.0));
-      chi2.push_back((S_chi2_i*R_chi2_i*zHat*R_chi2_i.conjugate()*S_chi2_i.conjugate()).vec());
-      const Quaternion R_frame_i = Unflipped(R_frame.back(), exp(Quaternion(0.0, y[5], y[6], y[7])));
-      R_frame.push_back(R_frame_i);
+      const Quaternion R_chi1_j = exp(Quaternion(0.0, y[1], y[2], 0.0));
+      chi1.push_back((S_chi1_i*R_chi1_j*zHat*R_chi1_j.conjugate()*S_chi1_i.conjugate()).vec());
+      const Quaternion R_chi2_j = exp(Quaternion(0.0, y[3], y[4], 0.0));
+      chi2.push_back((S_chi2_i*R_chi2_j*zHat*R_chi2_j.conjugate()*S_chi2_i.conjugate()).vec());
+      const Quaternion R_frame_j = Unflipped(R_frame.back(), exp(Quaternion(0.0, y[5], y[6], y[7])));
+      R_frame.push_back(R_frame_j);
       Phi.push_back(y[8]);
       L.push_back((Tn->OrbitalAngularMomentum()).vec());
     }
