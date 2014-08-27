@@ -770,9 +770,8 @@ private:
   const std::complex<double> hHat_2_0_0, hHat_2_1_1, hHat_2_1_3, hHat_2_2_0, hHat_2_2_2, hHat_2_2_3, hHat_3_1_1,
                              hHat_3_1_3, hHat_3_2_2, hHat_3_3_1, hHat_3_3_3, hHat_4_0_0, hHat_4_1_3, hHat_4_2_2,
                              hHat_4_3_3, hHat_4_4_2, hHat_5_1_3, hHat_5_3_3, hHat_5_5_3;
-  std::complex<double> hHat_spin_Symm_2_2_3, hHat_spin_Symm_2_1_2, hHat_spin_Symm_2_0_3, hHat_spin_Symm_3_2_3,
-                       hHat_spin_Asymm_2_2_2, hHat_spin_Asymm_2_1_3, hHat_spin_Asymm_2_0_2, hHat_spin_Asymm_3_3_3,
-                       hHat_spin_Asymm_3_1_3;
+  std::complex<double> hHat_spin_Symm_2_2_3, hHat_spin_Symm_2_1_2, hHat_spin_Symm_3_2_3, hHat_spin_Asymm_2_2_2,
+                       hHat_spin_Asymm_2_1_3, hHat_spin_Asymm_2_0_2, hHat_spin_Asymm_3_3_3, hHat_spin_Asymm_3_1_3;
 
 public:
   WaveformModes_1p5PN(const double M1_i, const double M2_i, const double v_i, const Quaternions::Quaternion chiVec1_i,
@@ -791,9 +790,8 @@ public:
     hHat_4_1_3(0.00376461626210521*I*delta*(-2.0*nu + 1.0)), hHat_4_2_2(-0.10647942749999*nu + 0.0354931424999967),
     hHat_4_3_3(0.268926437100239*I*delta*(2.0*nu - 1.0)), hHat_4_4_2(2.25374467927604*nu - 0.751248226425348),
     hHat_5_1_3(0.000176960830360287*I*delta*(-2.0*nu + 1.0)), hHat_5_3_3(0.0464469088412683*I*delta*(2.0*nu - 1.0)),
-    hHat_5_5_3(-0.801376894396698*I*delta*(2.0*nu - 1.0)), hHat_spin_Symm_2_2_3(0.166666666666667*(3.0*S_ell +
-    5.0*Sigma_ell*delta)/pow(M, 2)), hHat_spin_Symm_2_1_2(0.5*I*Sigma_ell/pow(M, 2)),
-    hHat_spin_Symm_2_0_3(0.408248290463863*(5.0*S_ell + 3.0*Sigma_ell*delta)/pow(M, 2)),
+    hHat_5_5_3(-0.801376894396698*I*delta*(2.0*nu - 1.0)), hHat_spin_Symm_2_2_3(0.333333333333333*(-6.0*S_ell -
+    2.0*Sigma_ell*delta)/pow(M, 2)), hHat_spin_Symm_2_1_2(0.5*I*Sigma_ell/pow(M, 2)),
     hHat_spin_Symm_3_2_3(0.563436169819011*(S_ell + Sigma_ell*delta)/pow(M, 2)),
     hHat_spin_Asymm_2_2_2(0.5*(-Sigma_lambda - I*Sigma_n)/pow(M, 2)),
     hHat_spin_Asymm_2_1_3(0.166666666666667*(4.0*I*S_lambda + 25.0*S_n + 4.0*I*Sigma_lambda*delta +
@@ -826,9 +824,8 @@ public:
     Sigma_n = M*(-M1*chi1_n + M2*chi2_n);
     Sigma_lambda = M*(-M1*chi1_lambda + M2*chi2_lambda);
     rhOverM_coeff = 6.34132367616962*nu*pow(v, 2);
-    hHat_spin_Symm_2_2_3 = 0.166666666666667*(3.0*S_ell + 5.0*Sigma_ell*delta)/pow(M, 2);
+    hHat_spin_Symm_2_2_3 = 0.333333333333333*(-6.0*S_ell - 2.0*Sigma_ell*delta)/pow(M, 2);
     hHat_spin_Symm_2_1_2 = 0.5*I*Sigma_ell/pow(M, 2);
-    hHat_spin_Symm_2_0_3 = 0.408248290463863*(5.0*S_ell + 3.0*Sigma_ell*delta)/pow(M, 2);
     hHat_spin_Symm_3_2_3 = 0.563436169819011*(S_ell + Sigma_ell*delta)/pow(M, 2);
     hHat_spin_Asymm_2_2_2 = 0.5*(-Sigma_lambda - I*Sigma_n)/pow(M, 2);
     hHat_spin_Asymm_2_1_3 = 0.166666666666667*(4.0*I*S_lambda + 25.0*S_n + 4.0*I*Sigma_lambda*delta +
@@ -840,7 +837,7 @@ public:
     std::vector<std::complex<double> > Modes(77);
     std::complex<double> Symm, Asymm;
     // (ell, m) = (2, +/- 0)
-    Symm = rhOverM_coeff*(hHat_2_0_0 + hHat_spin_Symm_2_0_3*pow(v, 3));
+    Symm = hHat_2_0_0*rhOverM_coeff;
     Asymm = hHat_spin_Asymm_2_0_2*rhOverM_coeff*pow(v, 2);
     Modes[2] = Symm + Asymm;
     // (ell, m) = (2, +/- 1)
@@ -1064,11 +1061,11 @@ private:
                              hHat_4_4_2, hHat_4_4_4, hHat_5_1_3, hHat_5_2_4, hHat_5_3_3, hHat_5_4_4, hHat_5_5_3,
                              hHat_6_2_4, hHat_6_4_4, hHat_6_6_4;
   std::complex<double> hHat_spin_Symm_2_2_3, hHat_spin_Symm_2_2_4, hHat_spin_Symm_2_1_2, hHat_spin_Symm_2_1_4,
-                       hHat_spin_Symm_2_0_3, hHat_spin_Symm_2_0_4, hHat_spin_Symm_3_3_4, hHat_spin_Symm_3_2_3,
-                       hHat_spin_Symm_3_1_4, hHat_spin_Symm_4_3_4, hHat_spin_Symm_4_1_4, hHat_spin_Asymm_2_2_2,
-                       hHat_spin_Asymm_2_2_4, hHat_spin_Asymm_2_1_3, hHat_spin_Asymm_2_1_4, hHat_spin_Asymm_2_0_2,
-                       hHat_spin_Asymm_2_0_4, hHat_spin_Asymm_3_3_3, hHat_spin_Asymm_3_2_4, hHat_spin_Asymm_3_1_3,
-                       hHat_spin_Asymm_3_0_4, hHat_spin_Asymm_4_4_4, hHat_spin_Asymm_4_2_4, hHat_spin_Asymm_4_0_4;
+                       hHat_spin_Symm_2_0_4, hHat_spin_Symm_3_3_4, hHat_spin_Symm_3_2_3, hHat_spin_Symm_3_1_4,
+                       hHat_spin_Symm_4_3_4, hHat_spin_Symm_4_1_4, hHat_spin_Asymm_2_2_2, hHat_spin_Asymm_2_2_4,
+                       hHat_spin_Asymm_2_1_3, hHat_spin_Asymm_2_1_4, hHat_spin_Asymm_2_0_2, hHat_spin_Asymm_2_0_4,
+                       hHat_spin_Asymm_3_3_3, hHat_spin_Asymm_3_2_4, hHat_spin_Asymm_3_1_3, hHat_spin_Asymm_3_0_4,
+                       hHat_spin_Asymm_4_4_4, hHat_spin_Asymm_4_2_4, hHat_spin_Asymm_4_0_4;
 
 public:
   WaveformModes_2p0PN(const double M1_i, const double M2_i, const double v_i, const Quaternions::Quaternion chiVec1_i,
@@ -1097,11 +1094,10 @@ public:
     hHat_5_4_4(-0.276799624590764*nu*(5.0*nu - 5.0) - 0.276799624590764), hHat_5_5_3(-0.801376894396698*I*delta*(2.0*nu
     - 1.0)), hHat_6_2_4(0.000835250737974468*nu*(5.0*nu - 5.0) + 0.000835250737974468),
     hHat_6_4_4(-0.058558165806266*nu*(5.0*nu - 5.0) - 0.058558165806266), hHat_6_6_4(0.903141370807658*nu*(5.0*nu - 5.0)
-    + 0.903141370807658), hHat_spin_Symm_2_2_3(0.166666666666667*(3.0*S_ell + 5.0*Sigma_ell*delta)/pow(M, 2)),
+    + 0.903141370807658), hHat_spin_Symm_2_2_3(0.333333333333333*(-6.0*S_ell - 2.0*Sigma_ell*delta)/pow(M, 2)),
     hHat_spin_Symm_2_2_4(0.166666666666667*(12.0*S1_ell*S2_ell + 10.0*S1_lambda*S2_lambda - 15.0*I*S1_lambda*S2_n -
     15.0*I*S1_n*S2_lambda - 22.0*S1_n*S2_n)/(pow(M, 4)*nu)), hHat_spin_Symm_2_1_2(0.5*I*Sigma_ell/pow(M, 2)),
     hHat_spin_Symm_2_1_4(0.0238095238095238*I*(-86.0*S_ell*delta + Sigma_ell*(139.0*nu - 79.0))/pow(M, 2)),
-    hHat_spin_Symm_2_0_3(0.408248290463863*(5.0*S_ell + 3.0*Sigma_ell*delta)/pow(M, 2)),
     hHat_spin_Symm_2_0_4(0.816496580927726*(-S1_lambda*S2_lambda + S1_n*S2_n)/(pow(M, 4)*nu)),
     hHat_spin_Symm_3_3_4(0.388161877130074*I*(7.0*S_ell*delta - 3.0*Sigma_ell*(3.0*nu - 1.0))/pow(M, 2)),
     hHat_spin_Symm_3_2_3(0.563436169819011*(S_ell + Sigma_ell*delta)/pow(M, 2)),
@@ -1156,12 +1152,11 @@ public:
     S2_n = pow(M2, 2)*chi2_n;
     S2_lambda = pow(M2, 2)*chi2_lambda;
     rhOverM_coeff = 6.34132367616962*nu*pow(v, 2);
-    hHat_spin_Symm_2_2_3 = 0.166666666666667*(3.0*S_ell + 5.0*Sigma_ell*delta)/pow(M, 2);
+    hHat_spin_Symm_2_2_3 = 0.333333333333333*(-6.0*S_ell - 2.0*Sigma_ell*delta)/pow(M, 2);
     hHat_spin_Symm_2_2_4 = 0.166666666666667*(12.0*S1_ell*S2_ell + 10.0*S1_lambda*S2_lambda - 15.0*I*S1_lambda*S2_n -
       15.0*I*S1_n*S2_lambda - 22.0*S1_n*S2_n)/(pow(M, 4)*nu);
     hHat_spin_Symm_2_1_2 = 0.5*I*Sigma_ell/pow(M, 2);
     hHat_spin_Symm_2_1_4 = 0.0238095238095238*I*(-86.0*S_ell*delta + Sigma_ell*(139.0*nu - 79.0))/pow(M, 2);
-    hHat_spin_Symm_2_0_3 = 0.408248290463863*(5.0*S_ell + 3.0*Sigma_ell*delta)/pow(M, 2);
     hHat_spin_Symm_2_0_4 = 0.816496580927726*(-S1_lambda*S2_lambda + S1_n*S2_n)/(pow(M, 4)*nu);
     hHat_spin_Symm_3_3_4 = 0.388161877130074*I*(7.0*S_ell*delta - 3.0*Sigma_ell*(3.0*nu - 1.0))/pow(M, 2);
     hHat_spin_Symm_3_2_3 = 0.563436169819011*(S_ell + Sigma_ell*delta)/pow(M, 2);
@@ -1190,7 +1185,7 @@ public:
     std::vector<std::complex<double> > Modes(77);
     std::complex<double> Symm, Asymm;
     // (ell, m) = (2, +/- 0)
-    Symm = rhOverM_coeff*(hHat_2_0_0 + pow(v, 3)*(hHat_spin_Symm_2_0_3 + hHat_spin_Symm_2_0_4*v));
+    Symm = rhOverM_coeff*(hHat_2_0_0 + hHat_spin_Symm_2_0_4*pow(v, 4));
     Asymm = rhOverM_coeff*pow(v, 2)*(hHat_spin_Asymm_2_0_2 + hHat_spin_Asymm_2_0_4*pow(v, 2));
     Modes[2] = Symm + Asymm;
     // (ell, m) = (2, +/- 1)
@@ -1419,11 +1414,11 @@ private:
                              hHat_6_2_4, hHat_6_3_5, hHat_6_4_4, hHat_6_5_5, hHat_6_6_4, hHat_7_1_5, hHat_7_3_5,
                              hHat_7_5_5, hHat_7_7_5;
   std::complex<double> hHat_spin_Symm_2_2_3, hHat_spin_Symm_2_2_4, hHat_spin_Symm_2_1_2, hHat_spin_Symm_2_1_4,
-                       hHat_spin_Symm_2_0_3, hHat_spin_Symm_2_0_4, hHat_spin_Symm_3_3_4, hHat_spin_Symm_3_2_3,
-                       hHat_spin_Symm_3_1_4, hHat_spin_Symm_4_3_4, hHat_spin_Symm_4_1_4, hHat_spin_Asymm_2_2_2,
-                       hHat_spin_Asymm_2_2_4, hHat_spin_Asymm_2_1_3, hHat_spin_Asymm_2_1_4, hHat_spin_Asymm_2_0_2,
-                       hHat_spin_Asymm_2_0_4, hHat_spin_Asymm_3_3_3, hHat_spin_Asymm_3_2_4, hHat_spin_Asymm_3_1_3,
-                       hHat_spin_Asymm_3_0_4, hHat_spin_Asymm_4_4_4, hHat_spin_Asymm_4_2_4, hHat_spin_Asymm_4_0_4;
+                       hHat_spin_Symm_2_0_4, hHat_spin_Symm_3_3_4, hHat_spin_Symm_3_2_3, hHat_spin_Symm_3_1_4,
+                       hHat_spin_Symm_4_3_4, hHat_spin_Symm_4_1_4, hHat_spin_Asymm_2_2_2, hHat_spin_Asymm_2_2_4,
+                       hHat_spin_Asymm_2_1_3, hHat_spin_Asymm_2_1_4, hHat_spin_Asymm_2_0_2, hHat_spin_Asymm_2_0_4,
+                       hHat_spin_Asymm_3_3_3, hHat_spin_Asymm_3_2_4, hHat_spin_Asymm_3_1_3, hHat_spin_Asymm_3_0_4,
+                       hHat_spin_Asymm_4_4_4, hHat_spin_Asymm_4_2_4, hHat_spin_Asymm_4_0_4;
 
 public:
   WaveformModes_2p5PN(const double M1_i, const double M2_i, const double v_i, const Quaternions::Quaternion chiVec1_i,
@@ -1466,14 +1461,13 @@ public:
     1.0)*(3.0*nu - 1.0)), hHat_6_6_4(0.903141370807658*nu*(5.0*nu - 5.0) + 0.903141370807658),
     hHat_7_1_5(8.17593033339979e-7*I*delta*(nu - 1.0)*(3.0*nu - 1.0)), hHat_7_3_5(-0.0018582230503756*I*delta*(nu -
     1.0)*(3.0*nu - 1.0)), hHat_7_5_5(0.0733861624905401*I*delta*(nu - 1.0)*(3.0*nu - 1.0)),
-    hHat_7_7_5(-1.05422444934392*I*delta*(nu - 1.0)*(3.0*nu - 1.0)), hHat_spin_Symm_2_2_3(0.166666666666667*(3.0*S_ell +
-    5.0*Sigma_ell*delta)/pow(M, 2)), hHat_spin_Symm_2_2_4(0.166666666666667*(12.0*S1_ell*S2_ell +
+    hHat_7_7_5(-1.05422444934392*I*delta*(nu - 1.0)*(3.0*nu - 1.0)), hHat_spin_Symm_2_2_3(0.333333333333333*(-6.0*S_ell
+    - 2.0*Sigma_ell*delta)/pow(M, 2)), hHat_spin_Symm_2_2_4(0.166666666666667*(12.0*S1_ell*S2_ell +
     10.0*S1_lambda*S2_lambda - 15.0*I*S1_lambda*S2_n - 15.0*I*S1_n*S2_lambda - 22.0*S1_n*S2_n)/(pow(M, 4)*nu)),
     hHat_spin_Symm_2_1_2(0.5*I*Sigma_ell/pow(M, 2)), hHat_spin_Symm_2_1_4(0.0238095238095238*I*(-86.0*S_ell*delta +
-    Sigma_ell*(139.0*nu - 79.0))/pow(M, 2)), hHat_spin_Symm_2_0_3(0.408248290463863*(5.0*S_ell +
-    3.0*Sigma_ell*delta)/pow(M, 2)), hHat_spin_Symm_2_0_4(0.816496580927726*(-S1_lambda*S2_lambda + S1_n*S2_n)/(pow(M,
-    4)*nu)), hHat_spin_Symm_3_3_4(0.388161877130074*I*(7.0*S_ell*delta - 3.0*Sigma_ell*(3.0*nu - 1.0))/pow(M, 2)),
-    hHat_spin_Symm_3_2_3(0.563436169819011*(S_ell + Sigma_ell*delta)/pow(M, 2)),
+    Sigma_ell*(139.0*nu - 79.0))/pow(M, 2)), hHat_spin_Symm_2_0_4(0.816496580927726*(-S1_lambda*S2_lambda +
+    S1_n*S2_n)/(pow(M, 4)*nu)), hHat_spin_Symm_3_3_4(0.388161877130074*I*(7.0*S_ell*delta - 3.0*Sigma_ell*(3.0*nu -
+    1.0))/pow(M, 2)), hHat_spin_Symm_3_2_3(0.563436169819011*(S_ell + Sigma_ell*delta)/pow(M, 2)),
     hHat_spin_Symm_3_1_4(0.0111358850796843*I*(S_ell*delta - 5.0*Sigma_ell*(3.0*nu - 1.0))/pow(M, 2)),
     hHat_spin_Symm_4_3_4(0.672316092750596*I*(-S_ell*delta + 3.0*Sigma_ell*nu - Sigma_ell)/pow(M, 2)),
     hHat_spin_Symm_4_1_4(0.00941154065526303*I*(S_ell*delta - 3.0*Sigma_ell*nu + Sigma_ell)/pow(M, 2)),
@@ -1525,12 +1519,11 @@ public:
     S2_n = pow(M2, 2)*chi2_n;
     S2_lambda = pow(M2, 2)*chi2_lambda;
     rhOverM_coeff = 6.34132367616962*nu*pow(v, 2);
-    hHat_spin_Symm_2_2_3 = 0.166666666666667*(3.0*S_ell + 5.0*Sigma_ell*delta)/pow(M, 2);
+    hHat_spin_Symm_2_2_3 = 0.333333333333333*(-6.0*S_ell - 2.0*Sigma_ell*delta)/pow(M, 2);
     hHat_spin_Symm_2_2_4 = 0.166666666666667*(12.0*S1_ell*S2_ell + 10.0*S1_lambda*S2_lambda - 15.0*I*S1_lambda*S2_n -
       15.0*I*S1_n*S2_lambda - 22.0*S1_n*S2_n)/(pow(M, 4)*nu);
     hHat_spin_Symm_2_1_2 = 0.5*I*Sigma_ell/pow(M, 2);
     hHat_spin_Symm_2_1_4 = 0.0238095238095238*I*(-86.0*S_ell*delta + Sigma_ell*(139.0*nu - 79.0))/pow(M, 2);
-    hHat_spin_Symm_2_0_3 = 0.408248290463863*(5.0*S_ell + 3.0*Sigma_ell*delta)/pow(M, 2);
     hHat_spin_Symm_2_0_4 = 0.816496580927726*(-S1_lambda*S2_lambda + S1_n*S2_n)/(pow(M, 4)*nu);
     hHat_spin_Symm_3_3_4 = 0.388161877130074*I*(7.0*S_ell*delta - 3.0*Sigma_ell*(3.0*nu - 1.0))/pow(M, 2);
     hHat_spin_Symm_3_2_3 = 0.563436169819011*(S_ell + Sigma_ell*delta)/pow(M, 2);
@@ -1559,7 +1552,7 @@ public:
     std::vector<std::complex<double> > Modes(77);
     std::complex<double> Symm, Asymm;
     // (ell, m) = (2, +/- 0)
-    Symm = rhOverM_coeff*(hHat_2_0_0 + pow(v, 3)*(hHat_spin_Symm_2_0_3 + hHat_spin_Symm_2_0_4*v));
+    Symm = rhOverM_coeff*(hHat_2_0_0 + hHat_spin_Symm_2_0_4*pow(v, 4));
     Asymm = rhOverM_coeff*pow(v, 2)*(hHat_spin_Asymm_2_0_2 + hHat_spin_Asymm_2_0_4*pow(v, 2));
     Modes[2] = Symm + Asymm;
     // (ell, m) = (2, +/- 1)
@@ -1791,11 +1784,11 @@ private:
                              hHat_6_6_4, hHat_6_6_6, hHat_7_1_5, hHat_7_2_6, hHat_7_3_5, hHat_7_4_6, hHat_7_5_5,
                              hHat_7_6_6, hHat_7_7_5, hHat_8_2_6, hHat_8_4_6, hHat_8_6_6, hHat_8_8_6;
   std::complex<double> hHat_spin_Symm_2_2_3, hHat_spin_Symm_2_2_4, hHat_spin_Symm_2_1_2, hHat_spin_Symm_2_1_4,
-                       hHat_spin_Symm_2_0_3, hHat_spin_Symm_2_0_4, hHat_spin_Symm_3_3_4, hHat_spin_Symm_3_2_3,
-                       hHat_spin_Symm_3_1_4, hHat_spin_Symm_4_3_4, hHat_spin_Symm_4_1_4, hHat_spin_Asymm_2_2_2,
-                       hHat_spin_Asymm_2_2_4, hHat_spin_Asymm_2_1_3, hHat_spin_Asymm_2_1_4, hHat_spin_Asymm_2_0_2,
-                       hHat_spin_Asymm_2_0_4, hHat_spin_Asymm_3_3_3, hHat_spin_Asymm_3_2_4, hHat_spin_Asymm_3_1_3,
-                       hHat_spin_Asymm_3_0_4, hHat_spin_Asymm_4_4_4, hHat_spin_Asymm_4_2_4, hHat_spin_Asymm_4_0_4;
+                       hHat_spin_Symm_2_0_4, hHat_spin_Symm_3_3_4, hHat_spin_Symm_3_2_3, hHat_spin_Symm_3_1_4,
+                       hHat_spin_Symm_4_3_4, hHat_spin_Symm_4_1_4, hHat_spin_Asymm_2_2_2, hHat_spin_Asymm_2_2_4,
+                       hHat_spin_Asymm_2_1_3, hHat_spin_Asymm_2_1_4, hHat_spin_Asymm_2_0_2, hHat_spin_Asymm_2_0_4,
+                       hHat_spin_Asymm_3_3_3, hHat_spin_Asymm_3_2_4, hHat_spin_Asymm_3_1_3, hHat_spin_Asymm_3_0_4,
+                       hHat_spin_Asymm_4_4_4, hHat_spin_Asymm_4_2_4, hHat_spin_Asymm_4_0_4;
 
 public:
   WaveformModes_3p0PN(const double M1_i, const double M2_i, const double v_i, const Quaternions::Quaternion chiVec1_i,
@@ -1863,11 +1856,10 @@ public:
     hHat_7_7_5(-1.05422444934392*I*delta*(nu - 1.0)*(3.0*nu - 1.0)), hHat_8_2_6(-8.42775671401151e-5*nu*pow(nu - 1.0, 2)
     + 1.20396524485879e-5), hHat_8_4_6(0.0226281108784145*nu*pow(nu - 1.0, 2) - 0.00323258726834493),
     hHat_8_6_6(-0.645290686836342*nu*pow(nu - 1.0, 2) + 0.0921843838337631), hHat_8_8_6(8.82604070589592*nu*pow(nu -
-    1.0, 2) - 1.26086295798513), hHat_spin_Symm_2_2_3(0.166666666666667*(3.0*S_ell + 5.0*Sigma_ell*delta)/pow(M, 2)),
+    1.0, 2) - 1.26086295798513), hHat_spin_Symm_2_2_3(0.333333333333333*(-6.0*S_ell - 2.0*Sigma_ell*delta)/pow(M, 2)),
     hHat_spin_Symm_2_2_4(0.166666666666667*(12.0*S1_ell*S2_ell + 10.0*S1_lambda*S2_lambda - 15.0*I*S1_lambda*S2_n -
     15.0*I*S1_n*S2_lambda - 22.0*S1_n*S2_n)/(pow(M, 4)*nu)), hHat_spin_Symm_2_1_2(0.5*I*Sigma_ell/pow(M, 2)),
     hHat_spin_Symm_2_1_4(0.0238095238095238*I*(-86.0*S_ell*delta + Sigma_ell*(139.0*nu - 79.0))/pow(M, 2)),
-    hHat_spin_Symm_2_0_3(0.408248290463863*(5.0*S_ell + 3.0*Sigma_ell*delta)/pow(M, 2)),
     hHat_spin_Symm_2_0_4(0.816496580927726*(-S1_lambda*S2_lambda + S1_n*S2_n)/(pow(M, 4)*nu)),
     hHat_spin_Symm_3_3_4(0.388161877130074*I*(7.0*S_ell*delta - 3.0*Sigma_ell*(3.0*nu - 1.0))/pow(M, 2)),
     hHat_spin_Symm_3_2_3(0.563436169819011*(S_ell + Sigma_ell*delta)/pow(M, 2)),
@@ -1923,12 +1915,11 @@ public:
     S2_lambda = pow(M2, 2)*chi2_lambda;
     logv = log(v);
     rhOverM_coeff = 6.34132367616962*nu*pow(v, 2);
-    hHat_spin_Symm_2_2_3 = 0.166666666666667*(3.0*S_ell + 5.0*Sigma_ell*delta)/pow(M, 2);
+    hHat_spin_Symm_2_2_3 = 0.333333333333333*(-6.0*S_ell - 2.0*Sigma_ell*delta)/pow(M, 2);
     hHat_spin_Symm_2_2_4 = 0.166666666666667*(12.0*S1_ell*S2_ell + 10.0*S1_lambda*S2_lambda - 15.0*I*S1_lambda*S2_n -
       15.0*I*S1_n*S2_lambda - 22.0*S1_n*S2_n)/(pow(M, 4)*nu);
     hHat_spin_Symm_2_1_2 = 0.5*I*Sigma_ell/pow(M, 2);
     hHat_spin_Symm_2_1_4 = 0.0238095238095238*I*(-86.0*S_ell*delta + Sigma_ell*(139.0*nu - 79.0))/pow(M, 2);
-    hHat_spin_Symm_2_0_3 = 0.408248290463863*(5.0*S_ell + 3.0*Sigma_ell*delta)/pow(M, 2);
     hHat_spin_Symm_2_0_4 = 0.816496580927726*(-S1_lambda*S2_lambda + S1_n*S2_n)/(pow(M, 4)*nu);
     hHat_spin_Symm_3_3_4 = 0.388161877130074*I*(7.0*S_ell*delta - 3.0*Sigma_ell*(3.0*nu - 1.0))/pow(M, 2);
     hHat_spin_Symm_3_2_3 = 0.563436169819011*(S_ell + Sigma_ell*delta)/pow(M, 2);
@@ -1957,7 +1948,7 @@ public:
     std::vector<std::complex<double> > Modes(77);
     std::complex<double> Symm, Asymm;
     // (ell, m) = (2, +/- 0)
-    Symm = rhOverM_coeff*(hHat_2_0_0 + pow(v, 3)*(hHat_spin_Symm_2_0_3 + hHat_spin_Symm_2_0_4*v));
+    Symm = rhOverM_coeff*(hHat_2_0_0 + hHat_spin_Symm_2_0_4*pow(v, 4));
     Asymm = rhOverM_coeff*pow(v, 2)*(hHat_spin_Asymm_2_0_2 + hHat_spin_Asymm_2_0_4*pow(v, 2));
     Modes[2] = Symm + Asymm;
     // (ell, m) = (2, +/- 1)
@@ -2192,11 +2183,11 @@ private:
                              hHat_6_5_5, hHat_6_6_4, hHat_6_6_6, hHat_7_1_5, hHat_7_2_6, hHat_7_3_5, hHat_7_4_6,
                              hHat_7_5_5, hHat_7_6_6, hHat_7_7_5, hHat_8_2_6, hHat_8_4_6, hHat_8_6_6, hHat_8_8_6;
   std::complex<double> hHat_spin_Symm_2_2_3, hHat_spin_Symm_2_2_4, hHat_spin_Symm_2_1_2, hHat_spin_Symm_2_1_4,
-                       hHat_spin_Symm_2_0_3, hHat_spin_Symm_2_0_4, hHat_spin_Symm_3_3_4, hHat_spin_Symm_3_2_3,
-                       hHat_spin_Symm_3_1_4, hHat_spin_Symm_4_3_4, hHat_spin_Symm_4_1_4, hHat_spin_Asymm_2_2_2,
-                       hHat_spin_Asymm_2_2_4, hHat_spin_Asymm_2_1_3, hHat_spin_Asymm_2_1_4, hHat_spin_Asymm_2_0_2,
-                       hHat_spin_Asymm_2_0_4, hHat_spin_Asymm_3_3_3, hHat_spin_Asymm_3_2_4, hHat_spin_Asymm_3_1_3,
-                       hHat_spin_Asymm_3_0_4, hHat_spin_Asymm_4_4_4, hHat_spin_Asymm_4_2_4, hHat_spin_Asymm_4_0_4;
+                       hHat_spin_Symm_2_0_4, hHat_spin_Symm_3_3_4, hHat_spin_Symm_3_2_3, hHat_spin_Symm_3_1_4,
+                       hHat_spin_Symm_4_3_4, hHat_spin_Symm_4_1_4, hHat_spin_Asymm_2_2_2, hHat_spin_Asymm_2_2_4,
+                       hHat_spin_Asymm_2_1_3, hHat_spin_Asymm_2_1_4, hHat_spin_Asymm_2_0_2, hHat_spin_Asymm_2_0_4,
+                       hHat_spin_Asymm_3_3_3, hHat_spin_Asymm_3_2_4, hHat_spin_Asymm_3_1_3, hHat_spin_Asymm_3_0_4,
+                       hHat_spin_Asymm_4_4_4, hHat_spin_Asymm_4_2_4, hHat_spin_Asymm_4_0_4;
 
 public:
   WaveformModes_3p5PN(const double M1_i, const double M2_i, const double v_i, const Quaternions::Quaternion chiVec1_i,
@@ -2266,11 +2257,10 @@ public:
     hHat_7_7_5(-1.05422444934392*I*delta*(nu - 1.0)*(3.0*nu - 1.0)), hHat_8_2_6(-8.42775671401151e-5*nu*pow(nu - 1.0, 2)
     + 1.20396524485879e-5), hHat_8_4_6(0.0226281108784145*nu*pow(nu - 1.0, 2) - 0.00323258726834493),
     hHat_8_6_6(-0.645290686836342*nu*pow(nu - 1.0, 2) + 0.0921843838337631), hHat_8_8_6(8.82604070589592*nu*pow(nu -
-    1.0, 2) - 1.26086295798513), hHat_spin_Symm_2_2_3(0.166666666666667*(3.0*S_ell + 5.0*Sigma_ell*delta)/pow(M, 2)),
+    1.0, 2) - 1.26086295798513), hHat_spin_Symm_2_2_3(0.333333333333333*(-6.0*S_ell - 2.0*Sigma_ell*delta)/pow(M, 2)),
     hHat_spin_Symm_2_2_4(0.166666666666667*(12.0*S1_ell*S2_ell + 10.0*S1_lambda*S2_lambda - 15.0*I*S1_lambda*S2_n -
     15.0*I*S1_n*S2_lambda - 22.0*S1_n*S2_n)/(pow(M, 4)*nu)), hHat_spin_Symm_2_1_2(0.5*I*Sigma_ell/pow(M, 2)),
     hHat_spin_Symm_2_1_4(0.0238095238095238*I*(-86.0*S_ell*delta + Sigma_ell*(139.0*nu - 79.0))/pow(M, 2)),
-    hHat_spin_Symm_2_0_3(0.408248290463863*(5.0*S_ell + 3.0*Sigma_ell*delta)/pow(M, 2)),
     hHat_spin_Symm_2_0_4(0.816496580927726*(-S1_lambda*S2_lambda + S1_n*S2_n)/(pow(M, 4)*nu)),
     hHat_spin_Symm_3_3_4(0.388161877130074*I*(7.0*S_ell*delta - 3.0*Sigma_ell*(3.0*nu - 1.0))/pow(M, 2)),
     hHat_spin_Symm_3_2_3(0.563436169819011*(S_ell + Sigma_ell*delta)/pow(M, 2)),
@@ -2326,12 +2316,11 @@ public:
     S2_lambda = pow(M2, 2)*chi2_lambda;
     logv = log(v);
     rhOverM_coeff = 6.34132367616962*nu*pow(v, 2);
-    hHat_spin_Symm_2_2_3 = 0.166666666666667*(3.0*S_ell + 5.0*Sigma_ell*delta)/pow(M, 2);
+    hHat_spin_Symm_2_2_3 = 0.333333333333333*(-6.0*S_ell - 2.0*Sigma_ell*delta)/pow(M, 2);
     hHat_spin_Symm_2_2_4 = 0.166666666666667*(12.0*S1_ell*S2_ell + 10.0*S1_lambda*S2_lambda - 15.0*I*S1_lambda*S2_n -
       15.0*I*S1_n*S2_lambda - 22.0*S1_n*S2_n)/(pow(M, 4)*nu);
     hHat_spin_Symm_2_1_2 = 0.5*I*Sigma_ell/pow(M, 2);
     hHat_spin_Symm_2_1_4 = 0.0238095238095238*I*(-86.0*S_ell*delta + Sigma_ell*(139.0*nu - 79.0))/pow(M, 2);
-    hHat_spin_Symm_2_0_3 = 0.408248290463863*(5.0*S_ell + 3.0*Sigma_ell*delta)/pow(M, 2);
     hHat_spin_Symm_2_0_4 = 0.816496580927726*(-S1_lambda*S2_lambda + S1_n*S2_n)/(pow(M, 4)*nu);
     hHat_spin_Symm_3_3_4 = 0.388161877130074*I*(7.0*S_ell*delta - 3.0*Sigma_ell*(3.0*nu - 1.0))/pow(M, 2);
     hHat_spin_Symm_3_2_3 = 0.563436169819011*(S_ell + Sigma_ell*delta)/pow(M, 2);
@@ -2360,7 +2349,7 @@ public:
     std::vector<std::complex<double> > Modes(77);
     std::complex<double> Symm, Asymm;
     // (ell, m) = (2, +/- 0)
-    Symm = rhOverM_coeff*(hHat_2_0_0 + pow(v, 3)*(hHat_spin_Symm_2_0_3 + hHat_spin_Symm_2_0_4*v));
+    Symm = rhOverM_coeff*(hHat_2_0_0 + hHat_spin_Symm_2_0_4*pow(v, 4));
     Asymm = rhOverM_coeff*pow(v, 2)*(hHat_spin_Asymm_2_0_2 + hHat_spin_Asymm_2_0_4*pow(v, 2));
     Modes[2] = Symm + Asymm;
     // (ell, m) = (2, +/- 1)
