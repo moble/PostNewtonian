@@ -239,7 +239,13 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   const double hmin = ForwardInTime ? 1.0e-7 : -1.0e-7;
   const double hmin_storage = ForwardInTime ? 1.0e-5 : -1.0e-5;
   const double hmax = (endtime-time) / (2.0*MinSteps); // Time-direction is taken care of
-  double hnext = hmax;
+  double hnext;
+  {
+    const double OrbitalPeriod = 2*M_PI/(y[0]*y[0]*y[0]);
+    hnext = ( ForwardInTime
+              ? std::min(hmax,  OrbitalPeriod/(MinStepsPerOrbit+1.))
+              : std::max(hmax, -OrbitalPeriod/(MinStepsPerOrbit+1.)) );
+  }
 
   // We will be using `push_back`, so we first reserve the rough lower
   // limit we will need (after clearing out any content the input
@@ -294,7 +300,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   while ((ForwardInTime && time < endtime) ||
          (!ForwardInTime && y[0]>v_0)) {
     // Take a step
-    int status = gsl_odeiv2_evolve_apply(e, c, s, sys, &time, time+2.0*hnext, &h, &y[0]);
+    int status = gsl_odeiv2_evolve_apply(e, c, s, sys, &time, time+hnext, &h, &y[0]);
     ++NSteps;
     ++nSteps;
 
@@ -355,8 +361,8 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     if(MinStepsPerOrbit!=0) {
       const double OrbitalPeriod = 2*M_PI/(y[0]*y[0]*y[0]);
       hnext = (ForwardInTime
-               ? std::min(h, std::min(hmax,  OrbitalPeriod/(MinStepsPerOrbit+1.)))
-               : std::max(h, std::max(hmax, -OrbitalPeriod/(MinStepsPerOrbit+1.))) );
+               ? std::min(2.0*h, std::min(2.0*hmax,  OrbitalPeriod/(MinStepsPerOrbit+1.)))
+               : std::max(2.0*h, std::max(2.0*hmax, -OrbitalPeriod/(MinStepsPerOrbit+1.))) );
       // INFOTOCERR << time << " " << h << " " << hnext << " " << y[0] << " " << NSteps << " " << nSteps << std::endl;
     }
 
