@@ -294,7 +294,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   while ((ForwardInTime && time < endtime) ||
          (!ForwardInTime && y[0]>v_0)) {
     // Take a step
-    int status = gsl_odeiv2_evolve_apply(e, c, s, sys, &time, time+hnext, &h, &y[0]);
+    int status = gsl_odeiv2_evolve_apply(e, c, s, sys, &time, time+2.0*hnext, &h, &y[0]);
     ++NSteps;
     ++nSteps;
 
@@ -336,8 +336,8 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
 
     // Check if we should stop because there have been too many steps
     if(NSteps>MaxSteps) {
-      INFOTOCERR << "\n\nThe integration has taken " << NSteps << ".  This seems excessive, so we'll stop."
-                 << "\nNote that this is unusual.  You may have a short waveform that stops before merger." << std::endl;
+      INFOTOCERR << "\n\nThe integration has taken " << NSteps << " steps.  This seems excessive, so we'll stop."
+                 << "\nNote that this is slightly unusual.  You may have a short waveform that stops before merger." << std::endl;
       break;
     }
 
