@@ -113,10 +113,12 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   const double chi1Mag = Quaternions::Quaternion(chi1_i).abs();
   const double chi2Mag = Quaternions::Quaternion(chi2_i).abs();
   const Quaternion S_chi1_i = ( chi1Mag>1e-12
-                                ? std::sqrt(chi1Mag) * Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi1_i).normalized()*Quaternions::zHat)
+                                ? std::sqrt(chi1Mag)
+                                  * Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi1_i).normalized()*Quaternions::zHat).normalized()
                                 : Quaternions::Zero);
   const Quaternion S_chi2_i = ( chi2Mag>1e-12
-                                ? std::sqrt(chi2Mag) * Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi2_i).normalized()*Quaternions::zHat)
+                                ? std::sqrt(chi2Mag)
+                                  * Quaternions::sqrtOfRotor(-Quaternions::Quaternion(chi2_i).normalized()*Quaternions::zHat).normalized()
                                 : Quaternions::Zero);
   const std::vector<double> rfrak_frame_i = R_frame_i.log().vec();
 
@@ -284,9 +286,9 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     t.push_back(time);
     v.push_back(y[0]);
     const Quaternion R_chi1_j = exp(Quaternion(0.0, y[1], y[2], 0.0));
-    chi1.push_back((S_chi1_i*R_chi1_j*zHat*R_chi1_j.conjugate()*S_chi1_i.conjugate()).vec());
+    chi1.push_back((S_chi1_i*R_chi1_j*zHat*R_chi1_j.inverse()*S_chi1_i.conjugate()).vec());
     const Quaternion R_chi2_j = exp(Quaternion(0.0, y[3], y[4], 0.0));
-    chi2.push_back((S_chi2_i*R_chi2_j*zHat*R_chi2_j.conjugate()*S_chi2_i.conjugate()).vec());
+    chi2.push_back((S_chi2_i*R_chi2_j*zHat*R_chi2_j.inverse()*S_chi2_i.conjugate()).vec());
     const Quaternion R_frame_j = exp(Quaternion(0.0, y[5], y[6], y[7]));
     // const Quaternion R_frame_j = Unflipped(R_frame.back(), exp(Quaternion(0.0, y[5], y[6], y[7])));
     R_frame.push_back(R_frame_j);
@@ -322,9 +324,9 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
       t.push_back(time);
       v.push_back(y[0]);
       const Quaternion R_chi1_j = exp(Quaternion(0.0, y[1], y[2], 0.0));
-      chi1.push_back((S_chi1_i*R_chi1_j*zHat*R_chi1_j.conjugate()*S_chi1_i.conjugate()).vec());
+      chi1.push_back((S_chi1_i*R_chi1_j*zHat*R_chi1_j.inverse()*S_chi1_i.conjugate()).vec());
       const Quaternion R_chi2_j = exp(Quaternion(0.0, y[3], y[4], 0.0));
-      chi2.push_back((S_chi2_i*R_chi2_j*zHat*R_chi2_j.conjugate()*S_chi2_i.conjugate()).vec());
+      chi2.push_back((S_chi2_i*R_chi2_j*zHat*R_chi2_j.inverse()*S_chi2_i.conjugate()).vec());
       const Quaternion R_frame_j = Unflipped(R_frame.back(), exp(Quaternion(0.0, y[5], y[6], y[7])));
       R_frame.push_back(R_frame_j);
       Phi.push_back(y[8]);
