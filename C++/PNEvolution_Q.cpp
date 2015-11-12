@@ -234,7 +234,7 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
     ? 4*time_to_merger // Happily run far into positive times just for a comfy margin of error
     : 3*(-5.0/(256.0*nu*std::pow(v_0,8))); // This should be (3x) a pretty good estimate, considering that it should be very early...
   const unsigned int MinSteps = 100000; // This is only a very rough lower limit
-  const unsigned int MaxSteps = 200000; // This is a hard upper limit; much bigger than this and Mike's laptop has been known to crash
+  const unsigned int MaxSteps = 10000000; // This is a hard upper limit; much bigger than this and Mike's laptop has been known to crash
   double h = ForwardInTime ? 1.0 : -1.0;
   const double eps_abs = 1.e-6;
   const double eps_rel = 1.e-6;
