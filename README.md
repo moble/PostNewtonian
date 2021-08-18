@@ -26,11 +26,8 @@ the complex issue of post-Newtonian constructions.
 Just looking
 ============
 
-I wouldn't want to discourage anyone from installing and using the
-fantastically excellent, powerful, and simple `ipython notebook`
-interface.  However, if you're too lazy or just don't believe me how
-great the combination of `ipython` and `notebook` is, you can just
-view the important notebooks in this module at on `nbviewer`:
+If you just want to take a look at the notebooks without downloading them,
+you can just view the important ones on `nbviewer`:
 
   * [AngularMomentum](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/AngularMomentum.ipynb)
   * [BindingEnergy](http://nbviewer.ipython.org/github/MOBle/postnewtonian/blob/master/PNTerms/BindingEnergy.ipynb)
