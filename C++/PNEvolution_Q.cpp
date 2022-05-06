@@ -236,8 +236,8 @@ void PostNewtonian::EvolvePN_Q(const std::string& Approximant, const double PNOr
   const unsigned int MinSteps = 100000; // This is only a very rough lower limit
   const unsigned int MaxSteps = 10000000; // This is a hard upper limit; much bigger than this and Mike's laptop has been known to crash
   double h = ForwardInTime ? 1.0 : -1.0;
-  const double eps_abs = 1.e-6;
-  const double eps_rel = 1.e-6;
+  const double eps_abs = 1.e-13;
+  const double eps_rel = 1.e-13;
   const double hmin = ForwardInTime ? 1.0e-7 : -1.0e-7;
   const double hmin_storage = ForwardInTime ? 1.0e-5 : -1.0e-5;
   const double hmax = (endtime-time) / (2.0*MinSteps); // Time-direction is taken care of
