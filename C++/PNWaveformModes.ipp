@@ -2,6 +2,7 @@
 
 class WaveformModes_Base {
 public:
+  virtual ~WaveformModes_Base() { }
   virtual std::vector<std::complex<double> > operator()(
     const double v_k,
     const double chi1_n_k, const double chi1_lambda_k, const double chi1_ell_k,

@@ -34,6 +34,7 @@ inline Quaternion Unflipped(const Quaternion& R0, const Quaternion& R1) {
 ///////////////////////////////////
 class TaylorTn_Q {
 public:
+  virtual ~TaylorTn_Q() { }
   virtual Quaternion OrbitalAngularMomentum() = 0;
   virtual int TaylorT1(double t, const double* y, double* dydt) { return GSL_FAILURE; }
   virtual int TaylorT4(double t, const double* y, double* dydt) { return GSL_FAILURE; }

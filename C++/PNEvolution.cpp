@@ -94,6 +94,7 @@ double dot(const std::vector<double>& a, const std::vector<double>& b) {
 ///////////////////////////////////
 class TaylorTn {
 public:
+  virtual ~TaylorTn() { }
   virtual std::vector<double> OrbitalAngularMomentum() = 0;
   virtual int TaylorT1(double t, const double* y, double* dydt) { return GSL_FAILURE; }
   virtual int TaylorT4(double t, const double* y, double* dydt) { return GSL_FAILURE; }
